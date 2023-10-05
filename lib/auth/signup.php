@@ -12,6 +12,7 @@
             <input type="text" name="Password"><br>
             <label for="ConfirmPassword">Confirm your password:</label><br>
             <input type="text" name="ConfirmPassword"><br>
+            <input type="submit" value="Sign Up">
         </form>
     </body>
 </html>
