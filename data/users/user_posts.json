@@ -1,0 +1,11 @@
+[
+    {
+        "title":"POST TITLE",
+        "author":"AUTHOR USERNAME",
+        "content":"POST CONTENT",
+        "tags":"POST TAGS",
+        "date_created":"POST CREATION DATE",
+        "last_edited":"POST LAST EDITED DATE",
+        "uid":"UNIQUE POST ID"
+    }
+]
