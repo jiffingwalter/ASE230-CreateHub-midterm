@@ -1,0 +1,46 @@
+<?php
+require_once('posts.php');
+$all_posts=get_posts();
+?>
+<head>
+    <title>Post Manager</title>
+    <link href="../../dist/css/admin.scss" rel="stylesheet" />
+</head>
+<body>
+    <h1>Post Manager</h1>
+    <hr>
+    <h3>All User Posts</h3>
+    <div class="table_stage">
+        <table border="1" cellpadding="5" cellspacing="2">
+            <!-- table listing all available products -->
+            <td><a href="create.php">Create new post</a></td>
+        </table>
+        <table border="1" cellpadding="5" cellspacing="2" style="width:100%">
+            <?php 
+            if(count($all_posts)<1){ ?>
+                <tr><td style="text-align:center">No posts currently available</td></tr>
+            <?php
+            }else{ ?>
+                <!-- column labels -->
+                <tr>
+                    <td><b>Post UID:</b></td>
+                    <td><p><b>Post Author:</p></td>
+                    <td><p><b>Post Title:</p></td>
+                    <td colspan="3"><p><b>Post Options:</p></td>
+                </tr>
+                <!-- table entries -->
+                <?php
+                for($i=0;$i<count($all_posts);$i++){ ?>
+                    <tr>
+                        <td><b><?=$all_posts[$i]['uid']?></b></td>
+                        <td><p><?=$all_posts[$i]['author']?></p></td>
+                        <td><p><?=$all_posts[$i]['title']?></p></td>
+                        <td class="table_button"><a href="detail.php?index=<?=$i?>">View details</a></td>
+                        <td class="table_button"><a href="edit.php?index=<?=$i?>">Edit</a></td>
+                        <td class="table_button"><a href="delete.php?index=<?=$i?>">Delete</a></td>
+                    </tr>
+            <?php  }
+            } ?>
+        </table>
+    </div>
+</body>
