@@ -32,12 +32,12 @@ $all_posts=get_posts();
                 <?php
                 for($i=0;$i<count($all_posts);$i++){ ?>
                     <tr>
-                        <td><b><?=$all_posts[$i]['uid']?></b></td>
-                        <td><p><?=$all_posts[$i]['author']?></p></td>
-                        <td><p><?=$all_posts[$i]['title']?></p></td>
-                        <td class="table_button"><a href="detail.php?index=<?=$i?>">View details</a></td>
-                        <td class="table_button"><a href="edit.php?index=<?=$i?>">Edit</a></td>
-                        <td class="table_button"><a href="delete.php?index=<?=$i?>">Delete</a></td>
+                        <td class="table_col_id"><b><?=$all_posts[$i]['uid']?></b></td>
+                        <td class="table_col_author"><p><?=$all_posts[$i]['author']?></p></td>
+                        <td class="table_col_title"><p><?=$all_posts[$i]['title']?></p></td>
+                        <td class="table_col_details"><a href="detail.php?index=<?=$i?>">View details</a></td>
+                        <td class="table_col_edit"><a href="edit.php?index=<?=$i?>">Edit</a></td>
+                        <td class="table_col_delete"><a href="delete.php?index=<?=$i?>">Delete</a></td>
                     </tr>
             <?php  }
             } ?>

@@ -7,7 +7,18 @@ function get_posts(){
         $json_file=file_get_contents($posts);
         return json_decode($json_file,true);
     } else {
-        echo 'SERVER ERROR - POSTS FILE NOT FOUND AT: '.$posts.'<BR>';
+        echo 'ERROR - Post data not found at given location: '.$posts.'<BR>';
     }
 }
 
+function create_post($infoIn){
+
+}
+
+function edit_post($infoIn){
+
+}
+
+function delete_post($infoIn){
+
+}

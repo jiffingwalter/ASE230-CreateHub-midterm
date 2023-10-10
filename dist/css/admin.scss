@@ -1,9 +1,21 @@
 .table_stage {
-    width:80%;
+    width:1000px;
 }
-.table_button {
-    width:80px;
+.table_col_details {
+    width:60px;
 }
-.table_row_id {
+.table_col_edit {
+    width:30px;
+}
+.table_col_delete {
+    width:30px;
+}
+.table_col_id {
     width:20px;
+}
+.table_col_author {
+    width:120px;
+}
+.table_col_title {
+    width:200px;
 }
