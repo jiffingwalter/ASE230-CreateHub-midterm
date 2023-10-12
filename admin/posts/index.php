@@ -1,6 +1,6 @@
 <?php
-require_once('posts.php');
-$all_posts=get_posts();
+require_once('./posts.php');
+$all_posts=get_all_posts();
 ?>
 <head>
     <title>Post Manager</title>
@@ -8,13 +8,14 @@ $all_posts=get_posts();
 </head>
 <body>
     <h1>Post Manager</h1>
+    <a href="../admin.php"><< Back</a>
     <hr>
     <h3>All User Posts</h3>
     <div class="table_stage">
         <table border="1" cellpadding="5" cellspacing="2">
-            <!-- table listing all available products -->
             <td><a href="create.php">Create new post</a></td>
         </table>
+        <!-- table listing all available products -->
         <table border="1" cellpadding="5" cellspacing="2" style="width:100%">
             <?php 
             if(count($all_posts)<1){ ?>
@@ -35,9 +36,9 @@ $all_posts=get_posts();
                         <td class="table_col_id"><b><?=$all_posts[$i]['uid']?></b></td>
                         <td class="table_col_author"><p><?=$all_posts[$i]['author']?></p></td>
                         <td class="table_col_title"><p><?=$all_posts[$i]['title']?></p></td>
-                        <td class="table_col_details"><a href="detail.php?index=<?=$i?>">View details</a></td>
-                        <td class="table_col_edit"><a href="edit.php?index=<?=$i?>">Edit</a></td>
-                        <td class="table_col_delete"><a href="delete.php?index=<?=$i?>">Delete</a></td>
+                        <td class="table_col_details"><a href="details.php?index=<?=$all_posts[$i]['uid']?>">View details</a></td>
+                        <td class="table_col_edit"><a href="edit.php?index=<?=$all_posts[$i]['uid']?>">Edit</a></td>
+                        <td class="table_col_delete"><a href="delete.php?index=<?=$all_posts[$i]['uid']?>">Delete</a></td>
                     </tr>
             <?php  }
             } ?>

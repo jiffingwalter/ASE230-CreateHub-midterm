@@ -1,18 +1,38 @@
 <?php
+require_once('../../lib/general.php');
 
-//get user posts on initilization
-function get_posts(){
+//get list of all user posts
+function get_all_posts(){
     $posts='../../data/users/user_posts.json';
     if (file_exists($posts)){
         $json_file=file_get_contents($posts);
         return json_decode($json_file,true);
     } else {
-        echo 'ERROR - Post data not found at given location: '.$posts.'<BR>';
+        display_error('Post data not found at given location: '.$posts,$_SERVER['SCRIPT_NAME']);
     }
 }
 
+// return single post by searching by UID in post file
+function get_post($uid){
+    $posts=get_all_posts();
+    $uid_found=false;
+    for ($i=0;$i<count($posts);$i++){
+        if ($posts[$i]['uid'] == $uid){
+            $uid_found=true;
+            break;
+        }
+    }
+
+    if ($uid_found){
+        return $posts[$i];
+    } else {
+        display_error('Could not find post UID #'.$uid.' inside post data file',$_SERVER['SCRIPT_NAME']);
+    }
+
+}
+
 function generate_uid(){
-    $posts=get_posts();
+    $posts=get_all_posts();
     $id_is_unique=false;
     // step through post data file by UIDs and ensure uid is actually unique. probably not scalable for a million users or something but it works for this
     while(!$id_is_unique){
@@ -31,7 +51,7 @@ function generate_uid(){
 
 function create_post($info_in){
     $timestamp=date("m-d-y:h:i:sa"); // gets current date/time - 
-    $entries_updated=get_products(); // set enteries_updated to the json data as php array
+    $posts_updated=get_all_posts(); // set enteries_updated to the json data as php array
     $new_post=[
         'title' => $info_in['title'],
         'author' => $info_in['author'],
@@ -41,8 +61,8 @@ function create_post($info_in){
         'last_edited' => $timestamp,
         'uid' => generate_uid(), // generates unique id
     ];
-    $entries_updated[count($entries_updated)]=$new_post; // add the new entry to the json data
-    $updated = json_encode($entries_updated,JSON_PRETTY_PRINT); // set updated to the json data as json
+    $posts_updated[count($posts_updated)]=$new_post; // add the new entry to the json data
+    $updated = json_encode($posts_updated,JSON_PRETTY_PRINT); // set updated to the json data as json
     echo '<pre>';
     print_r($updated);
     file_put_contents('../../data/products.json',$updated); // update the json data
