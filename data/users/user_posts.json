@@ -3,7 +3,7 @@
         "title":"POST TITLE",
         "author":"AUTHOR USERNAME",
         "content":"POST CONTENT",
-        "tags":"POST TAGS",
+        "tags":["POST TAG 1", "POST TAG 2", "POST TAG 3"],
         "date_created":"POST CREATION DATE",
         "last_edited":"POST LAST EDITED DATE",
         "uid":"00000"

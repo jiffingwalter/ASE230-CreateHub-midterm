@@ -5,7 +5,8 @@ $post=get_post($uid);
 ?>
 
 <head>
-    <title>Viewing post UID #<?=$all_posts[$index]['uid']?></title>
+    <title>Viewing Post UID #<?=$post['uid']?></title>
+    <link href="../../dist/css/admin.scss" rel="stylesheet" />
 </head>
 
 <body>
@@ -14,14 +15,31 @@ $post=get_post($uid);
     <a href="index.php"><< Back</a>
     <hr>
 
-    <h2>Viewing product entry <?=$all_posts[$index]['uid']?></h2>
+    <h2>Viewing Post UID #<?=$post['uid']?></h2>
+
     <table border="1" cellpadding="5" cellspacing="2">
-        <td><a href="edit.php?index=<?=$all_posts[$i]['uid']?>">Edit</a></td>
-        <td><a href="delete.php?index=<?=$all_posts[$i]['uid']?>">Delete</a></td>
+        <td><a href="edit.php?index=<?=$post['uid']?>">Edit</a></td>
+        <td><a href="delete.php?index=<?=$post['uid']?>">Delete</a></td>
     </table>
     <hr>
     <table border="1" cellpadding="5" cellspacing="2">
-        <tr><p><?=$all_posts[$i]['author']?></p></tr>
-        <tr><p><?=$all_posts[$i]['author']?></p></tr>
+        <tr>
+            <td><b>Title:</b></td>
+            <td><?=$post['title']?></td></tr>
+        <tr>
+            <td><b>Author:</b></td>
+            <td><?=$post['author']?></td></tr>
+        <tr>
+            <td><b>Content:</b></td>
+            <td><?=$post['content']?></td></tr>
+        <tr>
+            <td><b>Tags:</b></td>
+            <td><?= parse_tags_out($post['tags']) ?></td></tr>
+        <tr>
+            <td><b>Date Created:</b></td>
+            <td><?=$post['date_created']?></td></tr>
+        <tr>
+            <td><b>Date Last Edited:</b></td>
+            <td><?=$post['last_edited']?></td></tr>
     </table>
 </body>

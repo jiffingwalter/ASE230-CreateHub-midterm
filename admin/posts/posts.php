@@ -16,6 +16,7 @@ function get_all_posts(){
 function get_post($uid){
     $posts=get_all_posts();
     $uid_found=false;
+
     for ($i=0;$i<count($posts);$i++){
         if ($posts[$i]['uid'] == $uid){
             $uid_found=true;
@@ -27,10 +28,41 @@ function get_post($uid){
         return $posts[$i];
     } else {
         display_error('Could not find post UID #'.$uid.' inside post data file',$_SERVER['SCRIPT_NAME']);
+        return $posts[0]; // return example post to attempt to avoid php errors
     }
 
 }
 
+function create_post($info_in){
+    $timestamp=date("m-d-y:h:i:sa"); // gets current date/time - 
+    $posts_updated=get_all_posts(); // set enteries_updated to the json data as php array
+    $new_post=[
+        'title' => $info_in['title'],
+        'author' => $info_in['author'],
+        'content' => $info_in['content'],
+        'tags' => explode(',',$info_in['tags']),
+        'date_created' => $timestamp,
+        'last_edited' => $timestamp,
+        'uid' => generate_uid(), // generates unique id
+    ];
+    $posts_updated[count($posts_updated)]=$new_post; // add the new entry to the json data
+    $updated = json_encode($posts_updated,JSON_PRETTY_PRINT); // set updated to the json data as json
+    echo '<pre>';
+    print_r($updated);
+    file_put_contents('../../data/products.json',$updated); // update the json data
+    header('Location: index.php'); // redirect to index
+}
+
+function edit_post($info_in){
+
+}
+
+function delete_post($info_in){
+
+}
+
+// sub functions -------------------
+// generate uid for new posts and check if they're actually unique
 function generate_uid(){
     $posts=get_all_posts();
     $id_is_unique=false;
@@ -49,30 +81,12 @@ function generate_uid(){
     return $new_uid;
 }
 
-function create_post($info_in){
-    $timestamp=date("m-d-y:h:i:sa"); // gets current date/time - 
-    $posts_updated=get_all_posts(); // set enteries_updated to the json data as php array
-    $new_post=[
-        'title' => $info_in['title'],
-        'author' => $info_in['author'],
-        'content' => $info_in['content'],
-        'tags' => $info_in['tags'],
-        'date_created' => $timestamp,
-        'last_edited' => $timestamp,
-        'uid' => generate_uid(), // generates unique id
-    ];
-    $posts_updated[count($posts_updated)]=$new_post; // add the new entry to the json data
-    $updated = json_encode($posts_updated,JSON_PRETTY_PRINT); // set updated to the json data as json
-    echo '<pre>';
-    print_r($updated);
-    file_put_contents('../../data/products.json',$updated); // update the json data
-    header('Location: index.php');
-}
-
-function edit_post($info_in){
-
-}
-
-function delete_post($info_in){
-
+// print array of tags
+function parse_tags_out($tags_in){
+    $tags_string='';
+    foreach ($tags_in as $tag){
+        echo $tag;
+        echo ($tag !== $tags_in[count($tags_in) - 1])?", ":""; // check if tag is last tag, add comma appropriately
+    } 
+    return $tags_string;
 }
