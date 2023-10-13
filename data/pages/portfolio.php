@@ -1,4 +1,6 @@
 <?php
+session_start();
+$userID = $_SESSION['userID'];
 require_once('../themes/head.php');
 ?>
 <body id="page-top" style="background-color: black;">

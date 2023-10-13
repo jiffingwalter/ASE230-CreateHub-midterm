@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
     <?php
+    session_start();
+    $userID = $_SESSION['userID'];
     require_once('../themes/head.php');
     ?>
     <body id="page-top">
     <?php
     require_once('../themes/nav.php');
-    session_start();
-    $userID = $_SESSION['userID'];
     ?>
         <!-- Masthead-->
         <header class="masthead">

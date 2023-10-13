@@ -9,8 +9,8 @@ $index = 0; //get user index and set it to $index
             <ul class="navbar-nav ms-auto my-2 my-lg-0">
                 <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
-                <li class="nav-item"><a class="nav-link" href="../pages/userPage.php?index=<?=$index?>">My Page</a></li>
-                <li class="nav-item"><a class="nav-link" href="../pages/portfolio.php?index=<?=$index?>">My Portfolio</a></li>
+                <li class="nav-item"><a class="nav-link" href="../pages/userPage.php">My Page</a></li>
+                <li class="nav-item"><a class="nav-link" href="../pages/portfolio.php">My Portfolio</a></li>
                 <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
             </ul>
         </div>

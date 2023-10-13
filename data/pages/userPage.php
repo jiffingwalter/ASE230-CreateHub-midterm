@@ -1,5 +1,6 @@
 <?php
-$index = $_GET['index'];
+session_start();
+$userID = $_SESSION['userID'];
 require_once('../themes/head.php');
 ?>
 
