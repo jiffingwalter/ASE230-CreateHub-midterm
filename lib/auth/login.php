@@ -1,5 +1,6 @@
 <?php
 require_once('auth.php');
+require_once('createUser.php');
 $showSignUp=True;
 if(isset($_SESSION['email'])) $showSignUp=false;
 if(count($_POST)>0){
@@ -10,9 +11,7 @@ if(count($_POST)>0){
             //check password == confirmPassword
             if($_POST['password'] == $_POST['confirmPassword']){
                 //process data
-                $fp=fopen('../../data/users/users.csv','a+');
-                fputs($fp,$_POST['email'].';'.password_hash($_POST['password'],PASSWORD_DEFAULT).PHP_EOL);
-                fclose($fp);
+                createUser($_POST['email'],$_POST['password']);
                 echo 'your account has been created, please log in';
                 $showSignUp=false;
             }else{
