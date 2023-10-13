@@ -1,1 +1,26 @@
-[]
+[
+    {
+        "title": "1",
+        "content": "1",
+        "image": "",
+        "date_created": "2023-10-13"
+    },
+    {
+        "title": "2",
+        "content": "2",
+        "image": "",
+        "date_created": "2023-10-13"
+    },
+    {
+        "title": "3",
+        "content": "3",
+        "image": "",
+        "date_created": "2023-10-13"
+    },
+    {
+        "title": "4",
+        "content": "4",
+        "image": "Cave_Women.PNG",
+        "date_created": "2023-10-13"
+    }
+]

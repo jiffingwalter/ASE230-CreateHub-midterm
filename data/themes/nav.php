@@ -1,5 +1,5 @@
 <?php
-$index = 0; //get user index and set it to $index
+require_once('../themes/head.php');
 ?>
 <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
     <div class="container px-4 px-lg-5">
