@@ -11,5 +11,19 @@
         "date_created": "POST CREATION DATE",
         "last_edited": "POST LAST EDITED DATE",
         "uid": "00000"
+    },
+    {
+        "title": "Test post 2",
+        "author": "Temp author 2",
+        "content": "This is a post!",
+        "tags": [
+            "thesee",
+            "arer",
+            "tagss",
+            "these are tagss"
+        ],
+        "date_created": "10-13-23:01:22:59am",
+        "last_edited": "10-13-23 02:12:14am",
+        "uid": 89774
     }
 ]
