@@ -3,8 +3,6 @@ require_once('auth.php');
 $showSignUp=True;
 if(isset($_SESSION['email'])) $showSignUp=false;
 if(count($_POST)>0){
-    echo '<pre>';
-    print_r($_POST);
     if(isset($_POST['email'][0]) && isset($_POST['password'][0])){
         //check if email exists
         //check password == confirmPassword
@@ -15,9 +13,11 @@ if(count($_POST)>0){
         echo 'your account has been created, please sign in';
         $showSignUp=false;
     }
-    if(isset($_POST['LoginEmail'][0]) && isset($_POST['LoginPassword'][0])){
-        if(/*testauth here*/  true){
-            header('Location: ../../data/pages/index.php');
+    if(isset($_POST['LoginEmail']) && isset($_POST['LoginPassword'])){
+        if (validateUser($_POST['LoginEmail'], $_POST['LoginPassword'])){
+            echo 'true';
+        }else{
+            echo 'false';
         }
     }
 }
