@@ -34,34 +34,82 @@ function get_post($uid){
 }
 
 function create_post($info_in){
-    $timestamp=date("m-d-y:h:i:sa"); // gets current date/time - 
-    $posts_updated=get_all_posts(); // set enteries_updated to the json data as php array
+    $posts_updated=get_all_posts();
+
     $new_post=[
         'title' => $info_in['title'],
         'author' => $info_in['author'],
         'content' => $info_in['content'],
-        'tags' => explode(',',$info_in['tags']),
-        'date_created' => $timestamp,
-        'last_edited' => $timestamp,
+        'tags' => parse_tags_in($info_in['tags']),
+        'date_created' => get_timestamp(),
+        'last_edited' => get_timestamp(),
         'uid' => generate_uid(), // generates unique id
     ];
-    $posts_updated[count($posts_updated)]=$new_post; // add the new entry to the json data
-    $updated = json_encode($posts_updated,JSON_PRETTY_PRINT); // set updated to the json data as json
-    echo '<pre>';
-    print_r($updated);
-    file_put_contents('../../data/products.json',$updated); // update the json data
+
+    $posts_updated[count($posts_updated)]=$new_post; // append new post to the end of file
+    file_put_contents('../../data/users/user_posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data
+
+    display_message('Created new post #'.$new_post['uid'].'!');
     header('Location: index.php'); // redirect to index
 }
 
 function edit_post($info_in){
+    // get post list
+    $posts=get_all_posts();
 
+    // find index that matches uid
+    $index=0;
+    $uid_found=false;
+    for ($i=0;$i<count($posts);$i++){
+        if ($posts[$i]['uid'] == $info_in['uid']){
+            $uid_found=true;
+            $index=$i; // get index for modification
+            break;
+        }
+    }
+
+    // handle edit if uid is found, throw error if not
+    if ($uid_found){
+        $posts[$index]['title']=$info_in['title'];
+        $posts[$index]['author']=$info_in['author'];
+        $posts[$index]['content']=$info_in['content'];
+        $posts[$index]['tags']=parse_tags_in($info_in['tags']);
+        $posts[$index]['last_edited']=get_timestamp();
+
+        // update data file with new results
+        file_put_contents('../../data/users/user_posts.json',json_encode($posts,JSON_PRETTY_PRINT));
+        header('Location: index.php'); // redirect to index
+    } else {
+        display_error('Could not find post UID #'.$info_in['uid'].' inside post data file',$_SERVER['SCRIPT_NAME']);
+    }
 }
 
 function delete_post($info_in){
+    // get post lists
+    $posts=get_all_posts();
 
+    // find index that matches uid
+    $index=0;
+    $uid_found=false;
+    for ($i=0;$i<count($posts);$i++){
+        if ($posts[$i]['uid'] == $info_in['uid']){
+            $uid_found=true;
+            $index=$i; // get index for modification
+            break;
+        }
+    }
+
+    // splice post from temp data file if uid was found and update real data file, throw an error if not
+    if ($uid_found){
+        array_splice($posts,$index,$index+1);
+        file_put_contents('../../data/users/user_posts.json',json_encode($posts,JSON_PRETTY_PRINT));
+        header('Location: index.php'); // redirect to index
+    } else {
+        display_error('Could not find post UID #'.$info_in['uid'].' inside post data file',$_SERVER['SCRIPT_NAME']);
+    }
 }
 
-// sub functions -------------------
+// sub functions ------------------- might be able to move these into lib?
 // generate uid for new posts and check if they're actually unique
 function generate_uid(){
     $posts=get_all_posts();
@@ -81,12 +129,25 @@ function generate_uid(){
     return $new_uid;
 }
 
+// turn tags into array -- TODO: make it so blank tags get discarded
+function parse_tags_in($tags_in){
+    $tags_out=explode(',',$tags_in);
+    for($i=0;$i < count($tags_out);$i++){
+        $tags_out[$i]=trim($tags_out[$i]);
+    }
+    return $tags_out;
+}
+
 // print array of tags
 function parse_tags_out($tags_in){
-    $tags_string='';
+    $tags_out='';
     foreach ($tags_in as $tag){
         echo $tag;
         echo ($tag !== $tags_in[count($tags_in) - 1])?", ":""; // check if tag is last tag, add comma appropriately
     } 
-    return $tags_string;
+    return $tags_out;
+}
+
+function get_timestamp(){
+    return date("m-d-y h:i:sa");
 }
