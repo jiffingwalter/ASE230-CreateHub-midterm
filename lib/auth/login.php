@@ -6,12 +6,16 @@ if(count($_POST)>0){
     if(isset($_POST['email']) && isset($_POST['password'])){
         //check if email exists
         if(validateUserEmail($_POST['email'])){
-            //process data
-            $fp=fopen('../../data/users/users.csv','a+');
-            fputs($fp,$_POST['email'].';'.password_hash($_POST['password'],PASSWORD_DEFAULT).PHP_EOL);
-            fclose($fp);
-            echo 'your account has been created, please log in';
-            $showSignUp=false;
+            if($_POST['password'] == $_POST['confirmPassword']){
+                //process data
+                $fp=fopen('../../data/users/users.csv','a+');
+                fputs($fp,$_POST['email'].';'.password_hash($_POST['password'],PASSWORD_DEFAULT).PHP_EOL);
+                fclose($fp);
+                echo 'your account has been created, please log in';
+                $showSignUp=false;
+            }else{
+                echo '<h2> passwords do not match please try again </h2>';
+            }
         }else{
             echo '<h2> User already exists please log in </h2>';
         }   
