@@ -6,6 +6,8 @@
     <body id="page-top">
     <?php
     require_once('../themes/nav.php');
+    session_start();
+    $userID = $_SESSION['userID'];
     ?>
         <!-- Masthead-->
         <header class="masthead">

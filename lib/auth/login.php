@@ -26,7 +26,10 @@ if(count($_POST)>0){
     if(isset($_POST['LoginEmail']) && isset($_POST['LoginPassword'])){
         if (validateUser($_POST['LoginEmail'], $_POST['LoginPassword'])){
             //go to index
+            session_start();
+            $_SESSION['userID'] = getUserIndex($_POST['LoginEmail']);
             header("Location: ../../data/pages/index.php?");
+            die();
         }else{
             echo '<h2> Incorrect username/password please try again, or create an account';
             $showSignUp=True;
