@@ -9,4 +9,14 @@ function validateUser($email, $password){
     }
     return false;
 }
+
+function validateUserEmail($email){
+    $users = readCSV('../../data/users/users.csv');
+    for($i=0;$i<count($users);$i++){
+        if($email == $users[$i]['username']){
+            return false;
+        }
+    }
+    return true;
+}
 ?>
