@@ -3,9 +3,11 @@ require_once('auth.php');
 $showSignUp=True;
 if(isset($_SESSION['email'])) $showSignUp=false;
 if(count($_POST)>0){
+    //Signup
     if(isset($_POST['email']) && isset($_POST['password'])){
         //check if email exists
         if(validateUserEmail($_POST['email'])){
+            //check password == confirmPassword
             if($_POST['password'] == $_POST['confirmPassword']){
                 //process data
                 $fp=fopen('../../data/users/users.csv','a+');
@@ -20,11 +22,11 @@ if(count($_POST)>0){
             echo '<h2> User already exists please log in </h2>';
         }   
     }
-    //check password == confirmPassword
+    //Login
     if(isset($_POST['LoginEmail']) && isset($_POST['LoginPassword'])){
         if (validateUser($_POST['LoginEmail'], $_POST['LoginPassword'])){
             //go to index
-            echo 'true';
+            header("Location: ../../data/pages/index.php?");
         }else{
             echo '<h2> Incorrect username/password please try again, or create an account';
             $showSignUp=True;

@@ -19,4 +19,13 @@ function validateUserEmail($email){
     }
     return true;
 }
+
+function getUserIndex($email){
+    $users = readCSV('../../data/users/users.csv');
+    for($i=0;$i<count($users);$i++){
+        if($email == $users[$i]['username']){
+            return $i; 
+        }
+    }
+}
 ?>
