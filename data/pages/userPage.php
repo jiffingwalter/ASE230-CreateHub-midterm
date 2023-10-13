@@ -10,7 +10,7 @@ require_once('../../scripts/readJSON.php');
     require_once('../themes/nav.php');
     ?>
     <div style="margin-top: 70px;"> <!--content-wrapper-->
-        <h1><a class="nav-link" style="color: white" href="./portfolio.php">Portfolio</a></h1>
+        <h1><a class="nav-link" style="color: white" href="./portfolio.php<?=$index?>">Portfolio</a></h1>
         <table style="margin-left: auto; margin-right: auto">
         <tr>
             <?php
