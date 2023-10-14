@@ -9,6 +9,8 @@ $users=get_all_users();
 
 <body>
     <h1>User Manager</h1>
+    <a href="../admin.php"><< Back to main</a>
+    <hr>
     <table border="1" cellpadding="5" cellspacing="2" style="min-width:100px">
         <td><a href="create.php">Create new account</a></td>
     </table>

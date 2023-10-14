@@ -19,6 +19,7 @@ function validate_info($info_in){
     }else{
         echo '<h2>User already exists</h2>';
     }
+    echo '<button onclick="history.go(-1);">Back</button>';
 }
 
 function create_user($info_in){
