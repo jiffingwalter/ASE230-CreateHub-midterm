@@ -1,7 +1,9 @@
 <?php
+require_once('../../lib/general.php');
+
 function readCSV($fileIn) {
     if (!file_exists($fileIn)){
-        echo "ERROR - CSV file $fileIn not found...";
+        display_error('Post data not found at given location: '.$fileIn,$_SERVER['SCRIPT_NAME']);
     }
     $fp=fopen($fileIn,'r');
     $get_csv=fgetcsv($fp,0,';');

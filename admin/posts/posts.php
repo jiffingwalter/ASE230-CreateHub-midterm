@@ -1,15 +1,10 @@
 <?php
 require_once('../../lib/general.php');
+require_once('../../scripts/readJSON.php');
 
 //get list of all user posts
 function get_all_posts(){
-    $posts='../../data/users/user_posts.json';
-    if (file_exists($posts)){
-        $json_file=file_get_contents($posts);
-        return json_decode($json_file,true);
-    } else {
-        display_error('Post data not found at given location: '.$posts,$_SERVER['SCRIPT_NAME']);
-    }
+    return readJSON('../../data/users/user_posts.json');
 }
 
 // return single post by searching by UID in post file

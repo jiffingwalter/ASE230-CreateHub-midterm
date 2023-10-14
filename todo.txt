@@ -1,0 +1,7 @@
+ADMIN post pages:
+- refactor admin post handling to support the multi-file format in each user folder
+- make the "author" section of create/edit posts be a dropdown of existing users instead of typing it in
+
+general:
+- move post.php and users.php functions into main file that can be shared between admin section and normal section, chain the shared files back to admin pages
+- and much more!
