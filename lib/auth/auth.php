@@ -9,8 +9,9 @@ function validateUser($email, $password){
     $users = readCSV('../../data/users/users.csv');
     echo '<pre>'; var_dump($users); echo '</pre>';
     for($i=0;$i<count($users);$i++){
-        echo $i.'. '.$users[$i]['email'].' and '.$email.($email == $users[$i]['email']?' = true, ':' = false, ');
-        echo $i.'. '.$users[$i]['password'].' and '.$password.(password_verify($password, $users[$i]['password'])?' = true<br>':' = false<br>');
+        // array testing, it keeps only returning the first two accounts for some reason?
+        //echo $i.'. '.$users[$i]['email'].' = '.$email.($email == $users[$i]['email']?' true, ':' false, ');
+        //echo $i.'. '.$users[$i]['password'].' = '.$password.(password_verify($password, $users[$i]['password'])?' true<br>':' false<br>');
         if($email == $users[$i]['email'] && password_verify($password, $users[$i]['password'])){
             return true;
         }
