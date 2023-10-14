@@ -1,10 +1,10 @@
 <?php
-require_once('../../lib/general.php');
+require_once('general.php');
 require_once('../../scripts/readJSON.php');
 
 //get list of all user posts
 function get_all_posts(){
-    return readJSON('../../data/users/user_posts.json');
+    return readJSON('../data/users/user_posts.json');
 }
 
 // return single post by searching by UID in post file
@@ -42,7 +42,7 @@ function create_post($info_in){
     ];
 
     $posts_updated[count($posts_updated)]=$new_post; // append new post to the end of file
-    file_put_contents('../../data/users/user_posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data
+    file_put_contents('../data/users/user_posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data
 
     display_message('Created new post #'.$new_post['uid'].'!');
     header('Location: index.php'); // redirect to index
@@ -72,7 +72,7 @@ function edit_post($info_in){
         $posts[$index]['last_edited']=get_timestamp();
 
         // update data file with new results
-        file_put_contents('../../data/users/user_posts.json',json_encode($posts,JSON_PRETTY_PRINT));
+        file_put_contents('../data/users/user_posts.json',json_encode($posts,JSON_PRETTY_PRINT));
         header('Location: index.php'); // redirect to index
     } else {
         display_error('Could not find post UID #'.$info_in['uid'].' inside post data file',$_SERVER['SCRIPT_NAME']);
@@ -97,7 +97,7 @@ function delete_post($info_in){
     // splice post from temp data file if uid was found and update real data file, throw an error if not
     if ($uid_found){
         array_splice($posts,$index,$index+1);
-        file_put_contents('../../data/users/user_posts.json',json_encode($posts,JSON_PRETTY_PRINT));
+        file_put_contents('../data/users/user_posts.json',json_encode($posts,JSON_PRETTY_PRINT));
         header('Location: index.php'); // redirect to index
     } else {
         display_error('Could not find post UID #'.$info_in['uid'].' inside post data file',$_SERVER['SCRIPT_NAME']);

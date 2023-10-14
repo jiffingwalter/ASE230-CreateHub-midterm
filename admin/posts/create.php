@@ -1,5 +1,5 @@
 <?php
-require_once('./posts.php');
+require_once('../../lib/posts.php');
 
 if (isset($_POST['author'])){
     create_post($_POST);

@@ -1,5 +1,5 @@
 <?php
-require_once('./posts.php');
+require_once('../../lib/posts.php');
 $uid=(count($_GET) >= 1)?$_GET['index']:$_POST['uid'];
 $post=get_post($uid);
 

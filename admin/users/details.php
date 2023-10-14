@@ -1,5 +1,5 @@
 <?php
-require_once('./users.php');
+require_once('../../lib/users.php');
 $user=get_user($_GET['index']);
 ?>
 

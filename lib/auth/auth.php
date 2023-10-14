@@ -33,4 +33,18 @@ function getUserIndex($email){
         }
     }
 }
-?>
+
+// read through admin file and check if the user is an admin
+function isUserAdmin($user_id){
+    $admins=readCSV('../data/users/admins.csv');
+    $id_found=false;
+
+    // step through user data and compare ids until a match
+    for ($i=0;$i<count($admins);$i++){
+        if ($admins[$i]['id'] == $user_id){
+            $id_found=true;
+            break;
+        }
+    }
+    return $id_found;
+}

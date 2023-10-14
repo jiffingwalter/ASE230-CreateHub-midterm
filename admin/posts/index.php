@@ -1,5 +1,5 @@
 <?php
-require_once('./posts.php');
+require_once('../../lib/posts.php');
 $all_posts=get_all_posts();
 ?>
 <head>

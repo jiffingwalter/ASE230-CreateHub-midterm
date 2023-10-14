@@ -1,9 +1,9 @@
 <?php
-require_once('../../lib/general.php');
+require_once('general.php');
 require_once('../../scripts/readCSV.php');
 
 function get_all_users(){
-    return readCSV('../../data/users/users.csv');
+    return readCSV('../data/users/users.csv');
 }
 
 // gets single user
@@ -66,7 +66,7 @@ function validate_info($info_in){
 
 function create_user($info_in){
     // append new user to end of user data file, 
-    $users_updated=fopen('../../data/users/users.csv','a');
+    $users_updated=fopen('../data/users/users.csv','a');
     // generate user id
     $user_id=generate_user_id();
     fputs($users_updated,$info_in['username'].';'.
@@ -78,8 +78,8 @@ function create_user($info_in){
 
     // create user dependencies
     mkdir('../../data/users/'.$user_id, 0755);
-    file_put_contents('../../data/users/'.$user_id.'/posts.json', json_encode([], JSON_PRETTY_PRINT));
-    file_put_contents('../../data/users/'.$user_id.'/portfolio.json', json_encode([], JSON_PRETTY_PRINT));
+    file_put_contents('../data/users/'.$user_id.'/posts.json', json_encode([], JSON_PRETTY_PRINT));
+    file_put_contents('../data/users/'.$user_id.'/portfolio.json', json_encode([], JSON_PRETTY_PRINT));
     
     header('Location: index.php'); // redirect back to index
 }
@@ -88,7 +88,7 @@ function create_user($info_in){
 function edit_users($info_in){
     echo 'Saving changes to user '.$info_in['id'].' ...';
     $users_existing=get_all_users();
-    $users_updated=fopen('../../data/users/users.csv','w');
+    $users_updated=fopen('../data/users/users.csv','w');
 
     // step through existing users, update infomation if their id matches
     for ($row=0;$row < count($users_existing);$row++){
@@ -110,7 +110,7 @@ function edit_users($info_in){
 function delete_users($info_in){
     echo 'Deleting user '.$info_in['id'].'...';
     $users_existing=get_all_users();
-    $users_updated=fopen('../../data/users/users.csv','w');
+    $users_updated=fopen('../data/users/users.csv','w');
 
     // put column attributes, then rewrite users EXCEPT if its the user to delete
     fputcsv($users_updated,['username','password'],';');
