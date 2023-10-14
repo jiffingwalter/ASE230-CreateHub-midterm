@@ -17,8 +17,8 @@ if(count($_POST)>0){
     }
     $userPosts[count($userPosts)]=$post;
     file_put_contents('../users/'.$userID.'/posts.json', json_encode($userPosts, JSON_PRETTY_PRINT));
-    // header("Location: userPage.php");
-    // die();
+    header("Location: userPage.php");
+    die();
 }
 ?>
 <body style="background-color: black; margin-top: 70px; color: white;">

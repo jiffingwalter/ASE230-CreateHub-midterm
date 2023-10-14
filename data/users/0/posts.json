@@ -35,5 +35,18 @@
             "error": 0,
             "size": 156969
         }
+    },
+    {
+        "title": "5",
+        "content": "with image",
+        "date_created": "2023-10-14",
+        "3": {
+            "name": "Donald.webp",
+            "full_path": "Donald.webp",
+            "type": "image\/webp",
+            "tmp_name": "C:\\xampp\\tmp\\php67C.tmp",
+            "error": 0,
+            "size": 6460
+        }
     }
 ]

@@ -16,7 +16,13 @@ require_once('../themes/nav.php');
             for($i=0;$i<count($posts);$i++){?>
             <td>
                 <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="...">
+                    <img class="card-img-top" src="<?php
+                        if($posts[$i]['3']['name'] != 'noFileUploaded'){
+                            echo '../users/'.$userID.'/images/'.$posts[$i]['3']['name'];
+                        }else{
+                            echo '../users/No-image-found.jpg';
+                        }
+                    ?>" style="height: 300px">
                     <div class="card-body">
                         <h5 class="card-title"><?=$posts[$i]['title']?></h5>
                         <p class="card-text"><?=$posts[$i]['content']?></p>
