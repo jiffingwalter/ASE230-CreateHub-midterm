@@ -1,5 +1,10 @@
 <?php
 require_once('../../scripts/readCSV.php');
+if(!isset($_SESSION['userID'])){
+    if (!strpos($_SERVER['REQUEST_URI'], 'lib/auth/login.php')) {
+        header("Location: ../../lib/auth/login.php");
+    }
+}
 function validateUser($email, $password){
     $users = readCSV('../../data/users/users.csv');
     for($i=0;$i<count($users);$i++){

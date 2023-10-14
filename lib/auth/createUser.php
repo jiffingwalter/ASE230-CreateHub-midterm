@@ -6,6 +6,7 @@ function createUser($email, $password){
     fclose($fp);
     //create user folder
     mkdir('../../data/users/'.getUserIndex($email), 0755);
+    mkdir('../../data/users/'.getUserIndex($email).'/images', 0755);
     //create json for posts
     file_put_contents('../../data/users/'.getUserIndex($email).'/posts.json', json_encode([], JSON_PRETTY_PRINT));
     //create json for portfolio
