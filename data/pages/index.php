@@ -4,6 +4,7 @@
     session_start();
     $userID = $_SESSION['userID'];
     require_once('../themes/head.php');
+    require_once('../../lib/auth/auth.php');
     ?>
     <body id="page-top">
     <?php
