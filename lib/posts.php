@@ -22,7 +22,7 @@ function get_post($uid){
     if ($uid_found){
         return $posts[$i];
     } else {
-        display_error('Could not find post UID #'.$uid.' inside post data file',$_SERVER['SCRIPT_NAME']);
+        display_system_error('Could not find post UID #'.$uid.' inside post data file',$_SERVER['SCRIPT_NAME']);
         return $posts[0]; // return example post to attempt to avoid php errors
     }
 
@@ -44,7 +44,7 @@ function create_post($info_in){
     $posts_updated[count($posts_updated)]=$new_post; // append new post to the end of file
     file_put_contents('../data/users/user_posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data
 
-    display_message('Created new post #'.$new_post['uid'].'!');
+    display_message('Created new post #'.$new_post['uid'].'!','lightskyblue');
     header('Location: index.php'); // redirect to index
 }
 
@@ -75,7 +75,7 @@ function edit_post($info_in){
         file_put_contents('../data/users/user_posts.json',json_encode($posts,JSON_PRETTY_PRINT));
         header('Location: index.php'); // redirect to index
     } else {
-        display_error('Could not find post UID #'.$info_in['uid'].' inside post data file',$_SERVER['SCRIPT_NAME']);
+        display_system_error('Could not find post UID #'.$info_in['uid'].' inside post data file',$_SERVER['SCRIPT_NAME']);
     }
 }
 
@@ -100,7 +100,7 @@ function delete_post($info_in){
         file_put_contents('../data/users/user_posts.json',json_encode($posts,JSON_PRETTY_PRINT));
         header('Location: index.php'); // redirect to index
     } else {
-        display_error('Could not find post UID #'.$info_in['uid'].' inside post data file',$_SERVER['SCRIPT_NAME']);
+        display_system_error('Could not find post UID #'.$info_in['uid'].' inside post data file',$_SERVER['SCRIPT_NAME']);
     }
 }
 

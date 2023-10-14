@@ -7,8 +7,11 @@ if(!isset($_SESSION['userID'])){
 }
 function validateUser($email, $password){
     $users = readCSV('../../data/users/users.csv');
+    echo '<pre>'; var_dump($users); echo '</pre>';
     for($i=0;$i<count($users);$i++){
-        if($email == $users[$i]['username'] && password_verify($password, $users[$i]['password'])){
+        echo $i.'. '.$users[$i]['email'].' and '.$email.($email == $users[$i]['email']?' = true, ':' = false, ');
+        echo $i.'. '.$users[$i]['password'].' and '.$password.(password_verify($password, $users[$i]['password'])?' = true<br>':' = false<br>');
+        if($email == $users[$i]['email'] && password_verify($password, $users[$i]['password'])){
             return true;
         }
     }
@@ -18,7 +21,7 @@ function validateUser($email, $password){
 function validateUserEmail($email){
     $users = readCSV('../../data/users/users.csv');
     for($i=0;$i<count($users);$i++){
-        if($email == $users[$i]['username']){
+        if($email == $users[$i]['email']){
             return false;
         }
     }
@@ -28,13 +31,13 @@ function validateUserEmail($email){
 function getUserIndex($email){
     $users = readCSV('../../data/users/users.csv');
     for($i=0;$i<count($users);$i++){
-        if($email == $users[$i]['username']){
+        if($email == $users[$i]['email']){
             return $i; 
         }
     }
 }
 
-// read through admin file and check if the user is an admin
+// read through admin file and check if the user signed in is an admin
 function isUserAdmin($user_id){
     $admins=readCSV('../data/users/admins.csv');
     $id_found=false;

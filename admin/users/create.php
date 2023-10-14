@@ -2,8 +2,8 @@
 require_once('../../lib/users.php');
 $users=get_all_users();
 
-if (isset($_POST['username']) && isset($_POST['password'])){
-    validate_info($_POST);
+if (isset($_POST['email']) && isset($_POST['password'])){
+    validate_user_signup_info($_POST);
     return;
 }
 ?>
@@ -19,8 +19,8 @@ if (isset($_POST['username']) && isset($_POST['password'])){
 
     <h2>Create new user account</h2>
     <form method="POST" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
-            <label for="username">Email:</label><br>
-            <input type="email" name="username"><br>
+            <label for="email">Email:</label><br>
+            <input type="email" name="email"><br>
             <label for="Password">Password:</label><br>
             <input type="password" name="password"><br>
             <label for="ConfirmPassword">Confirm Password:</label><br>

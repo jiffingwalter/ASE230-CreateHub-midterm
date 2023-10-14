@@ -1,25 +1,16 @@
 <?php
 require_once('auth.php');
-require_once('createUser.php');
+require_once('../users.php');
 $showSignUp=True;
 if(isset($_SESSION['email'])) $showSignUp=false;
 if(count($_POST)>0){
     //Signup
     if(isset($_POST['email']) && isset($_POST['password'])){
-        //check if email exists
-        if(validateUserEmail($_POST['email'])){
-            //check password == confirmPassword
-            if($_POST['password'] == $_POST['confirmPassword']){
-                //process data
-                createUser($_POST['email'],$_POST['password']);
-                echo 'your account has been created, please log in';
-                $showSignUp=false;
-            }else{
-                echo '<h2> passwords do not match please try again </h2>';
-            }
-        }else{
-            echo '<h2> User already exists please log in </h2>';
-        }   
+        // attempt to validate user's info, if its good give success message
+        if(validate_user_signup($_POST)){
+            display_message('Your account has been created, please log in');
+            $showSignUp=false;
+        }
     }
     //Login
     if(isset($_POST['LoginEmail']) && isset($_POST['LoginPassword'])){
@@ -30,7 +21,7 @@ if(count($_POST)>0){
             header("Location: ../../data/pages/index.php?");
             die();
         }else{
-            echo '<h2> Incorrect username/password please try again, or create an account';
+            display_error('Incorrect email/password, please try again or create an account');
             $showSignUp=True;
         }
     }
@@ -48,7 +39,7 @@ if(count($_POST)>0){
             <label for="LoginEmail">Email:</label><br>
             <input type="email" name="LoginEmail"><br>
             <label for="LoginPassword">Password:</label><br>
-            <input type="password" name="LoginPassword"><br>
+            <input type="password" name="LoginPassword"><br><br>
             <input type="submit" value="Login">
         </form>
         <hr>
@@ -57,12 +48,12 @@ if(count($_POST)>0){
         ?>
             <h3>Sign Up</h3>
             <form method="POST">
-                <label for="Username">Enter your email:</label><br>
+                <label for="email">Enter your email:</label><br>
                 <input type="email" name="email"><br>
                 <label for="Password">Enter a password:</label><br>
                 <input type="password" name="password"><br>
                 <label for="ConfirmPassword">Confirm your password:</label><br>
-                <input type="password" name="confirmPassword"><br>
+                <input type="password" name="confirmPassword"><br><br>
                 <input type="submit" value="Sign Up">
             </form>
         <?php
