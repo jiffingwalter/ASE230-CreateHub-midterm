@@ -18,7 +18,7 @@ require_once('../themes/nav.php');
                 <div class="card" style="width: 18rem;">
                     <img class="card-img-top" src="<?php
                         if($posts[$i]['3']['name'] != 'noFileUploaded'){
-                            echo '../users/'.$userID.'/images/'.$posts[$i]['3']['name'];
+                            echo '../users/'.$userID.'/images/'.$i.'.'.$posts[$i]['3']['6'];
                         }else{
                             echo '../users/No-image-found.jpg';
                         }

@@ -24,29 +24,17 @@
         }
     },
     {
-        "title": "4",
-        "content": "img",
+        "title": "q",
+        "content": "q",
         "date_created": "2023-10-14",
         "3": {
             "name": "Cave_Women.PNG",
             "full_path": "Cave_Women.PNG",
             "type": "image\/png",
-            "tmp_name": "C:\\xampp\\tmp\\php11CF.tmp",
+            "tmp_name": "C:\\xampp\\tmp\\phpB418.tmp",
             "error": 0,
-            "size": 156969
-        }
-    },
-    {
-        "title": "5",
-        "content": "with image",
-        "date_created": "2023-10-14",
-        "3": {
-            "name": "Donald.webp",
-            "full_path": "Donald.webp",
-            "type": "image\/webp",
-            "tmp_name": "C:\\xampp\\tmp\\php67C.tmp",
-            "error": 0,
-            "size": 6460
+            "size": 156969,
+            "6": "PNG"
         }
     }
 ]

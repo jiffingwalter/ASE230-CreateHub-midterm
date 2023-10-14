@@ -10,8 +10,9 @@ if(count($_POST)>0){
     //put image in a folder
     if(isset($_FILES['image']) && $_FILES['image']['error'] != 4){
         $img = $_FILES['image'];
+        $img[count($img)] = pathinfo($img['name'], PATHINFO_EXTENSION);
         $post[count($post)] = $img;
-        move_uploaded_file($img['tmp_name'],'../users/'.$userID.'/images/'.$img['name']);
+        move_uploaded_file($img['tmp_name'],'../users/'.$userID.'/images/'.count($userPosts).'.'.pathinfo($img['name'], PATHINFO_EXTENSION));
     }else{
         $post[count($post)] = ['name' => 'noFileUploaded'];
     }
