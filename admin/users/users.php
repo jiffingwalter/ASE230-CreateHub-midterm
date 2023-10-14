@@ -5,13 +5,29 @@ function get_all_users(){
     return readCSV('../../data/users/users.csv');
 }
 
+function validate_info($info_in){
+    //check if email exists
+    if(validateUserEmail($_POST['username'])){
+        // validate password
+        if(strlen($_POST['password'])<1){ // check if blank
+            echo '<h2>Password cannot be blank</h2>';
+        }elseif($_POST['password'] != $_POST['confirmPassword']){ // check if passwords match
+            echo '<h2>Passwords do not match</h2>';
+        }else{
+            create_user($info_in);
+        }
+    }else{
+        echo '<h2>User already exists</h2>';
+    }
+}
+
 function create_user($info_in){
     // append new user to end of user data file
     $users_updated=fopen('../../data/users/users.csv','a');
     fputs($users_updated,$info_in['username'].';'.password_hash($info_in['password'],PASSWORD_DEFAULT).PHP_EOL);
     fclose($users_updated);
 
-    // assign get new user index
+    // get the new users index
     $u_index=getUserIndex($info_in['username']);
 
     // create user dependencies

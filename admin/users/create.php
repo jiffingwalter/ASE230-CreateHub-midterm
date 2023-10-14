@@ -2,20 +2,8 @@
 require_once('./users.php');
 $users=get_all_users();
 
-if (isset($_POST['email']) && isset($_POST['password'])){
-    //check if email exists
-    if(validateUserEmail($_POST['username'])){
-        //check password == confirmPassword
-        if($_POST['password'] == $_POST['confirmPassword']){
-            //process data
-            create_user($_POST);
-        }else{
-            echo '<h2>Passwords do not match</h2>';
-        }
-    }else{
-        echo '<h2>User already exists</h2>';
-    }   
-    
+if (isset($_POST['username']) && isset($_POST['password'])){
+    validate_info($_POST);
     return;
 }
 ?>
@@ -25,11 +13,11 @@ if (isset($_POST['email']) && isset($_POST['password'])){
 </head>
 
 <body>
-    <h1>Manage Awards Entries</h1>
+    <h1>Manage User Accounts</h1>
     <a href="index.php"><< Back</a>
     <hr>
 
-    <h2>Create new award</h2>
+    <h2>Create new user account</h2>
     <form method="POST" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
             <label for="username">Email:</label><br>
             <input type="email" name="username"><br>
