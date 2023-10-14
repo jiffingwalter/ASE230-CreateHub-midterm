@@ -142,7 +142,3 @@ function parse_tags_out($tags_in){
     } 
     return $tags_out;
 }
-
-function get_timestamp(){
-    return date("m-d-y h:i:sa");
-}

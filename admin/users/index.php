@@ -9,7 +9,7 @@ $users=get_all_users();
 
 <body>
     <h1>User Manager</h1>
-    <a href="../admin.php"><< Back to main</a>
+    <a href="../index.php"><< Back to main</a>
     <hr>
     <table border="1" cellpadding="5" cellspacing="2" style="min-width:100px">
         <td><a href="create.php">Create new account</a></td>
@@ -20,14 +20,13 @@ $users=get_all_users();
             <tr><td style="text-align:center">No user accounts!</td></tr>
         <?php
         }else {
-            for($i=0;$i<count($users);$i++){
-                $user_index=getUserIndex($users[$i]['username']); ?>
+            for($i=0;$i<count($users);$i++){ ?>
                 <tr>
-                    <td><b><?= $user_index ?>.</b></td>
-                    <td><p class="text-muted mb-5"><b><?=$users[$user_index]['username']?></td>
-                    <td style="width:80px"><a href="details.php?index=<?=$user_index?>">View details</a></td>
-                    <td><a href="edit.php?index=<?=$user_index?>">Edit</a></td>
-                    <td><a href="delete.php?index=<?=$user_index?>">Delete</a></td>
+                    <td><b><?= $users[$i]['id'] ?></b></td>
+                    <td><p class="text-muted mb-5"><b><?=$users[$i]['username']?></td>
+                    <td style="width:80px"><a href="details.php?index=<?= $users[$i]['id'] ?>">View details</a></td>
+                    <td><a href="edit.php?index=<?= $users[$i]['id'] ?>">Edit</a></td>
+                    <td><a href="delete.php?index=<?= $users[$i]['id'] ?>">Delete</a></td>
                 </tr>
         <?php }
         } ?>

@@ -1,2 +1,3 @@
-username;password
-test@email.com;$2y$10$EteZ2mFhTNDg9W8KsRjVIOoufkjAPoxiOUIeTbcq12/zmaIwczdDm
+username;password;date_created;id
+admin@createhub.com;$2y$10$OQ4aqiyJi6RWhXO3kuTHtus1bwIh6/TP0hOj4/yJ8r2qGwCihpz8m;DATE;u0
+test@email.com;$2y$10$5m7A57KsUcETZtuqtCdNBO6r3R3Pj96M6f3qZ8ur0YDvQYaILK0vC;DATE;u000000

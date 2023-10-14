@@ -13,7 +13,7 @@ if (isset($_POST['username']) && isset($_POST['password'])){
 </head>
 
 <body>
-    <h1>Manage User Accounts</h1>
+    <h1>User Manager</h1>
     <a href="index.php"><< Back</a>
     <hr>
 
