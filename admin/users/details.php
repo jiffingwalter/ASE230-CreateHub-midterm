@@ -22,7 +22,7 @@ $user=get_user($_GET['index']);
     <table border="1" cellpadding="5" cellspacing="2">
         <tr>
             <td><b>Email:</b></td>
-            <td><?=$user['username']?></td></tr>
+            <td><?=$user['email']?></td></tr>
         <tr>
     </table>
     <!-- posts -->

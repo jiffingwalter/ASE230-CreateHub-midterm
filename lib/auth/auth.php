@@ -7,7 +7,6 @@ if(!isset($_SESSION['userID'])){
 }
 function validateUser($email, $password){
     $users = readCSV('../../data/users/users.csv');
-    echo '<pre>'; var_dump($users); echo '</pre>';
     for($i=0;$i<count($users);$i++){
         // array testing, it keeps only returning the first two accounts for some reason?
         //echo $i.'. '.$users[$i]['email'].' = '.$email.($email == $users[$i]['email']?' true, ':' false, ');

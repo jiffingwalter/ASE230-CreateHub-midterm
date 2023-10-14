@@ -1,5 +1,4 @@
 <?php
-require_once('auth/auth.php');
 
 function display_system_error($context,$origin){
     echo "<h4 style='background-color: indianred; color: white; padding: 6px'>

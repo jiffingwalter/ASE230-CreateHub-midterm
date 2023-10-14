@@ -2,9 +2,15 @@
 require_once('../../lib/users.php');
 $users=get_all_users();
 
-if (isset($_POST['email']) && isset($_POST['password'])){
-    validate_user_signup_info($_POST);
-    return;
+if(count($_POST)>0){
+    if (isset($_POST['email']) && isset($_POST['password'])){
+        if(validate_user_signup($_POST)){
+            display_message('Account has been created');
+        }
+        echo '<a href="./create.php">Create another</a><br>
+            <a href="./index.php">Back to index</a><br>';
+        return;
+    }
 }
 ?>
 
