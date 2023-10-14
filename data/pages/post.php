@@ -7,7 +7,7 @@ require_once('../themes/nav.php');
 <body style="margin-top: 150px; background-color: black; color: white;">
 <table style="margin-right: auto; margin-left: auto">
     <tr>
-        <td><img src="<?='../users/'.$userID.'/images/'.$posts[$i]['3']['name']?>"></td>
+        <td><img src="<?='../users/'.$userID.'/images/'.$_GET['index'].'.'.$_GET['ext']?>"></td>
     </tr>
     <tr>
         <td>Title</td>

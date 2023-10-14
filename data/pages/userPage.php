@@ -27,7 +27,7 @@ require_once('../themes/nav.php');
                         <h5 class="card-title"><?=$posts[$i]['title']?></h5>
                         <p class="card-text"><?=$posts[$i]['content']?></p>
                         <h5 class="card-text"><?=$posts[$i]['date_created']?></h5>
-                        <a href="post.php?index=<?=$i?>" class="btn btn-primary">View Post</a>
+                        <a href="post.php?index=<?=$i?>&ext=<?=$posts[$i]['3']['6']?>" class="btn btn-primary">View Post</a>
                     </div>
                 </div>
             </td>
