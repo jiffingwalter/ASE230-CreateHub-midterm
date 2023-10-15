@@ -8,7 +8,7 @@ $posts=get_user_posts($userID);
 ?>
 <body id="page-top" style="background-color: black;">
     <div style="margin-top: 70px;"> <!--content-wrapper-->
-        <h1><a class="btn btn-primary" style="color: white" href="./portfolio.php<?=$index?>">Portfolio</a></h1>
+        <h1><a class="btn btn-primary" style="color: white" href="./portfolio.php">Portfolio</a></h1>
         <h1><a class="btn btn-primary" style="color: white" href="createPost.php">Create a Post</a></h1>
         <table style="margin-left: auto; margin-right: auto">
             <?php
@@ -18,8 +18,8 @@ $posts=get_user_posts($userID);
                 <div class="card" style="width: 400px;">
                     <img class="card-img-top" style="height: 300px" src="
                     <?php
-                    if($posts[$i]['3']['error'] != 'noFileUploaded'){
-                        echo '../users/'.$userID.'/images/'.$posts[$i]['3']['full_path'];
+                    if($posts[$i]['attachments']['error'] != 'noFileUploaded'){
+                        echo '../users/'.$userID.'/images/'.$posts[$i]['attachments']['full_path'];
                     }else{
                         echo '../users/No-image-found.jpg';
                     }
