@@ -3,7 +3,6 @@
     <?php
     session_start();
     $userID = $_SESSION['userID'];
-    echo $userID;
     require_once('../themes/head.php');
     require_once('../../lib/auth/auth.php');
     ?>

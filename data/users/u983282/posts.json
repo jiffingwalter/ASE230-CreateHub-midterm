@@ -20,5 +20,19 @@
             "size": 156969,
             "6": "PNG"
         }
+    },
+    {
+        "title": "big picture",
+        "content": "test body",
+        "date_created": "2023-10-15",
+        "3": {
+            "name": "feelsbetterman.jpg",
+            "full_path": "feelsbetterman.jpg",
+            "type": "image\/jpeg",
+            "tmp_name": "C:\\xampp\\tmp\\php7E35.tmp",
+            "error": 0,
+            "size": 254624,
+            "6": "jpg"
+        }
     }
 ]
