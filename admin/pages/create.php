@@ -21,6 +21,6 @@ if (isset($_POST['name'])){
         <input style="width:300px;" type="text" name="name">
         <button type="submit">Create Page</button><br>
         <label for="code">Page Content:</label><br>
-        <textarea style="width:100%;height:1080px" name="code"></textarea><br><br>
+        <textarea style="width:100%;height:490px" name="code"></textarea><br><br>
     </form>
 </body>

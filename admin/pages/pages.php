@@ -29,7 +29,7 @@ function edit_page($newPage){
 }
 
 function delete_page($page){
-    $pageToDelete=$page['name'];
+    $pageToDelete=$page['delete_name'];
     unlink('../../data/pages/'.$pageToDelete);
 }
 ?>

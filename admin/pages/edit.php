@@ -20,9 +20,9 @@ $show_confirm_delete=false;
 if (isset($_POST['confirm_delete'])){
     // show confirmation dialog, delete on confirmation
     $show_confirm_delete=true;
-    if (isset($_POST['delete_id']) && isset($_POST['confirm_delete'])){
+    if (isset($_POST['delete_name']) && isset($_POST['confirm_delete'])){
         delete_page($_POST);
-        display_message($_POST['name'].' has been deleted');
+        display_message($_POST['delete_name'].' has been deleted');
         ?><a href="index.php">Back to index</a><?php
         return;
     }
@@ -33,7 +33,7 @@ if (isset($_POST['confirm_delete'])){
 </head>
 
 <body>
-    <h1>Manage Page Entries</h1>
+    <h1>Page Manager</h1>
     <a href="index.php"><< Back</a>
     <hr>
 
@@ -43,7 +43,7 @@ if (isset($_POST['confirm_delete'])){
         <input type="hidden" name="name" value="<?=$pageName?>"><br>
         <button type="submit">Update Page</button><br>
         <label for="code">Page Content:</label><br>
-        <textarea style="width:100%;height:490px" name="code"><?=$pageContent?></textarea><br><br>
+        <textarea style="width:100%;height:450px" name="code"><?=$pageContent?></textarea><br><br>
     </form><hr>
     <?php if(!$show_confirm_delete){ ?>
         <form method="POST">
@@ -54,7 +54,7 @@ if (isset($_POST['confirm_delete'])){
     <?php if($show_confirm_delete){ ?>
         <form method="POST">
             <p>Are you sure you want to delete this page? This cannot be undone.</p>
-            <input type="hidden" name="delete_id" value="<?= $user['id'] ?>">
+            <input type="hidden" name="delete_name" value="<?=$pageName?>">
             <input type="hidden" name="confirm_delete" value="confirm_delete">
             <button>Confirm delete page</button>
         </form>
