@@ -72,7 +72,7 @@ function create_post($info_in,$file_in){
         $img = $file_in['image'];
         $img[count($img)] = pathinfo($img['name'], PATHINFO_EXTENSION);
         $new_post['attachments'] = $img;
-        move_uploaded_file($img['tmp_name'],'../users/'.$info_in['user_id'].'/images/'.$img['full_path']);
+        move_uploaded_file($img['tmp_name'],'../../data/users/'.$info_in['user_id'].'/images/'.$img['full_path']);
     }else{
         $new_post['attachments'] = ['error' => 'noFileUploaded'];
     }

@@ -18,8 +18,8 @@ $posts=get_user_posts($userID);
                 <div class="card" style="width: 400px;">
                     <img class="card-img-top" style="height: 300px" src="
                     <?php
-                    if($posts[$i]['3']['error'] != 'noFileUploaded'){
-                        echo '../users/'.$userID.'/images/'.$posts[$i]['3']['full_path'];
+                    if($posts[$i]['attachments']['error'] != 'noFileUploaded'){
+                        echo '../users/'.$userID.'/images/'.$posts[$i]['attachments']['full_path'];
                     }else{
                         echo '../users/No-image-found.jpg';
                     }
