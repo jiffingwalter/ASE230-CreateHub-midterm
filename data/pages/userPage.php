@@ -23,9 +23,7 @@ require_once('../themes/nav.php');
                     }else{
                         echo '../users/No-image-found.jpg';
                     }
-                    ?>
-
-                    ">
+                    ?>">
                     <div class="card-body">
                         <h5 class="card-title"><?=$posts[$i]['title']?></h5>
                         <p class="card-text"><?=$posts[$i]['content']?></p>
