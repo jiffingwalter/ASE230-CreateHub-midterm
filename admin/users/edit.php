@@ -1,7 +1,6 @@
 <?php
 require_once('../../lib/users.php');
 $user=get_user((count($_GET) > 0)?$_GET['index']:$_POST['id']);
-echo '<pre>'; var_dump($_POST); echo '</pre>';
 
 // edit account
 if (isset($_POST['new_email']) && isset($_POST['new_password'])){
@@ -19,8 +18,7 @@ if (isset($_POST['confirm_delete'])){
     // show confirmation dialog, 
     $show_confirm_delete=true;
     if (isset($_POST['delete_id']) && isset($_POST['confirm_delete'])){
-        (delete_user($user))?display_message('Account .'.$user['id'].' has been deleted'):'';
-        echo '<a href="./index.php">Back to index</a><br>';
+        delete_user($user);
     }
 }
 ?>

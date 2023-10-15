@@ -92,21 +92,28 @@ function edit_user($info_in,$user){
 }
 
 function delete_user($info_in){
-    echo 'Deleting user '.$info_in['id'].'...';
     $users_existing=get_all_users();
     $users_updated=fopen('../../data/users/users.csv','w');
 
     // put column attributes, then rewrite users EXCEPT if its the user to delete
     fputcsv($users_updated,['email','password','date_created','id'],';');
     foreach ($users_existing as $fields){
-        fwrite($users_updated,$fields['id']==$info_in['id']?"":implode(';',$fields)."\n");
-        // delete user's files and directory
-        unlink('../../data/users/'.$info_in['id'].'/portfolio.json');
-        unlink('../../data/users/'.$info_in['id'].'/posts.json');
-        $delete_success=rmdir('../../data/users/'.$info_in['id']);
+        // rewrite user info in file if current id doesn't match deletion id
+        if($fields['id']!=$info_in['id']){
+            fwrite($users_updated,implode(';',$fields)."\n");
+        }else{
+            // id matches, delete user files and directory. don't add them to file
+            unlink('../../data/users/'.$info_in['id'].'/portfolio.json');
+            unlink('../../data/users/'.$info_in['id'].'/posts.json');
+            $delete_success=rmdir('../../data/users/'.$info_in['id']);
+        }
     }
     fclose($users_updated);
-    return $delete_success;
+
+    // display success message and stop loading page to avoid nulls
+    ($delete_success)?display_message('Account '.$info_in['id'].' has been deleted'):'';
+    echo '<a href="./index.php">Back to index</a><br>';
+    die;
 }
 
 // validates info for account creation
