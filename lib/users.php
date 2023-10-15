@@ -65,42 +65,48 @@ function create_user($info_in){
 }
 
 // edits a user by going through and matching
-function edit_users($info_in){
-    echo 'Saving changes to user '.$info_in['id'].' ...';
+function edit_user($info_in,$user){
     $users_existing=get_all_users();
-    $users_updated=fopen('../data/users/users.csv','w');
+    $users_updated=fopen('../../data/users/users.csv','w');
 
-    // step through existing users, update infomation if their id matches
+    // step through existing users, update infomation if their id matches and the field has been changed
     for ($row=0;$row < count($users_existing);$row++){
-        if ($users_existing[$row]['id'] == $info_in['id']){
-            $users_existing[$row]['password']=$info_in['password'];
-            $users_existing[$row]['email']=$info_in['email'];
+        if ($users_existing[$row]['id'] == $user['id']){
+            if (strlen($info_in['new_password'])>0){ // if new password was given, update password and hash it
+                $users_existing[$row]['password']=password_hash($info_in['new_password'],PASSWORD_DEFAULT);
+            }
+            $users_existing[$row]['email']=$info_in['new_email'];
         }
     }
-    // put column attributes, then write each line of users and close file
-    fputcsv($users_updated,['email','password'],';');
+    // put column attributes, then rewrite each line with updated user and close file
+    fputcsv($users_updated,['email','password','date_created','id'],';');
     foreach ($users_existing as $fields){
-        fwrite($users_updated,$fields['email'].';'.password_hash($fields['password'],PASSWORD_DEFAULT)."\n");
+        fputs($users_updated,$fields['email'].';'.
+            $fields['password'].';'.
+            $fields['date_created'].';'.
+            $fields['id'].
+            PHP_EOL);
     }
     fclose($users_updated);
-    header('Location: detail.php?index='.$info_in['index']); //redirect back to index
-    die;
+    return true;
 }
 
-function delete_users($info_in){
+function delete_user($info_in){
     echo 'Deleting user '.$info_in['id'].'...';
     $users_existing=get_all_users();
-    $users_updated=fopen('../data/users/users.csv','w');
+    $users_updated=fopen('../../data/users/users.csv','w');
 
     // put column attributes, then rewrite users EXCEPT if its the user to delete
-    fputcsv($users_updated,['email','password'],';');
+    fputcsv($users_updated,['email','password','date_created','id'],';');
     foreach ($users_existing as $fields){
-        fwrite($users_updated,$fields['email']==$info_in['email']?"":implode(';',$fields)."\n");
-        // delete user's directory
-        
+        fwrite($users_updated,$fields['id']==$info_in['id']?"":implode(';',$fields)."\n");
+        // delete user's files and directory
+        unlink('../../data/users/'.$info_in['id'].'/portfolio.json');
+        unlink('../../data/users/'.$info_in['id'].'/posts.json');
+        $delete_success=rmdir('../../data/users/'.$info_in['id']);
     }
     fclose($users_updated);
-    die;
+    return $delete_success;
 }
 
 // validates info for account creation
@@ -122,6 +128,30 @@ function validate_user_signup($info_in){
             display_error('Passwords do not match');
         }else{ // it passes password and email validation, make the account
             create_user($info_in);
+            return true;
+        }
+    }else{
+        display_error('Email is already in use');
+    }
+}
+
+// validates info for editing accounts
+function validate_user_edit($info_in,$user){
+    $users = readCSV('../../data/users/users.csv');
+
+    //check if email exists (if its not the account being edited)
+    $id_found=false;
+    for($i=0;$i<count($users);$i++){
+        if($info_in['new_email'] == $users[$i]['email'] && $info_in['id'] != $users[$i]['id']){
+            $id_found=true;
+            break;
+        }
+    }
+    // validate password if user doesn't already exist, error if they do
+    if(!$id_found){
+        if(strlen($info_in['new_password'])>0 && $info_in['new_password'] != $info_in['confirm_new_password']){ // check if passwords match (if password was given)
+            display_error('Passwords do not match');
+        }else{ // it passes password and email validation, return true
             return true;
         }
     }else{

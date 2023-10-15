@@ -25,7 +25,11 @@ function get_post($uid){
         display_system_error('Could not find post UID #'.$uid.' inside post data file',$_SERVER['SCRIPT_NAME']);
         return $posts[0]; // return example post to attempt to avoid php errors
     }
+}
 
+// return all posts by a specific user by ID
+function get_user_posts($user_id){
+    return readJSON('../../data/users/'.$user_id.'/posts.json');
 }
 
 function create_post($info_in){

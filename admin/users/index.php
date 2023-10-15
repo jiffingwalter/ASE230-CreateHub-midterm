@@ -15,6 +15,11 @@ $users=get_all_users();
         <td><a href="create.php">Create new account</a></td>
     </table>
     <table border="1" cellpadding="5" cellspacing="2" style="width:700px">
+        <tr>
+            <td><b>User ID:</b></td>
+            <td><p><b>Email:</p></td>
+            <td colspan="2"><p><b>Options:</p></td>
+        </tr>
         <?php
         if (count($users)<1){ ?>
             <tr><td style="text-align:center">No user accounts!</td></tr>
@@ -26,7 +31,6 @@ $users=get_all_users();
                     <td><p class="text-muted mb-5"><b><?=$users[$i]['email']?></td>
                     <td style="width:80px"><a href="details.php?index=<?= $users[$i]['id'] ?>">View details</a></td>
                     <td><a href="edit.php?index=<?= $users[$i]['id'] ?>">Edit</a></td>
-                    <td><a href="delete.php?index=<?= $users[$i]['id'] ?>">Delete</a></td>
                 </tr>
         <?php }
         } ?>
