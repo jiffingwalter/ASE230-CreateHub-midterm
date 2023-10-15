@@ -60,6 +60,7 @@ function create_user($info_in){
     
     // create user dependencies
     mkdir('../../data/users/'.$user_id, 0755);
+    mkdir('../../data/users/'.$user_id.'/images', 0755);
     file_put_contents('../../data/users/'.$user_id.'/posts.json', json_encode([], JSON_PRETTY_PRINT));
     file_put_contents('../../data/users/'.$user_id.'/portfolio.json', json_encode([], JSON_PRETTY_PRINT));
 }
