@@ -2,9 +2,9 @@
 session_start();
 $userID = $_SESSION['userID'];
 require_once('../themes/head.php');
-require_once('../../scripts/readJSON.php');
 require_once('../themes/nav.php');
-$posts=readJSON('../users/'.$userID.'/posts.json');
+require_once('../../lib/posts.php');
+$posts=get_user_posts($userID);
 ?>
 <body id="page-top" style="background-color: black;">
     <div style="margin-top: 70px;"> <!--content-wrapper-->
