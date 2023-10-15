@@ -1,17 +1,25 @@
 [
     {
         "title": "testPost",
+        "author": "u983282",
         "content": "post body goes here :)",
         "date_created": "2023-10-15",
-        "3": {
+        "last_edited": "2023-10-15",
+        "attachments": {
             "error": "noFileUploaded"
-        }
+        },
+        "uid": "p111111"
     },
     {
         "title": "image post",
+        "author": "u983282",
         "content": "image post body",
         "date_created": "2023-10-15",
-        "3": {
+        "last_edited": "2023-10-15",
+        "tags": [
+            ""
+        ],
+        "attachments": {
             "name": "Cave_Women.PNG",
             "full_path": "Cave_Women.PNG",
             "type": "image\/png",
@@ -19,13 +27,19 @@
             "error": 0,
             "size": 156969,
             "6": "PNG"
-        }
+        },
+        "uid": "p222222"
     },
     {
         "title": "big picture",
+        "author": "u983282",
         "content": "test body",
         "date_created": "2023-10-15",
-        "3": {
+        "last_edited": "2023-10-15",
+        "tags": [
+            ""
+        ],
+        "attachments": {
             "name": "feelsbetterman.jpg",
             "full_path": "feelsbetterman.jpg",
             "type": "image\/jpeg",
@@ -33,6 +47,7 @@
             "error": 0,
             "size": 254624,
             "6": "jpg"
-        }
+        },
+        "uid": "p333333"
     }
 ]

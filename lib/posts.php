@@ -50,19 +50,32 @@ function get_post($uid){
     }
 }
 
-function create_post($info_in){
+function create_post($info_in,$file_in){
     $posts_updated=get_user_posts($info_in['user_id']);
 
+    // lay out new post text
     $new_post=[
         'title' => $info_in['title'],
         'author' => $info_in['user_id'],
         'content' => $info_in['content'],
-        'attachments' => $info_in['attachments'],
+        'attachments' => '',
         'tags' => parse_tags_in($info_in['tags']),
         'date_created' => get_timestamp(),
         'last_edited' => get_timestamp(),
         'uid' => generate_uid(),
     ];
+
+    // handle image if one is added
+    if(isset($file_in['image']) && $file_in['image']['error'] != 4
+        &&
+        in_array(strtolower(pathinfo($file_in['image']['name'], PATHINFO_EXTENSION)),get_file_extensions())){
+        $img = $file_in['image'];
+        $img[count($img)] = pathinfo($img['name'], PATHINFO_EXTENSION);
+        $new_post['attachments'] = $img;
+        move_uploaded_file($img['tmp_name'],'../users/'.$info_in['user_id'].'/images/'.$img['full_path']);
+    }else{
+        $new_post['attachments'] = ['error' => 'noFileUploaded'];
+    }
 
     $posts_updated[count($posts_updated)]=$new_post; // append new post to the end of file
     file_put_contents('../../data/users/'.$info_in['user_id'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data

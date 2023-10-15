@@ -6,7 +6,7 @@ $users=get_all_users();
 // if author id is set, create post. error if not
 if (isset($_POST['user_id'])){
     if(strlen($_POST['user_id'])>0) {
-        create_post($_POST);
+        create_post($_POST,$_FILES);
         return;
     }else{
         display_error('Must select an author!');
@@ -46,6 +46,6 @@ if (isset($_POST['user_id'])){
         <label for="tags">Tags (separated by commas):</label> <br>
         <input type="text" name="tags"> <br><br>
 
-        <button type="submit">Save changes</button>
+        <button type="submit">Create Post</button>
     </form>
 </body>
