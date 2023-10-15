@@ -20,5 +20,5 @@ function display_message($message){
 }
 
 function get_timestamp(){
-    return date("m-d-y h:i:sa");
+    return date("m/d/y h:i:sa");
 }

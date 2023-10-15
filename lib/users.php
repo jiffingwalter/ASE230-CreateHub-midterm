@@ -54,7 +54,7 @@ function create_user($info_in){
     fputs($users_updated,$info_in['email'].';'.
         password_hash($info_in['password'],PASSWORD_DEFAULT).';'.
         get_timestamp().';'.
-        $user_id.';'.
+        $user_id.
         PHP_EOL);
     fclose($users_updated);
     
