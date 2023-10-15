@@ -6,5 +6,5 @@
     <hr>
     <a href="./users/index.php">User management</a></br>
     <a href="./posts/index.php">Posts management</a></br>
-    <a href="./page/index.php">Page management</a></br>
+    <a href="./pages/index.php">Page management</a></br>
 </body>

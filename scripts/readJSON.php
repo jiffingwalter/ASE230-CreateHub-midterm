@@ -6,6 +6,6 @@ function readJSON($fileIn) {
         $json_file=file_get_contents($fileIn);
         return json_decode($json_file,true);
     } else {
-        display_system_error('Post data not found at given location: '.$fileIn,$_SERVER['SCRIPT_NAME']);
+        display_system_error('File not found at given location: '.$fileIn,$_SERVER['SCRIPT_NAME']);
     }
 }
