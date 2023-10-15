@@ -16,18 +16,21 @@ require_once('../themes/nav.php');
             for($i=0;$i<count($posts);$i++){?>
             <td>
                 <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="<?php
-                        if($posts[$i]['3']['name'] != 'noFileUploaded'){
-                            echo '../users/'.$userID.'/images/'.$i.'.'.$posts[$i]['3']['6'];
-                        }else{
-                            echo '../users/No-image-found.jpg';
-                        }
-                    ?>" style="height: 300px">
+                    <img class="card-img-top" style="height: 300px" src="
+                    <?php
+                    if($posts[$i]['3']['error'] != 'noFileUploaded'){
+                        echo '../users/'.$userID.'/images/'.$posts[$i]['3']['full_path'];
+                    }else{
+                        echo '../users/No-image-found.jpg';
+                    }
+                    ?>
+
+                    ">
                     <div class="card-body">
                         <h5 class="card-title"><?=$posts[$i]['title']?></h5>
                         <p class="card-text"><?=$posts[$i]['content']?></p>
                         <h5 class="card-text"><?=$posts[$i]['date_created']?></h5>
-                        <a href="post.php?index=<?=$i?>&ext=<?=$posts[$i]['3']['6']?>" class="btn btn-primary">View Post</a>
+                        <a href="post.php?index=<?=$i?>" class="btn btn-primary">View Post</a>
                     </div>
                 </div>
             </td>

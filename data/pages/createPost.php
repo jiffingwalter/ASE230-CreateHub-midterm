@@ -4,18 +4,18 @@ $userID=$_SESSION['userID'];
 require_once('../themes/head.php');
 require_once('../themes/nav.php');
 require_once('../../scripts/readJSON.php');
-$extensions = ['png', 'jpg', 'jpeg'];
+$extensions = ['png', 'jpg', 'jpeg', 'PNG'];
 if(count($_POST)>0){
     $userPosts=readJSON('../users/'.$userID.'/posts.json');
     $post=['title'=>$_POST['title'], 'content'=>$_POST['content'], 'date_created'=>$_POST['date_created']];
     //put image in a folder
-    if(isset($_FILES['image']) && $_FILES['image']['error'] != 4 && in_array(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION),$extensions)){
+    if(isset($_FILES['image']) && $_FILES['image']['error'] != 4 && in_array(strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION)),$extensions)){
         $img = $_FILES['image'];
         $img[count($img)] = pathinfo($img['name'], PATHINFO_EXTENSION);
         $post[count($post)] = $img;
-        move_uploaded_file($img['tmp_name'],'../users/'.$userID.'/images/'.count($userPosts).'.'.pathinfo($img['name'], PATHINFO_EXTENSION));
+        move_uploaded_file($img['tmp_name'],'../users/'.$userID.'/images/'.$img['full_path']);
     }else{
-        $post[count($post)] = ['name' => 'noFileUploaded'];
+        $post[count($post)] = ['error' => 'noFileUploaded'];
     }
     $userPosts[count($userPosts)]=$post;
     file_put_contents('../users/'.$userID.'/posts.json', json_encode($userPosts, JSON_PRETTY_PRINT));
