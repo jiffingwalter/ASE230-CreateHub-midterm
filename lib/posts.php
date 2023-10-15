@@ -200,3 +200,7 @@ function get_post_author($user_id){
         return $users[0];
     }
 }
+
+function create_portfolio($info, $file){
+    
+}
