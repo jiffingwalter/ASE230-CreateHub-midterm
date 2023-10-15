@@ -3,8 +3,8 @@ session_start();
 $userID=$_SESSION['userID'];
 require_once('../themes/head.php');
 require_once('../themes/nav.php');
-require_once('../../scripts/readJSON.php');
-$extensions = ['png', 'jpg', 'jpeg', 'PNG'];
+require_once('../../lib/posts.php');
+
 if(count($_POST)>0){
     create_post($_POST,$_FILES);
     return;
