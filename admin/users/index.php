@@ -32,5 +32,3 @@ $users=get_all_users();
         } ?>
     </table>
 </body>
-testing csv reader area
-<?php echo '<pre>'; var_dump($users); echo '</pre>'; ?>

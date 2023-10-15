@@ -13,18 +13,25 @@ $user=get_user($_GET['index']);
     <hr>
 
     <h2>Viewing User ID #<?=$user['id']?></h2>
-
+    <h3>User Details</h3>
     <table border="1" cellpadding="5" cellspacing="2">
         <td><a href="edit.php?index=<?=$user['id']?>">Edit</a></td>
         <td><a href="delete.php?index=<?=$user['id']?>">Delete</a></td>
     </table>
-    <hr>
     <table border="1" cellpadding="5" cellspacing="2">
         <tr>
+            <td><b>ID:</b></td>
+            <td><?=$user['id']?></td></tr>
             <td><b>Email:</b></td>
             <td><?=$user['email']?></td></tr>
+            <td><b>Date created:</b></td>
+            <td><?=$user['date_created']?></td></tr>
+            <td><b>Posts:</b></td>
+            <td><?= '[count of user posts function call goes here]' ?></td></tr>
         <tr>
     </table>
+    <hr>
+    <h3>User Content</h3>
     <!-- posts -->
     <table border="1" cellpadding="5" cellspacing="2">
         <tr>
