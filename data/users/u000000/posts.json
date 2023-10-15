@@ -3,7 +3,9 @@
         "title": "POST TITLE",
         "author": "AUTHOR ID",
         "content": "POST CONTENT",
-        "images": "No-image-found.jpg",
+        "attachments": [
+            ""
+        ],
         "tags": [
             "POST TAG 1",
             "POST TAG 2",
@@ -11,6 +13,6 @@
         ],
         "date_created": "POST CREATION DATE",
         "last_edited": "POST LAST EDITED DATE",
-        "uid": "00000"
+        "uid": "p000000"
     }
 ]

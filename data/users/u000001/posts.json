@@ -3,7 +3,9 @@
         "title": "user 1's post",
         "author": "u000001",
         "content": "she sells sea shells by the sea shore",
-        "images": "No-image-found.jpg",
+        "attachments": [
+            ""
+        ],
         "tags": [
             "test",
             "post",

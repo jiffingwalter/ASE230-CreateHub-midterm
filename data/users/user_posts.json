@@ -3,7 +3,9 @@
         "title": "POST TITLE",
         "author": "AUTHOR ID",
         "content": "POST CONTENT",
-        "images": "No-image-found.jpg",
+        "attachments": [
+            ""
+        ],
         "tags": [
             "POST TAG 1",
             "POST TAG 2",

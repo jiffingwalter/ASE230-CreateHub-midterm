@@ -3,7 +3,9 @@
         "title": "user 2's post",
         "author": "u253072",
         "content": "server side programming rocks",
-        "images": "No-image-found.jpg",
+        "attachments": [
+            ""
+        ],
         "tags": [
             "server",
             "side",
@@ -17,7 +19,9 @@
         "title": "user 2's post part 2",
         "author": "u253072",
         "content": "cant wait till this project is over",
-        "images": "No-image-found.jpg",
+        "attachments": [
+            ""
+        ],
         "tags": [
             "i",
             "am",
