@@ -4,12 +4,13 @@ $pages=get_pages();
 ?>
 
 <head>
-    <title>Manage Pages</title>
+    <title>Page Manager</title>
     <link href="../../dist/css/admin.scss" rel="stylesheet" />
 </head>
 
 <body>
-    <h1>Manage Pages</h1>
+    <h1>Page Manager</h1>
+    <a href="../index.php"><< Back to dashboard</a><hr>
 
     <table border="1" cellpadding="5" cellspacing="2">
         <td><a href="create.php">Create a new page</a></td>

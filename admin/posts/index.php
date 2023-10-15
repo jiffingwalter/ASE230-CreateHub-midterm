@@ -8,7 +8,7 @@ $all_posts=get_all_posts();
 </head>
 <body>
     <h1>Post Manager</h1>
-    <a href="../index.php"><< Back to main</a>
+    <a href="../index.php"><< Back to dashboard</a>
     <hr>
     <h3>All User Posts</h3>
     <div class="table_stage">

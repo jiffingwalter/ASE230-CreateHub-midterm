@@ -37,7 +37,7 @@ $user_posts=get_user_posts($user['id']);
     <table border="1" cellpadding="5" cellspacing="2">
         <tr>
             <td><b>Posts:</b></td>
-            <td><table border="1" cellpadding="5" cellspacing="2" style="width:100%">
+            <td style="min-width:512px"><table border="1" cellpadding="5" cellspacing="2" style="width:100%">
             <?php 
             if(count($user_posts)<1){ ?>
                 <tr><td style="text-align:center">No posts by this user</td></tr>
@@ -57,7 +57,6 @@ $user_posts=get_user_posts($user['id']);
                         <td class="table_col_title"><p><?=$user_posts[$i]['title']?></p></td>
                         <td class="table_col_details"><a href="details.php?index=<?=$user_posts[$i]['uid']?>">View details</a></td>
                         <td class="table_col_edit"><a href="edit.php?index=<?=$user_posts[$i]['uid']?>">Edit</a></td>
-                        <td class="table_col_delete"><a href="delete.php?index=<?=$user_posts[$i]['uid']?>">Delete</a></td>
                     </tr>
             <?php  }
             } ?></td>

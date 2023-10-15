@@ -1,7 +1,9 @@
 ADMIN post pages:
-- refactor admin post handling to support the multi-file format in each user folder
-- make the "author" section of create/edit posts be a dropdown of existing users instead of typing it in
+- add attachment area to post editor and details
+ADMIN user pages:
+- finish portfolio section
 
-general:
-- move post.php and users.php functions into main file that can be shared between admin section and normal section, chain the shared files back to admin pages
-- and much more!
+main:
+- add username into upper corner
+- make admin dashboard button disappear if not an admin
+- add logout option
