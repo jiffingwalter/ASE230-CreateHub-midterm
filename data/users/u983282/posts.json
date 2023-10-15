@@ -5,6 +5,9 @@
         "content": "post body goes here :)",
         "date_created": "2023-10-15",
         "last_edited": "2023-10-15",
+        "tags": [
+            ""
+        ],
         "attachments": {
             "error": "noFileUploaded"
         },
