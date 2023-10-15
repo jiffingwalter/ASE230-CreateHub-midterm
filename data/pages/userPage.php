@@ -4,18 +4,18 @@ $userID = $_SESSION['userID'];
 require_once('../themes/head.php');
 require_once('../../scripts/readJSON.php');
 require_once('../themes/nav.php');
+$posts=readJSON('../users/'.$userID.'/posts.json');
 ?>
 <body id="page-top" style="background-color: black;">
     <div style="margin-top: 70px;"> <!--content-wrapper-->
         <h1><a class="btn btn-primary" style="color: white" href="./portfolio.php<?=$index?>">Portfolio</a></h1>
         <h1><a class="btn btn-primary" style="color: white" href="createPost.php">Create a Post</a></h1>
         <table style="margin-left: auto; margin-right: auto">
-        <tr>
             <?php
-            $posts=readJSON('../users/'.$userID.'/posts.json');
             for($i=0;$i<count($posts);$i++){?>
-            <td>
-                <div class="card" style="width: 18rem;">
+            <tr>
+                <td>
+                <div class="card" style="width: 400px;">
                     <img class="card-img-top" style="height: 300px" src="
                     <?php
                     if($posts[$i]['3']['error'] != 'noFileUploaded'){
@@ -31,7 +31,7 @@ require_once('../themes/nav.php');
                         <a href="post.php?index=<?=$i?>" class="btn btn-primary">View Post</a>
                     </div>
                 </div>
-            </td>
+                </td>
             <?php
             }?>
         </tr>
