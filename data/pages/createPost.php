@@ -13,16 +13,14 @@ if(count($_POST)>0){
         $img = $_FILES['image'];
         $img[count($img)] = pathinfo($img['name'], PATHINFO_EXTENSION);
         $post[count($post)] = $img;
-        echo '<pre>';
-        print_r($post);
         move_uploaded_file($img['tmp_name'],'../users/'.$userID.'/images/'.$img['full_path']);
     }else{
         $post[count($post)] = ['error' => 'noFileUploaded'];
     }
     $userPosts[count($userPosts)]=$post;
     file_put_contents('../users/'.$userID.'/posts.json', json_encode($userPosts, JSON_PRETTY_PRINT));
-    // header("Location: userPage.php");
-    // die();
+    header("Location: userPage.php");
+    die();
 }
 ?>
 <body style="background-color: black; margin-top: 70px; color: white;">
