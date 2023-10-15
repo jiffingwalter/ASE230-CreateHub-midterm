@@ -8,7 +8,7 @@ $posts=readJSON('../users/'.$userID.'/posts.json');
 ?>
 <body id="page-top" style="background-color: black;">
     <div style="margin-top: 70px;"> <!--content-wrapper-->
-        <h1><a class="btn btn-primary" style="color: white" href="./portfolio.php<?=$index?>">Portfolio</a></h1>
+        <h1><a class="btn btn-primary" style="color: white" href="./portfolio.php">Portfolio</a></h1>
         <h1><a class="btn btn-primary" style="color: white" href="createPost.php">Create a Post</a></h1>
         <table style="margin-left: auto; margin-right: auto">
             <?php
