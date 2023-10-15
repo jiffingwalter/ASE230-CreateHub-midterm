@@ -2,12 +2,17 @@
 require_once('../../lib/posts.php');
 $uid=(count($_GET) >= 1)?$_GET['index']:$_POST['uid'];
 $post=get_post($uid);
+require_once('../../lib/users.php');
+$users=get_all_users();
 
-if (isset($_POST['author'])){
-    edit_post($_POST);
-    echo '<pre>';
-    print_r($_POST);
-    return;
+// if author id is set, edit post. error if not
+if (isset($_POST['user_id'])){
+    if(strlen($_POST['user_id'])>0) {
+        edit_post($_POST);
+        return;
+    }else{
+        display_error('Must select an author!');
+    }
 }
 ?>
 
