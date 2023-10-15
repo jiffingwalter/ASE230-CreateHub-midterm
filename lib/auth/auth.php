@@ -32,7 +32,7 @@ function getUserIndex($email){
     $users = readCSV('../../data/users/users.csv');
     for($i=0;$i<count($users);$i++){
         if($email == $users[$i]['email']){
-            return $i; 
+            return $users[$i]['id']; 
         }
     }
 }
