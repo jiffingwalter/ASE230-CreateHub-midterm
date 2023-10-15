@@ -1,10 +1,20 @@
 <?php
 require_once('general.php');
+require_once('users.php');
 require_once('../../scripts/readJSON.php');
 
 //get list of all user posts
 function get_all_posts(){
-    return readJSON('../../data/users/user_posts.json');
+    $users=get_all_users();
+    $post_list=[];
+
+    // go through all users, read their posts and append to list
+    foreach($users as $user){
+        $post_list+=get_user_posts($user['id']);
+    }
+    
+    return $post_list;
+    //return readJSON('../../data/users/user_posts.json');
 }
 
 // return single post by searching by UID in post file
@@ -39,6 +49,7 @@ function create_post($info_in){
         'title' => $info_in['title'],
         'author' => $info_in['author'],
         'content' => $info_in['content'],
+        'image' => $info_in['image'],
         'tags' => parse_tags_in($info_in['tags']),
         'date_created' => get_timestamp(),
         'last_edited' => get_timestamp(),
@@ -115,7 +126,7 @@ function generate_uid(){
     $id_is_unique=false;
     // step through post data file by UIDs and ensure uid is actually unique. probably not scalable for a million users or something but it works for this
     while(!$id_is_unique){
-        $new_uid=rand(10000,99999);
+        $new_uid='p'.rand(100000,999999);
 
         for ($i=0;$i<count($posts);$i++){
             if ($posts[$i]['uid'] == $new_uid){

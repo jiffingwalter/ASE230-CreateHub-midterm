@@ -1,18 +1,16 @@
 [
     {
-        "title": "1",
-        "content": "1",
-        "date_created": "2023-10-14",
-        "3": {
-            "name": "noFileUploaded"
-        }
-    },
-    {
-        "title": "3",
-        "content": "3",
-        "date_created": "2023-10-14",
-        "3": {
-            "name": "noFileUploaded"
-        }
+        "title": "POST TITLE",
+        "author": "AUTHOR ID",
+        "content": "POST CONTENT",
+        "images": "No-image-found.jpg",
+        "tags": [
+            "POST TAG 1",
+            "POST TAG 2",
+            "POST TAG 3"
+        ],
+        "date_created": "POST CREATION DATE",
+        "last_edited": "POST LAST EDITED DATE",
+        "uid": "00000"
     }
 ]

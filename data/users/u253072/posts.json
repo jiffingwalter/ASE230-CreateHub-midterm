@@ -1,1 +1,30 @@
-[]
+[
+    {
+        "title": "user 2's post",
+        "author": "u253072",
+        "content": "server side programming rocks",
+        "images": "No-image-found.jpg",
+        "tags": [
+            "server",
+            "side",
+            "programming"
+        ],
+        "date_created": "10/14/2023",
+        "last_edited": "10/14/2023",
+        "uid": "p111111"
+    },
+    {
+        "title": "user 2's post part 2",
+        "author": "u253072",
+        "content": "cant wait till this project is over",
+        "images": "No-image-found.jpg",
+        "tags": [
+            "i",
+            "am",
+            "tired"
+        ],
+        "date_created": "10/15/2023",
+        "last_edited": "10/15/2023",
+        "uid": "p222222"
+    }
+]

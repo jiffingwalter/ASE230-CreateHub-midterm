@@ -1,18 +1,16 @@
 [
     {
-        "title": "1",
-        "content": "1",
-        "date_created": "2023-10-14",
-        "3": {
-            "name": "noFileUploaded"
-        }
-    },
-    {
-        "title": "3",
-        "content": "3",
-        "date_created": "2023-10-14",
-        "3": {
-            "name": "noFileUploaded"
-        }
+        "title": "user 1's post",
+        "author": "u000001",
+        "content": "she sells sea shells by the sea shore",
+        "images": "No-image-found.jpg",
+        "tags": [
+            "test",
+            "post",
+            "wee doggy"
+        ],
+        "date_created": "10/14/2023",
+        "last_edited": "10/14/2023",
+        "uid": "p000001"
     }
 ]
