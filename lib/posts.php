@@ -30,6 +30,11 @@ function get_user_posts($user_id){
     return readJSON('../../data/users/'.$user_id.'/posts.json');
 }
 
+//return portfolio of user
+function get_user_portfolio($user_id){
+    return readJSON('../../data/users/'.$user_id.'/portfolio.json');
+}
+
 // return single post by searching by UID in post file
 function get_post($uid){
     $posts=get_all_posts();
@@ -202,5 +207,20 @@ function get_post_author($user_id){
 }
 
 function create_portfolio($info, $file){
-    
+    for($i=0;$i<count($file['images']['name']);$i++){
+        if(in_array(strtolower(pathinfo($file['images']['name'][0], PATHINFO_EXTENSION)),get_file_extensions())){
+            //put image in images folder
+            move_uploaded_file($file['images']['tmp_name'][$i],'../../data/users/'.$info['user_id'].'/images/'.$file['images']['full_path'][$i]);
+        }
+    }
+    //add info to portfolio.json
+    $portfolio_updated=get_user_portfolio($info['user_id']);
+    $new_portfolio=[
+        'name' => $info['name'],
+        'category' => $info['category'],
+        'images' => $file['images']['name']
+    ];
+    $portfolio_updated[count($portfolio_updated)]=$new_portfolio;
+    file_put_contents('../../data/users/'.$info['user_id'].'/portfolio.json', json_encode($portfolio_updated,JSON_PRETTY_PRINT));
+    header('Location: index.php');
 }

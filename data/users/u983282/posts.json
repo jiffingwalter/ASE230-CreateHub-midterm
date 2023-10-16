@@ -1,53 +1,36 @@
 [
     {
-        "title": "testPost",
+        "title": "test post",
         "author": "u983282",
-        "content": "post body goes here :)",
-        "date_created": "2023-10-15",
-        "last_edited": "2023-10-15",
-        "attachments": {
-            "error": "noFileUploaded"
-        },
-        "uid": "p111111"
-    },
-    {
-        "title": "image post",
-        "author": "u983282",
-        "content": "image post body",
-        "date_created": "2023-10-15",
-        "last_edited": "2023-10-15",
-        "tags": [
-            ""
-        ],
+        "content": "post bod",
         "attachments": {
             "name": "Cave_Women.PNG",
             "full_path": "Cave_Women.PNG",
             "type": "image\/png",
-            "tmp_name": "C:\\xampp\\tmp\\php44EC.tmp",
+            "tmp_name": "C:\\xampp\\tmp\\php8F4.tmp",
             "error": 0,
             "size": 156969,
             "6": "PNG"
         },
-        "uid": "p222222"
-    },
-    {
-        "title": "big picture",
-        "author": "u983282",
-        "content": "test body",
-        "date_created": "2023-10-15",
-        "last_edited": "2023-10-15",
         "tags": [
             ""
         ],
+        "date_created": "10\/16\/23 03:24:04am",
+        "last_edited": "10\/16\/23 03:24:04am",
+        "uid": "p944839"
+    },
+    {
+        "title": "asdfasdf",
+        "author": "u983282",
+        "content": "asdfasdf",
         "attachments": {
-            "name": "feelsbetterman.jpg",
-            "full_path": "feelsbetterman.jpg",
-            "type": "image\/jpeg",
-            "tmp_name": "C:\\xampp\\tmp\\php7E35.tmp",
-            "error": 0,
-            "size": 254624,
-            "6": "jpg"
+            "error": "noFileUploaded"
         },
-        "uid": "p333333"
+        "tags": [
+            ""
+        ],
+        "date_created": "10\/16\/23 03:24:11am",
+        "last_edited": "10\/16\/23 03:24:11am",
+        "uid": "p902990"
     }
 ]
