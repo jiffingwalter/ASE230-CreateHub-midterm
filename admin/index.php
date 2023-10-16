@@ -1,7 +1,5 @@
 <?php
-//require_once('../lib/auth/admin.php');
-session_start();
-$userID=$_SESSION['userID'];
+require_once('../lib/auth/admin.php');
 
 ?>
 <head>

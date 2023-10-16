@@ -1,6 +1,5 @@
 <?php
-session_start();
-$userID=$_SESSION['userID'];
+require_once('../lib/auth/admin.php');
 require_once('pages.php');
 
 // handle editing page
