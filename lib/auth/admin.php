@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('../lib/general.php');
+file_exists('../lib/general.php')?require_once('../lib/general.php'):require_once('../../lib/general.php');
 // allow user only if they're logged in with a session and an admin
 $admins=get_admins();
 $id_found=false;
@@ -20,7 +20,8 @@ if(!$id_found){
 }
 
 function get_admins() {
-    $fp=fopen('../data/users/admins.csv','r');
+    $admin_file=file_exists('../data/users/admins.csv')?'../data/users/admins.csv':'../../data/users/admins.csv';
+    $fp=fopen($admin_file,'r');
     $get_csv=fgetcsv($fp,0,';');
     $data=[];
 

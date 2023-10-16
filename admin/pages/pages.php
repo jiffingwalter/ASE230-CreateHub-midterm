@@ -1,5 +1,5 @@
 <?php
-require_once('../../lib/general.php');
+require_once('../../../lib/general.php');
 
 function get_pages(){
     $pages=scandir('../../data/pages');

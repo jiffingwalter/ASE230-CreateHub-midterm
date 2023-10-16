@@ -15,5 +15,12 @@
             "gort.jpg",
             "patproj.jpg"
         ]
+    },
+    {
+        "name": "resume",
+        "category": "art",
+        "images": [
+            "astrowave wallpaper.jpg"
+        ]
     }
 ]

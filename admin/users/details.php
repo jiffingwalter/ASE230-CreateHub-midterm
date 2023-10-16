@@ -1,5 +1,5 @@
 <?php
-require_once('../lib/auth/admin.php');
+require_once('../../lib/auth/admin.php');
 require_once('../../lib/users.php');
 require_once('../../lib/posts.php');
 $user=get_user($_GET['index']);
