@@ -1,4 +1,6 @@
 <?php
+session_start();
+$userID=$_SESSION['userID'];
 require_once('../../lib/posts.php');
 $uid=$_GET['index'];
 $post=get_post($uid);

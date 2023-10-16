@@ -1,4 +1,6 @@
 <?php
+session_start();
+$userID=$_SESSION['userID'];
 require_once('../../lib/users.php');
 $users=get_all_users();
 

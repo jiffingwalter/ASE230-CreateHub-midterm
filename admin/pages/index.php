@@ -1,4 +1,6 @@
 <?php
+session_start();
+$userID=$_SESSION['userID'];
 require_once('pages.php');
 $pages=get_pages();
 ?>

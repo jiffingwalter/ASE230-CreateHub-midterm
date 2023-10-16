@@ -1,3 +1,9 @@
+<?php
+//require_once('../lib/auth/admin.php');
+session_start();
+$userID=$_SESSION['userID'];
+
+?>
 <head>
     <title>CreateHub Admin Dashboard</title>
 </head>

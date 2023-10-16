@@ -5,7 +5,7 @@ function get_file_extensions(){
 }
 
 function display_system_error($context,$origin){
-    echo "<h4 style='background-color: indianred; color: white; padding: 6px'>
+    echo "<h4 style='background-color: darkred; color: white; padding: 6px'>
             ERROR at ".$origin."<br>
             ".$context."
         </h4>";

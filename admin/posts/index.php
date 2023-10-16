@@ -1,4 +1,6 @@
 <?php
+session_start();
+$userID=$_SESSION['userID'];
 require_once('../../lib/posts.php');
 $all_posts=get_all_posts();
 ?>

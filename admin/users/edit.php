@@ -1,4 +1,6 @@
 <?php
+session_start();
+$userID=$_SESSION['userID'];
 require_once('../../lib/users.php');
 $user=get_user((count($_GET) > 0)?$_GET['index']:$_POST['id']);
 
