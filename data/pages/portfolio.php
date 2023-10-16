@@ -1,6 +1,6 @@
 <?php
-session_start();
-$userID = $_SESSION['userID'];
+require_once('../../lib/auth/auth.php');
+$userID=isLoggedIn()?$_SESSION['userID']:forceLogin();
 require_once('../themes/head.php');
 require_once('../../lib/posts.php');
 $portfolios=get_user_portfolio($userID);

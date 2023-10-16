@@ -1,9 +1,5 @@
 <?php
 
-function get_file_extensions(){
-    return ['png', 'jpg', 'jpeg'];
-}
-
 function display_system_error($context,$origin){
     echo "<h4 style='background-color: darkred; color: white; padding: 6px'>
             ERROR at ".$origin."<br>
@@ -21,6 +17,10 @@ function display_message($message){
     echo "<p style='background-color: lightskyblue; color: white; padding: 6px'>
             ".$message."
         </p>";
+}
+
+function get_file_extensions(){
+    return ['png', 'jpg', 'jpeg'];
 }
 
 function get_timestamp(){

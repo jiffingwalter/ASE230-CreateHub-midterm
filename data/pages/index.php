@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-    <?php
-    session_start();
-    $userID = $_SESSION['userID'];
-    require_once('../themes/head.php');
-    require_once('../../lib/auth/auth.php');
-    ?>
-    <body id="page-top">
-    <?php
-    require_once('../themes/nav.php');
-    ?>
+<?php
+require_once('../themes/head.php');
+require_once('../../lib/auth/auth.php');
+$userID=isLoggedIn()?$_SESSION['userID']:'';
+?>
+<body id="page-top">
+<?php
+require_once('../themes/nav.php');
+?>
+
         <!-- Masthead-->
         <header class="masthead">
             <div class="container px-4 px-lg-5 h-100">
