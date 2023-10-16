@@ -3,6 +3,7 @@
 <?php
 require_once('../themes/head.php');
 require_once('../../lib/auth/auth.php');
+require_once('../../lib/users.php');
 $userID=isLoggedIn()?$_SESSION['userID']:'';
 ?>
 <body id="page-top">
@@ -15,7 +16,9 @@ require_once('../themes/nav.php');
             <div class="container px-4 px-lg-5 h-100">
                 <div class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center">
                     <div class="col-lg-8 align-self-end">
-                        <h1 class="text-white font-weight-bold">Welcome to CreateHub</h1>
+                        <?= isLoggedIn($userID)?
+                            '<h1 class="text-white font-weight-bold">Welcome back,<br>'.get_user($userID)['email'].'</h1>':
+                            '<h1 class="text-white font-weight-bold">Welcome to CreateHub</h1>' // this should be a name eventually ?> 
                         <hr class="divider" />
                     </div>
                     <div class="col-lg-8 align-self-baseline">
