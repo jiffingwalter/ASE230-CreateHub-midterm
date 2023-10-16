@@ -1,0 +1,36 @@
+[
+    {
+        "title": "test post",
+        "author": "u983282",
+        "content": "post bod",
+        "attachments": {
+            "name": "Cave_Women.PNG",
+            "full_path": "Cave_Women.PNG",
+            "type": "image\/png",
+            "tmp_name": "C:\\xampp\\tmp\\php8F4.tmp",
+            "error": 0,
+            "size": 156969,
+            "6": "PNG"
+        },
+        "tags": [
+            ""
+        ],
+        "date_created": "10\/16\/23 03:24:04am",
+        "last_edited": "10\/16\/23 03:24:04am",
+        "uid": "p944839"
+    },
+    {
+        "title": "asdfasdf",
+        "author": "u983282",
+        "content": "asdfasdf",
+        "attachments": {
+            "error": "noFileUploaded"
+        },
+        "tags": [
+            ""
+        ],
+        "date_created": "10\/16\/23 03:24:11am",
+        "last_edited": "10\/16\/23 03:24:11am",
+        "uid": "p902990"
+    }
+]

@@ -1,0 +1,5 @@
+email;password;date_created;id
+template@createhub.com;$2y$10$OQ4aqiyJi6RWhXO3kuTHtus1bwIh6/TP0hOj4/yJ8r2qGwCihpz8m;0/0/0 00:00:00am;u000000
+admin@createhub.com;$2y$10$OQ4aqiyJi6RWhXO3kuTHtus1bwIh6/TP0hOj4/yJ8r2qGwCihpz8m;10/14/23 10:33:15pm;u000001
+test@email.com;$2y$10$A.gvtUtdVjbvOSYpjwp7GutZtDhMOCqfj6RWEm6M/oTvdheuEUnOe;10/15/23 09:46:44pm;u983282
+guy@website.com;$2y$10$sRDrxk5.T97ZV8GjrmrhhucguKiE9TgPQC5tLAzOQxeVpKCltAeDi;10/16/23 02:14:11am;u592780

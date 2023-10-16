@@ -1,0 +1,42 @@
+[
+    {
+        "title": "user 1's post",
+        "author": "u000001",
+        "content": "she sells sea shells by the sea shore",
+        "attachments": [
+            ""
+        ],
+        "tags": [
+            "test",
+            "post",
+            "wee doggy"
+        ],
+        "date_created": "10\/14\/2023",
+        "last_edited": "10\/14\/2023",
+        "uid": "p000001"
+    },
+    {
+        "title": "cool picture",
+        "author": "u000001",
+        "content": "this picture is cool",
+        "attachments": {
+            "name": "2mGKPSp.jpg",
+            "full_path": "2mGKPSp.jpg",
+            "type": "image\/jpeg",
+            "tmp_name": "D:\\Storage\\Programs\\Xampp\\tmp\\phpB4EF.tmp",
+            "error": 0,
+            "size": 520855,
+            "6": "jpg"
+        },
+        "tags": [
+            "this",
+            "is",
+            "a",
+            "cool",
+            "picture"
+        ],
+        "date_created": "10\/15\/23 11:43:05pm",
+        "last_edited": "10\/15\/23 11:43:05pm",
+        "uid": "p123903"
+    }
+]
