@@ -1,7 +1,7 @@
 ## ASE 230 Midterm Project, "CreateHub"
 By Bryce Bien and Justin Walter
 
-video: 
+video: https://www.youtube.com/watch?v=hRlBTsFWfx8 
 
 
 ## Other stuff:
