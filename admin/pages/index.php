@@ -1,5 +1,5 @@
 <?php
-require_once('../lib/auth/admin.php');
+require_once('../../lib/auth/admin.php');
 require_once('pages.php');
 $pages=get_pages();
 ?>

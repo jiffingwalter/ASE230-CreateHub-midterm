@@ -1,5 +1,5 @@
 <?php
-require_once('../lib/auth/admin.php');
+require_once('../../lib/auth/admin.php');
 require_once('pages.php');
 if (isset($_POST['name'])){
     create_page($_POST);
