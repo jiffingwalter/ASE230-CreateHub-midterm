@@ -1,8 +1,17 @@
 ADMIN post pages:
-- update edit and delete options for newer setup
-- add attachment area to post editor and details
+- update edit and delete post logic for newer setup
+- add attachment areas to post editor and details
 ADMIN user pages:
 - finish portfolio section
-- look into mkdir issue with user deletion
+- look into mkdir issue with user deletion -- found it, need to add to delete function to delete anything inside images folder, then folder itself
+- add logic to add/remove users as admin
 
 main:
+user options:
+- add option for user's name
+- give user option to edit their own info and delete their account
+
+
+other:
+- fix double session warning on portfolio page
+- look into session_destroy warning on logout

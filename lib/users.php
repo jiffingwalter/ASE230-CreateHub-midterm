@@ -102,8 +102,15 @@ function delete_user($info_in){
         // rewrite user info in file if current id doesn't match deletion id
         if($fields['id']!=$info_in['id']){
             fwrite($users_updated,implode(';',$fields)."\n");
-        }else{
-            // id matches, delete user files and directory. don't add them to file
+        }else{ // id matches, delete user files and directory. don't add them to file
+            // get images directory content; if dir isn't empty, delete each image
+            $img_directory=get_directory_contents('../../data/users/'.$info_in['id'].'/images');
+            if(count($img_directory)>0){
+                foreach($img_directory as $image){
+                    unlink('../../data/users/'.$info_in['id'].'/images/'.$image);
+                }
+            }
+            rmdir('../../data/users/'.$info_in['id'].'/images');
             unlink('../../data/users/'.$info_in['id'].'/portfolio.json');
             unlink('../../data/users/'.$info_in['id'].'/posts.json');
             $delete_success=rmdir('../../data/users/'.$info_in['id']);

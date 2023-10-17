@@ -46,5 +46,3 @@ $all_posts=get_all_posts();
         </table>
     </div>
 </body>
-
-<br><br><a href="playground.php">Testing ground</a>

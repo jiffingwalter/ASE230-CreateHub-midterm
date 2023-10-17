@@ -90,6 +90,8 @@ function create_post($info_in,$file_in){
 }
 
 function edit_post($info_in){
+    // NEEDS UPDATING FOR NEW POST SYSTEM, DO NOT USE
+    // changes to be made: find post in user owner's directory by user id, remove from posts file, then readd? (for the case of changing an author, etc)
     // get post list
     $posts=get_user_posts($info_in);
 
@@ -121,6 +123,8 @@ function edit_post($info_in){
 }
 
 function delete_post($info_in){
+    // NEEDS UPDATING FOR NEW SYSTEM, DO NOT USE
+    // changes to be made: need to find post in the current user's directory posts file and delete from there
     // get post lists
     $posts=get_all_posts();
 
