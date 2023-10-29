@@ -28,6 +28,8 @@ $user_posts=get_user_posts($user['id']);
             <td><?=$user['email']?></td></tr>
             <td><b>Date created:</b></td>
             <td><?=$user['date_created']?></td></tr>
+            <td><b>Is admin?</b></td>
+            <td><?=is_user_admin($user['id'])?'Yes':'No';?></td></tr>
             <td><b>Posts:</b></td>
             <td><?= count($user_posts) ?></td></tr>
         <tr>

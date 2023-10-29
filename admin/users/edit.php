@@ -9,6 +9,12 @@ if (isset($_POST['new_email']) && isset($_POST['new_password'])){
     if(validate_user_edit($_POST,$user)){
         (edit_user($_POST,$user))?display_message('Account has been updated'):'';
     }
+    // update admin status
+    if (isset($_POST['is_admin'])){
+        add_admin($user['id']);
+    } else {
+        remove_admin(($user['id']));
+    }
     echo '<a href="./index.php">Back to index</a><br>';
     return;
 }
@@ -40,14 +46,17 @@ if (isset($_POST['confirm_delete'])){
         <label for="new_password">New Password:</label><br>
         <input type="password" name="new_password"><br>
         <label for="confirm_new_password">Confirm New Password:</label><br>
-        <input type="password" name="confirm_new_password"><br><br>
+        <input type="password" name="confirm_new_password"><br>
+        <label for="is_admin">Admin rights?</label><br>
+        <input type="checkbox" id="is_admin" name="is_admin" value=<?php if(is_user_admin($user['id'])) echo 'Yes checked="checked"'; ?>>
+        <br><br>
         <input type="hidden" name="id" value="<?= $user['id'] ?>">
         <button type="submit">Save Changes</button>
     </form> <hr>
     <?php if(!$show_confirm_delete){ ?>
         <form method="POST">
             <input type="hidden" name="confirm_delete" value="confirm_delete">
-            <button>Delete entry</button>
+            <button>Delete user</button>
         </form>
     <?php } ?>
     <?php if($show_confirm_delete){ ?>
