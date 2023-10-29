@@ -3,7 +3,7 @@ ADMIN post pages:
 - add attachment areas to post editor and details
 ADMIN user pages:
 - finish portfolio section
-- look into mkdir issue with user deletion -- found it, need to add to delete function to delete anything inside images folder, then folder itself
+- look into mkdir issue with user deletion -- found it, need to test fix
 - add logic to add/remove users as admin
 
 main:
@@ -13,5 +13,6 @@ user options:
 
 
 other:
-- fix double session warning on portfolio page
+- fix double session warning on portfolio page, make sure session calls are all before any html
 - look into session_destroy warning on logout
+- convert users and posts to object-oriented?

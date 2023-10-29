@@ -52,10 +52,10 @@ if (isset($_POST['confirm_delete'])){
     <?php } ?>
     <?php if($show_confirm_delete){ ?>
         <form method="POST">
-            <p>Are you sure you want to delete this entry? This cannot be undone.</p>
+            <p>Are you sure you want to delete this user? This cannot be undone.</p>
             <input type="hidden" name="delete_id" value="<?= $user['id'] ?>">
             <input type="hidden" name="confirm_delete" value="confirm_delete">
-            <button>Delete entry</button>
+            <button>Delete user</button>
         </form>
     <?php } ?>
 </body>

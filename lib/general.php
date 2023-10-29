@@ -1,7 +1,7 @@
 <?php
 // multi-purpose functions
 
-// display system errors (unpreventable by user)
+// display system errors (things unpreventable by user)
 function display_system_error($context,$origin){
     echo "<h4 style='background-color: darkred; color: white; padding: 6px'>
             SYSTEM ERROR at ".$origin."<br>
@@ -16,7 +16,7 @@ function display_error($message){
         </p>";
 }
 
-// display general message (login success messages, etc)
+// display generic message (login success messages, etc)
 function display_message($message){
     echo "<p style='background-color: lightskyblue; color: white; padding: 6px'>
             ".$message."
