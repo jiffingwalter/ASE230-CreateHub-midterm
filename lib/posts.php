@@ -106,14 +106,14 @@ function edit_post($info_in){
     $posts_updated=get_user_posts($selected_post['author']);
     $posts_updated=$selected_post; // append edited post to the end of file
     file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the users post json data
-    // move attachment if one exists and the author was changed
-    if (isset($selected_post['attachments']['name']) && $selected_post['author']!=$author_original){
+    // move attachment if there is one, and if the author was changed
+    if ($selected_post['attachments']['error'] != 'noFileUploaded' && $selected_post['author']!=$author_original){
         rename('../../data/users/'.$author_original['author'].'/images/'.$selected_post['attachments']['name'],
                 '../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name']);
     }
 
     // delete original post and give updated message
-    //delete_post($info_in['uid']);
+    delete_post($info_in['uid']);
     display_message('Updated post #'.$selected_post['uid'].'!');
     header('Location: index.php'); // redirect to index
 }
@@ -139,7 +139,7 @@ function delete_post($post_uid){
     array_splice($posts,$index,$index+1);
     file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts,JSON_PRETTY_PRINT));
     // delete post image if one is attached
-    if (isset($selected_post['attachments']['name'])){
+    if ($selected_post['attachments']['error'] != 'noFileUploaded'){
         unlink('../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name']);
     }
     header('Location: index.php'); // redirect to index
