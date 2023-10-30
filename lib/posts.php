@@ -82,7 +82,7 @@ function create_post($info_in,$file_in){
     }
 
     $posts_updated[count($posts_updated)]=$new_post; // append new post to the end of file
-    file_put_contents('../../data/users/'.$info_in['user_id'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data
+    file_put_contents('../../data/users/'.$info_in['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data
 
     display_message('Created new post #'.$new_post['uid'].'!');
     header('Location: index.php'); // redirect to index

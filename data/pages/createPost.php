@@ -6,6 +6,7 @@ require_once('../themes/nav.php');
 require_once('../../lib/posts.php');
 
 if(count($_POST)>0){
+    $_POST['author']=$userID;
     create_post($_POST,$_FILES);
     header("Location: userPage.php");
     die();
@@ -25,7 +26,6 @@ if(count($_POST)>0){
         <label for="tags">Post Tags (separated by commas):</label> <br>
         <input type="text" name="tags"> <br><br>
 
-        <input type="hidden" name="user_id" value="<?=$userID?>"><br>
         <input type="submit" value="Create Post">
     </form>
 </body>

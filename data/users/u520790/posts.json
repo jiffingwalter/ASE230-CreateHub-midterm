@@ -1,0 +1,23 @@
+[
+    {
+        "title": "testing new posts",
+        "author": "u520790",
+        "content": "test post",
+        "attachments": {
+            "name": "20231019183921_2.jpg",
+            "full_path": "20231019183921_2.jpg",
+            "type": "image\/jpeg",
+            "tmp_name": "D:\\Storage\\Programs\\Xampp\\tmp\\php62C3.tmp",
+            "error": 0,
+            "size": 149728,
+            "6": "jpg"
+        },
+        "tags": [
+            "horses",
+            "red dead redemption 2"
+        ],
+        "date_created": "10\/31\/23 12:00:30am",
+        "last_edited": "10\/31\/23 12:00:30am",
+        "uid": "p770308"
+    }
+]

@@ -34,8 +34,8 @@ $index = $_GET['index'];
         <tr>
             <th>Image</th>
             <td><img src="<?php
-                    if($posts[$index]['3']['error'] != 'noFileUploaded'){
-                        echo '../users/'.$userID.'/images/'.$posts[$index]['3']['full_path'];
+                    if($posts[$index]['attachments']['error'] != 'noFileUploaded'){
+                        echo '../users/'.$userID.'/images/'.$posts[$index]['attachments']['name'];
                     }else{
                         echo '../users/No-image-found.jpg';
                     }
