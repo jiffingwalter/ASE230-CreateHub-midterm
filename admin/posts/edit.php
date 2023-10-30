@@ -35,9 +35,13 @@ if (isset($_POST['user_id'])){
 
         <label for="author">Author:</label> <br>
         <select name="author">
-            <?php
+            <?php // select the current author of the post in the list by default
             foreach($users as $user){
-                echo '<option value="'.$user['id'].'">'.$user['email'].'</option>';
+                if($user['id']==$post['author']){
+                    echo '<option value="'.$user['id'].'" selected>'.$user['email'].'</option>';
+                } else {
+                    echo '<option value="'.$user['id'].'">'.$user['email'].'</option>';
+                }
             }
             ?>
         </select><br>
