@@ -14,7 +14,6 @@ function get_all_posts(){
     }
     
     return $post_list_all;
-    //return readJSON('../../data/users/user_posts.json');
 }
 
 // return all posts by a specific user by ID
@@ -56,12 +55,12 @@ function get_post($uid){
 }
 
 function create_post($info_in,$file_in){
-    $posts_updated=get_user_posts($info_in['user_id']);
+    $posts_updated=get_user_posts($info_in['author']);
 
     // lay out new post text
     $new_post=[
         'title' => $info_in['title'],
-        'author' => $info_in['user_id'],
+        'author' => $info_in['author'],
         'content' => $info_in['content'],
         'attachments' => '',
         'tags' => parse_tags_in($info_in['tags']),
@@ -77,7 +76,7 @@ function create_post($info_in,$file_in){
         $img = $file_in['image'];
         $img[count($img)] = pathinfo($img['name'], PATHINFO_EXTENSION);
         $new_post['attachments'] = $img;
-        move_uploaded_file($img['tmp_name'],'../../data/users/'.$info_in['user_id'].'/images/'.$img['full_path']);
+        move_uploaded_file($img['tmp_name'],'../../data/users/'.$info_in['author'].'/images/'.$img['full_path']);
     }else{
         $new_post['attachments'] = ['error' => 'noFileUploaded'];
     }
@@ -85,71 +84,68 @@ function create_post($info_in,$file_in){
     $posts_updated[count($posts_updated)]=$new_post; // append new post to the end of file
     file_put_contents('../../data/users/'.$info_in['user_id'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data
 
-    display_message('Created new post #'.$new_post['uid'].'!','lightskyblue');
+    display_message('Created new post #'.$new_post['uid'].'!');
     header('Location: index.php'); // redirect to index
 }
 
 function edit_post($info_in){
-    // NEEDS UPDATING FOR NEW POST SYSTEM, DO NOT USE
-    // changes to be made: find post in user owner's directory by user id, remove from posts file, then readd? (for the case of changing an author, etc)
-    // get post list
-    $posts=get_user_posts($info_in);
+    // pull requested post by uid to get all its info and remove it from file
+    $selected_post=get_post($info_in['uid']);
+    $author_original=$selected_post['author'];
 
-    // find index that matches uid
-    $index=0;
-    $uid_found=false;
-    for ($i=0;$i<count($posts);$i++){
-        if ($posts[$i]['uid'] == $info_in['uid']){
-            $uid_found=true;
-            $index=$i; // get index for modification
-            break;
-        }
+    // update the post text info that was returned
+    $selected_post['title']=$info_in['title'];
+    $selected_post['author']=$info_in['author'];
+    $selected_post['content']=$info_in['content'];
+    $selected_post['tags']=parse_tags_in($info_in['tags']);
+    $selected_post['last_edited']=get_timestamp();
+
+    // TODO -- add logic here to update attachment stuff
+
+    // get users post list add post to given user's post data file
+    $posts_updated=get_user_posts($selected_post['author']);
+    $posts_updated=$selected_post; // append edited post to the end of file
+    file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the users post json data
+    // move attachment if one exists and the author was changed
+    if (isset($selected_post['attachments']['name']) && $selected_post['author']!=$author_original){
+        rename('../../data/users/'.$author_original['author'].'/images/'.$selected_post['attachments']['name'],
+                '../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name']);
     }
 
-    // handle edit if uid is found, throw error if not
-    if ($uid_found){
-        $posts[$index]['title']=$info_in['title'];
-        $posts[$index]['author']=$info_in['author'];
-        $posts[$index]['content']=$info_in['content'];
-        $posts[$index]['tags']=parse_tags_in($info_in['tags']);
-        $posts[$index]['last_edited']=get_timestamp();
-
-        // update data file with new results
-        file_put_contents('../../data/users/user_posts.json',json_encode($posts,JSON_PRETTY_PRINT));
-        header('Location: index.php'); // redirect to index
-    } else {
-        display_system_error('Could not find post UID #'.$info_in['uid'].' inside post data file',$_SERVER['SCRIPT_NAME']);
-    }
+    // delete original post and give updated message
+    //delete_post($info_in['uid']);
+    display_message('Updated post #'.$selected_post['uid'].'!');
+    header('Location: index.php'); // redirect to index
 }
 
-function delete_post($info_in){
+// accepts a post ID and deletes it from it's user's post data
+function delete_post($post_uid){
     // NEEDS UPDATING FOR NEW SYSTEM, DO NOT USE
     // changes to be made: need to find post in the current user's directory posts file and delete from there
-    // get post lists
-    $posts=get_all_posts();
+    // get the post info for the post to be deleted, then the authors's post list
+    $selected_post=get_post($post_uid);
+    $posts=get_user_posts($selected_post['author']);
 
-    // find index that matches uid
+    // find index in user posts that matches post uid for deletion
     $index=0;
-    $uid_found=false;
     for ($i=0;$i<count($posts);$i++){
-        if ($posts[$i]['uid'] == $info_in['uid']){
-            $uid_found=true;
+        if ($posts[$i]['uid'] == $post_uid){
             $index=$i; // get index for modification
             break;
         }
     }
 
-    // splice post from temp data file if uid was found and update real data file, throw an error if not
-    if ($uid_found){
-        array_splice($posts,$index,$index+1);
-        file_put_contents('../../data/users/user_posts.json',json_encode($posts,JSON_PRETTY_PRINT));
-        header('Location: index.php'); // redirect to index
-    } else {
-        display_system_error('Could not find post UID #'.$info_in['uid'].' inside post data file',$_SERVER['SCRIPT_NAME']);
+    // splice post if uid was found and update real data file
+    array_splice($posts,$index,$index+1);
+    file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts,JSON_PRETTY_PRINT));
+    // delete post image if one is attached
+    if (isset($selected_post['attachments']['name'])){
+        unlink('../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name']);
     }
+    header('Location: index.php'); // redirect to index
 }
 
-// sub functions ------------------- might be able to move these into lib?
+// sub functions
 // generate uid for new posts and check if they're actually unique
 function generate_uid(){
     $posts=get_all_posts();
@@ -208,6 +204,12 @@ function get_post_author($user_id){
         display_system_error('Could not find user with ID #'.$user_id.' inside user data file',$_SERVER['SCRIPT_NAME']);
         return $users[0];
     }
+}
+
+// accepts a post id and returns a list of its attachment filenames -- TODO -- if we add support for multiple images in one post, add support for that
+function get_post_attachments($post_id){
+    $selected_post=get_post($post_id);
+    return [$selected_post['attachments']['name']];
 }
 
 function create_portfolio($info, $file){

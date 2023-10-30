@@ -7,8 +7,8 @@ require_once('../../lib/users.php');
 $users=get_all_users();
 
 // if author id is set, edit post. error if not
-if (isset($_POST['user_id'])){
-    if(strlen($_POST['user_id'])>0) {
+if (isset($_POST['author'])){
+    if(strlen($_POST['author'])>0) {
         edit_post($_POST);
         return;
     }else{
