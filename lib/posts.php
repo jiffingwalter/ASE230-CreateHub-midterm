@@ -85,13 +85,28 @@ function create_post($info_in,$file_in){
     file_put_contents('../../data/users/'.$info_in['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data
 
     display_message('Created new post #'.$new_post['uid'].'!');
-    header('Location: index.php'); // redirect to index
+    //header('Location: index.php'); // redirect to index -- REMINDER TO SELF: move this into the respective CRUD page
 }
 
 function edit_post($info_in){ // STILL A WORK IN PROGRESS, getting type offset errors when moving to a new file
-    // pull requested post by uid to get all its info and remove it from file
+    // pull requested post by uid to get all its info
     $selected_post=get_post($info_in['uid']);
     $author_original=$selected_post['author'];
+
+    //echo '<pre>'; echo var_dump(); echo '</pre>'; 
+
+    // move attachment if there is one, and if the author was changed
+    if ($selected_post['attachments']['error'] != 'noFileUploaded' && $info_in['author']!=$author_original){
+        echo '<br>author changed<br>';
+        echo 'attempting to move file ../../data/users/'.$author_original.'/images/'.$selected_post['attachments']['name'];
+        echo '<br>to ../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name'];
+        echo rename('../../data/users/'.$author_original.'/images/'.$selected_post['attachments']['name'],
+                '../../data/users/'.$info_in['author'].'/images/'.$selected_post['attachments']['name'])?
+                '<br>...file *should be* moved/renamed successfully':'<br>...file did not move/rename successfully';
+    }
+
+    // delete original post
+    delete_post($info_in['uid']);
 
     // update the post text info that was returned
     $selected_post['title']=$info_in['title'];
@@ -106,16 +121,10 @@ function edit_post($info_in){ // STILL A WORK IN PROGRESS, getting type offset e
     $posts_updated=get_user_posts($selected_post['author']);
     $posts_updated[]=$selected_post; // append edited post to the end of file
     file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the users post json data
-    // move attachment if there is one, and if the author was changed
-    if ($selected_post['attachments']['error'] != 'noFileUploaded' && $selected_post['author']!=$author_original){
-        rename('../../data/users/'.$author_original['author'].'/images/'.$selected_post['attachments']['name'],
-                '../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name']);
-    }
 
-    // delete original post and give updated message
-    delete_post($info_in['uid']);
+    // give updated message
     display_message('Updated post #'.$selected_post['uid'].'!');
-    header('Location: index.php'); // redirect to index
+    //header('Location: index.php'); // redirect to index -- REMINDER TO SELF: move this into the respective CRUD page
 }
 
 // accepts a post ID and deletes it from it's user's post data
@@ -128,8 +137,6 @@ function delete_post($post_uid){
     echo '<h3>looking for post #'.$selected_post['uid'].'</h3>'; // debug
     $index=0;
     for ($i=0;$i<count($posts);$i++){
-        echo '<h3>post #'.$posts[$i]['uid'].'</h3>'; // debug
-        echo '<pre>'; echo var_dump($posts[$i]); echo '</pre>'; // debug
         if ($posts[$i]['uid'] == $post_uid){
             $index=$i; // get index for modification
             break;
@@ -141,9 +148,10 @@ function delete_post($post_uid){
     file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts,JSON_PRETTY_PRINT));
     // delete post image if one is attached
     if ($selected_post['attachments']['error'] != 'noFileUploaded'){
-        unlink('../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name']);
+        $attachment_dir='../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name'];
+        file_exists($attachment_dir)?unlink($attachment_dir):display_error('Warning: File not found at '.$attachment_dir.' (probably already deleted)');
     }
-    header('Location: index.php'); // redirect to index
+    //header('Location: index.php'); // redirect to index -- REMINDER TO SELF: move this into the respective CRUD page
 }
 
 // sub functions

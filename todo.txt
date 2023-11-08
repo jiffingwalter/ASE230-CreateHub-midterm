@@ -1,14 +1,12 @@
 ADMIN post pages:
-- update edit and delete post logic for newer setup
 - add attachment areas to post editor and details
+- move page redirect logic out of posts.php and into respective pages after CRUD operations
 ADMIN user pages:
 - finish portfolio section
-- look into mkdir issue with user deletion -- found it, need to test fix
-- add logic to add/remove users as admin
 
 main:
 user options:
-- add option for user's name
+- add option for user's name?
 - give user option to edit their own info and delete their account
 
 
