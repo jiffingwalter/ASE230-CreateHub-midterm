@@ -29,7 +29,7 @@ $post=get_post($uid);
             <td><?=$post['title']?></td></tr>
         <tr>
             <td><b>Author:</b></td>
-            <td><?=$post['author']?></td></tr>
+            <td><?=get_post_author($post['author'])?> [<?=$post['author']?>]</td></tr>
         <tr>
             <td><b>Content:</b></td>
             <td><?=$post['content']?></td></tr>
