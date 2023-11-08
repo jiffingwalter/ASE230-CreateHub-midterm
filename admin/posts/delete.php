@@ -5,7 +5,7 @@ $uid=$_GET['index'];
 $post=get_post($uid);
 
 if (isset($_POST['uid'])){
-    delete_post($_POST);
+    delete_post($_POST['uid']);
     return;
 }
 ?>

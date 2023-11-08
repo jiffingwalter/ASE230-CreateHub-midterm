@@ -88,7 +88,7 @@ function create_post($info_in,$file_in){
     header('Location: index.php'); // redirect to index
 }
 
-function edit_post($info_in){
+function edit_post($info_in){ // STILL A WORK IN PROGRESS, getting type offset errors when moving to a new file
     // pull requested post by uid to get all its info and remove it from file
     $selected_post=get_post($info_in['uid']);
     $author_original=$selected_post['author'];
@@ -104,7 +104,7 @@ function edit_post($info_in){
 
     // get users post list add post to given user's post data file
     $posts_updated=get_user_posts($selected_post['author']);
-    $posts_updated=$selected_post; // append edited post to the end of file
+    $posts_updated[]=$selected_post; // append edited post to the end of file
     file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the users post json data
     // move attachment if there is one, and if the author was changed
     if ($selected_post['attachments']['error'] != 'noFileUploaded' && $selected_post['author']!=$author_original){
@@ -120,15 +120,16 @@ function edit_post($info_in){
 
 // accepts a post ID and deletes it from it's user's post data
 function delete_post($post_uid){
-    // NEEDS UPDATING FOR NEW SYSTEM, DO NOT USE
-    // changes to be made: need to find post in the current user's directory posts file and delete from there
     // get the post info for the post to be deleted, then the authors's post list
     $selected_post=get_post($post_uid);
     $posts=get_user_posts($selected_post['author']);
 
     // find index in user posts that matches post uid for deletion
+    echo '<h3>looking for post #'.$selected_post['uid'].'</h3>'; // debug
     $index=0;
     for ($i=0;$i<count($posts);$i++){
+        echo '<h3>post #'.$posts[$i]['uid'].'</h3>'; // debug
+        echo '<pre>'; echo var_dump($posts[$i]); echo '</pre>'; // debug
         if ($posts[$i]['uid'] == $post_uid){
             $index=$i; // get index for modification
             break;
