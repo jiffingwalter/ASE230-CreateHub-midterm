@@ -20,8 +20,8 @@ if(count($_POST)>0){
         <label for="content">Post Body:</label><br>
         <textarea name="content" rows="10" cols="50" required></textarea><br>
 
-        <label for="image">Upload an Image (Optional):</label><br>
-        <input type="file" name="image" accept=".png, .jpg, .jpeg"><br>
+        <label for="attachments">Upload an Image (Optional):</label><br>
+        <input type="file" name="attachments" accept=".png, .jpg, .jpeg"><br>
 
         <label for="tags">Post Tags (separated by commas):</label> <br>
         <input type="text" name="tags"> <br><br>

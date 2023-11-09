@@ -69,11 +69,11 @@ function create_post($info_in,$file_in){
         'uid' => generate_uid(),
     ];
 
-    // handle image if one is added
-    if(isset($file_in['image']) && $file_in['image']['error'] != 4
+    // add attachment info and 
+    if(isset($file_in['attachments']) && $file_in['attachments']['error'] != 4
         &&
-        in_array(strtolower(pathinfo($file_in['image']['name'], PATHINFO_EXTENSION)),get_file_extensions())){
-        $img = $file_in['image'];
+        in_array(strtolower(pathinfo($file_in['attachment']['name'], PATHINFO_EXTENSION)),get_file_extensions())){
+        $img = $file_in['attachments'];
         $img[count($img)] = pathinfo($img['name'], PATHINFO_EXTENSION);
         $new_post['attachments'] = $img;
         move_uploaded_file($img['tmp_name'],'../../data/users/'.$info_in['author'].'/images/'.$img['full_path']);
@@ -88,7 +88,7 @@ function create_post($info_in,$file_in){
     //header('Location: index.php'); // redirect to index -- REMINDER TO SELF: move this into the respective CRUD page
 }
 
-function edit_post($info_in){ // STILL A WORK IN PROGRESS, getting type offset errors when moving to a new file
+function edit_post($info_in){
     // pull requested post by uid to get all its info
     $selected_post=get_post($info_in['uid']);
     $author_original=$selected_post['author'];
@@ -115,8 +115,6 @@ function edit_post($info_in){ // STILL A WORK IN PROGRESS, getting type offset e
     $selected_post['tags']=parse_tags_in($info_in['tags']);
     $selected_post['last_edited']=get_timestamp();
 
-    // TODO -- add logic here to update attachment stuff
-
     // get users post list add post to given user's post data file
     $posts_updated=get_user_posts($selected_post['author']);
     $posts_updated[]=$selected_post; // append edited post to the end of file
@@ -134,7 +132,6 @@ function delete_post($post_uid){
     $posts=get_user_posts($selected_post['author']);
 
     // find index in user posts that matches post uid for deletion
-    echo '<h3>looking for post #'.$selected_post['uid'].'</h3>'; // debug
     $index=0;
     for ($i=0;$i<count($posts);$i++){
         if ($posts[$i]['uid'] == $post_uid){
