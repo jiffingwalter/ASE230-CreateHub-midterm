@@ -69,10 +69,10 @@ function create_post($info_in,$file_in){
         'uid' => generate_uid(),
     ];
 
-    // add attachment info and 
+    // add attachment info as necessary if attachment was given or not
     if(isset($file_in['attachments']) && $file_in['attachments']['error'] != 4
         &&
-        in_array(strtolower(pathinfo($file_in['attachment']['name'], PATHINFO_EXTENSION)),get_file_extensions())){
+        in_array(strtolower(pathinfo($file_in['attachments']['name'], PATHINFO_EXTENSION)),get_file_extensions())){
         $img = $file_in['attachments'];
         $img[count($img)] = pathinfo($img['name'], PATHINFO_EXTENSION);
         $new_post['attachments'] = $img;

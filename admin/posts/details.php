@@ -43,4 +43,16 @@ $post=get_post($uid);
             <td><b>Date Last Edited:</b></td>
             <td><?=$post['last_edited']?></td></tr>
     </table>
+    <table border="1" cellpadding="5" cellspacing="2">
+        <tr><td><b>Post Attachments: </b></td></tr>
+        <tr><td>
+        <?php
+            if ($post['attachments']['error'] == 0){ ?>
+                <img src="../../data/users/<?=$post['author']?>/images/<?=$post['attachments']['name']?>" style="max-width: 1024px"><br>
+                <p><b>Location: </b>../../data/users/<?=$post['author']?>/images/<?=$post['attachments']['name']?></p> <?php
+            } else { ?>
+                <p>No attachment provided</p>
+            <?php } ?>
+        </tr></td>
+    </table>
 </body>
