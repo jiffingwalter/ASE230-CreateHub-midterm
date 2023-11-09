@@ -59,8 +59,8 @@ $user_portfolios=get_user_portfolio($user['id']);
                     <tr>
                         <td class="table_col_id"><b><?=$user_posts[$i]['uid']?></b></td>
                         <td class="table_col_title"><p><?=$user_posts[$i]['title']?></p></td>
-                        <td class="table_col_details"><a href="details.php?index=<?=$user_posts[$i]['uid']?>">View details</a></td>
-                        <td class="table_col_edit"><a href="edit.php?index=<?=$user_posts[$i]['uid']?>">Edit</a></td>
+                        <td class="table_col_details"><a href="../posts/details.php?index=<?=$user_posts[$i]['uid']?>">View details</a></td>
+                        <td class="table_col_edit"><a href="../posts/edit.php?index=<?=$user_posts[$i]['uid']?>">Edit</a></td>
                     </tr>
             <?php  }
             } ?></td>
