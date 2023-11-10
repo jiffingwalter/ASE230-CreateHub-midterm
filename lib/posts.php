@@ -62,25 +62,14 @@ function create_post($info_in,$file_in){
         'title' => $info_in['title'],
         'author' => $info_in['author'],
         'content' => $info_in['content'],
-        'attachments' => '',
+        'attachments' => parse_attachments($info_in,$file_in),
         'tags' => parse_tags_in($info_in['tags']),
         'date_created' => get_timestamp(),
         'last_edited' => get_timestamp(),
         'uid' => generate_uid(),
     ];
 
-    // add attachment info as necessary if attachment was given or not
-    if(isset($file_in['attachments']) && $file_in['attachments']['error'] != 4
-        &&
-        in_array(strtolower(pathinfo($file_in['attachments']['name'], PATHINFO_EXTENSION)),get_file_extensions())){
-        $img = $file_in['attachments'];
-        $img[count($img)] = pathinfo($img['name'], PATHINFO_EXTENSION);
-        $new_post['attachments'] = $img;
-        move_uploaded_file($img['tmp_name'],'../../data/users/'.$info_in['author'].'/images/'.$img['full_path']);
-    }else{
-        $new_post['attachments'] = ['error' => 'noFileUploaded'];
-    }
-
+    // update post data files
     $posts_updated[count($posts_updated)]=$new_post; // append new post to the end of file
     file_put_contents('../../data/users/'.$info_in['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data
 
@@ -88,32 +77,30 @@ function create_post($info_in,$file_in){
     //header('Location: index.php'); // redirect to index -- REMINDER TO SELF: move this into the respective CRUD page
 }
 
-function edit_post($info_in){
+function edit_post($info_in,$file_in){
     // pull requested post by uid to get all its info
     $selected_post=get_post($info_in['uid']);
-    $author_original=$selected_post['author'];
 
-    //echo '<pre>'; echo var_dump(); echo '</pre>'; 
-
-    // move attachment if there is one, and if the author was changed
-    if ($selected_post['attachments']['error'] != 'noFileUploaded' && $info_in['author']!=$author_original){
-        echo '<br>author changed<br>';
-        echo 'attempting to move file ../../data/users/'.$author_original.'/images/'.$selected_post['attachments']['name'];
-        echo '<br>to ../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name'];
-        echo rename('../../data/users/'.$author_original.'/images/'.$selected_post['attachments']['name'],
-                '../../data/users/'.$info_in['author'].'/images/'.$selected_post['attachments']['name'])?
-                '<br>...file *should be* moved/renamed successfully':'<br>...file did not move/rename successfully';
+    // TODO -- add logic for deleting attachment and also make sure changing author and attachments at same time doesn't blow everything up
+    // move attachment IF... there is an attachment, the author was changed, and if the attachment itself wasn't being changed
+    if ($selected_post['attachments']['error'] != 'noFileUploaded' && $info_in['author']!=$selected_post['author'] && !isset($file_in)){
+        change_attachment_user($selected_post['attachments']['name'],$selected_post['author'],$info_in['author']);
     }
 
-    // delete original post
-    delete_post($info_in['uid']);
+    // update attachment if a one is provided
+    if (isset($file_in)){
+        $selected_post['attachments']=replace_attachment($selected_post,$file_in);
+    }
 
-    // update the post text info that was returned
+    // update/reinsert the post text info that was returned
     $selected_post['title']=$info_in['title'];
     $selected_post['author']=$info_in['author'];
     $selected_post['content']=$info_in['content'];
     $selected_post['tags']=parse_tags_in($info_in['tags']);
     $selected_post['last_edited']=get_timestamp();
+
+    // delete original post
+    delete_post($info_in['uid']);
 
     // get users post list add post to given user's post data file
     $posts_updated=get_user_posts($selected_post['author']);
@@ -212,12 +199,52 @@ function get_post_author($user_id){
     }
 }
 
-// accepts a post id and returns a list of its attachment filenames -- TODO -- if we add support for multiple images in one post, add support for that
+// parse attachments to readable format and return attachment array - TODO -- if support for more attachments on one post is added, need to refactor
+function parse_attachments($post_info,$file_in){
+    $new_attachment=[];
+    if(isset($file_in['attachments']) && $file_in['attachments']['error'] != 4
+        &&
+        in_array(strtolower(pathinfo($file_in['attachments']['name'], PATHINFO_EXTENSION)),get_file_extensions())){
+        $file = $file_in['attachments'];
+        $file[count($file)] = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $new_attachment = $file;
+        move_uploaded_file($file['tmp_name'],'../../data/users/'.$post_info['author'].'/images/'.$file['full_path']);
+    }else{
+        $new_attachment = ['error' => 'noFileUploaded'];
+    }
+    return $new_attachment;
+}
+
+// accepts a post id and returns a list of its attachment filenames -- TODO: if we add support for multiple images in one post, add support for that
 function get_post_attachments($post_id){
     $selected_post=get_post($post_id);
     return [$selected_post['attachments']['name']];
 }
 
+// moves a post's attachment to a new user
+function change_attachment_user($filename,$user_id_old,$user_id_new){
+    echo 'attempting to move file ../../data/users/'.$user_id_old.'/images/'.$filename;
+        echo '<br>to ../../data/users/'.$user_id_new.'/images/'.$filename;
+        return rename('../../data/users/'.$user_id_old.'/images/'.$filename,'../../data/users/'.$user_id_new.'/images/'.$filename);
+}
+
+// accepts a post and an attachment array, returns new attachment array and deletes old attachment files
+function replace_attachment($post_current,$file_in){
+    // parse new attachment 
+    $attachments_new=parse_attachments($post_current,$file_in);
+    // if there was an attachment previously, delete it
+    if ($post_current['attachments']['error']!="noFileUploaded"){
+        unlink('../../data/users/'.$post_current['author'].'/images/'.$post_current['attachments']['name']);
+    }
+    return $attachments_new;
+}
+
+// reset an attachment back to empty
+function delete_attachment(){
+    // coming Eventually (tm)
+}
+
+// portfolio stuff ---------------------
 function create_portfolio($info, $file){
     for($i=0;$i<count($file['images']['name']);$i++){
         if(in_array(strtolower(pathinfo($file['images']['name'][0], PATHINFO_EXTENSION)),get_file_extensions())){
