@@ -30,12 +30,12 @@ if (isset($_POST['author'])){
         <label for="title">Title:</label> <br>
         <input type="text" name="title"> <br>
 
-        <label for="author">Author:</label> <br> <!-- make this into drop down list that's filled with current users -->
+        <label for="author">Author:</label> <br>
         <select name="author">
             <option value=""></option>
-            <?php foreach($users as $user){ ?>
-                <option value="<?= $user['id'] ?>"><?= $user['email'] ?></option>
-            <?php } ?>
+            <?php foreach($users as $user){
+                echo '<option value="'.$user['id'].'">'.$user['email'].' ['.$user['id'].']</option>';
+            } ?>
         </select><br>
         
         <label for="content">Post Content:</label> <br>
