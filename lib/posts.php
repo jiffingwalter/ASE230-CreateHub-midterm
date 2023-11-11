@@ -96,7 +96,7 @@ function edit_post($info_in,$file_in){
     $selected_post['title']=$info_in['title'];
     $selected_post['author']=$info_in['author'];
     $selected_post['content']=$info_in['content'];
-    $selected_post['tags']=parse_tags_in($info_in['tags']);
+    $selected_post['tags']=(strlen($info_in['tags'][0])>0)?parse_tags_in($info_in['tags']):[""];
     $selected_post['last_edited']=get_timestamp();
 
     // delete original post
@@ -109,7 +109,8 @@ function edit_post($info_in,$file_in){
 
     // give updated message
     display_message('Updated post #'.$selected_post['uid'].'!');
-    //header('Location: index.php'); // redirect to index -- REMINDER TO SELF: move this into the respective CRUD page
+    return true;
+    //header('Location: index.php'); // redirect to index -- REMINDER TO SELF: move this and displayed message into the respective CRUD page
 }
 
 // accepts a post ID and deletes it from it's user's post data
@@ -199,6 +200,7 @@ function get_post_author($user_id){
     }
 }
 
+// attachment stuff ------------------------------------------------------------------
 // parse attachments to readable format and return attachment array - TODO -- if support for more attachments on one post is added, need to refactor
 function parse_attachments($post_info,$file_in){
     $new_attachment=[];
@@ -240,11 +242,17 @@ function replace_attachment($post_current,$file_in){
 }
 
 // reset an attachment back to empty
-function delete_attachment(){
-    // coming Eventually (tm)
+function delete_attachment($post_id){
+    $selected_post=get_post($post_id);
+    if ($selected_post['attachments']['error']!="noFileUploaded"){
+        unlink('../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name']);
+        return edit_post($selected_post,['error' => 'noFileUploaded']);
+    } else {
+        return false;
+    }
 }
 
-// portfolio stuff ---------------------
+// portfolio stuff -------------------------------------------------
 function create_portfolio($info, $file){
     for($i=0;$i<count($file['images']['name']);$i++){
         if(in_array(strtolower(pathinfo($file['images']['name'][0], PATHINFO_EXTENSION)),get_file_extensions())){

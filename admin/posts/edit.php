@@ -6,6 +6,8 @@ $post=get_post($uid);
 require_once('../../lib/users.php');
 $users=get_all_users();
 
+$postHasAttachment=($post['attachments']['error'] == 0);
+
 // if author id is set, edit post. error if not
 if (isset($_POST['author'])){
     if(strlen($_POST['author'])>0) {
@@ -15,6 +17,15 @@ if (isset($_POST['author'])){
         display_error('Must select an author!');
     }
 }
+
+// handle attachment deletion
+if (isset($_POST['delete_attachment'])){
+    delete_attachment($post['uid'])?
+        display_message('Deleted attachment successfully'):
+        display_system_error('There was a problem deleting the attachment',$_SERVER['SCRIPT_NAME']);
+    header('Location: edit.php?index='.$post['uid']);
+}
+
 ?>
 
 <head>
@@ -52,7 +63,7 @@ if (isset($_POST['author'])){
         <!-- TODO - add "delete attachment" button so it can be reset to blank -->
         <label for="current-attachment">Current Attachment:</label> <br>
         <div class="attachment-display">
-        <?php if ($post['attachments']['error'] == 0){ ?>
+        <?php if ($postHasAttachment){ ?>
             <img src="../../data/users/<?=$post['author']?>/images/<?=$post['attachments']['name']?>" style="max-width: 256px"><br>
         <?php } else { ?>
             <p>(no attachment)</p>
@@ -71,4 +82,10 @@ if (isset($_POST['author'])){
         <input type="hidden" name="index" value="<?= $uid ?>">
         <button>Delete post</button>
     </form>
+    <?php if ($postHasAttachment){ ?>
+    <form method="POST">
+        <input type="hidden" name="delete_attachment" value="true">
+        <button>Delete attachment</button>
+    </form>
+    <?php } ?>
 </body>
