@@ -18,12 +18,22 @@ if (isset($_POST['author'])){
     }
 }
 
+// handle post deletion and confirmation dialog
+$show_confirm_delete=false;
+if (isset($_POST['confirm_delete'])){
+    // show confirmation dialog, 
+    $show_confirm_delete=true;
+    if (isset($_POST['delete_id']) && isset($_POST['confirm_delete'])){
+        delete_post($uid);
+    }
+}
+
 // handle attachment deletion
 if (isset($_POST['delete_attachment'])){
-    delete_attachment($post['uid'])?
+    delete_attachment($uid)?
         display_message('Deleted attachment successfully'):
         display_system_error('There was a problem deleting the attachment',$_SERVER['SCRIPT_NAME']);
-    header('Location: edit.php?index='.$post['uid']);
+    header('Location: edit.php?index='.$uid);
 }
 
 ?>
@@ -76,12 +86,22 @@ if (isset($_POST['delete_attachment'])){
         <input type="text" name="tags" style="width:512px" value="<?= parse_tags_out($post['tags'])?>"> <br><br>
 
         <input type="hidden" name="uid" value="<?= $uid ?>">
-        <button type="submit">Save changes</button>
-    </form><hr><br>
-    <form method="GET" action="delete.php?index=<?=$uid?>">
-        <input type="hidden" name="index" value="<?= $uid ?>">
-        <button>Delete post</button>
-    </form>
+        <button type="submit">Save changes</button><br><br>
+    </form><hr>
+    <?php if(!$show_confirm_delete){ ?>
+        <form method="POST">
+            <input type="hidden" name="confirm_delete" value="confirm_delete">
+            <button>Delete post</button>
+        </form>
+    <?php } ?>
+    <?php if($show_confirm_delete){ ?>
+        <form method="POST">
+            <p>Are you sure you want to delete this post? This cannot be undone.</p>
+            <input type="hidden" name="delete_id" value="<?= $uid ?>">
+            <input type="hidden" name="confirm_delete" value="confirm_delete">
+            <button>Delete post</button>
+        </form>
+    <?php } ?>
     <?php if ($postHasAttachment){ ?>
     <form method="POST">
         <input type="hidden" name="delete_attachment" value="true">
