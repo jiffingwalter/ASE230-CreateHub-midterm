@@ -72,7 +72,7 @@ function create_post($info_in,$file_in){
     // update post data files
     $posts_updated[count($posts_updated)]=$new_post; // append new post to the end of file
     file_put_contents('../../data/users/'.$info_in['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data
-
+    return true;
     display_message('Created new post #'.$new_post['uid'].'!');
     //header('Location: index.php'); // redirect to index -- REMINDER TO SELF: move this into the respective CRUD page
 }
@@ -88,7 +88,8 @@ function edit_post($info_in,$file_in){
     }
 
     // update attachment if a one is provided
-    if (isset($file_in)){
+    if ($file_in['attachments']['error']!=4){
+        echo 'update attachment code run';
         $selected_post['attachments']=replace_attachment($selected_post,$file_in);
     }
 
@@ -100,21 +101,18 @@ function edit_post($info_in,$file_in){
     $selected_post['last_edited']=get_timestamp();
 
     // delete original post
-    delete_post($info_in['uid']);
+    delete_post($info_in['uid'],false);
 
     // get users post list add post to given user's post data file
     $posts_updated=get_user_posts($selected_post['author']);
     $posts_updated[]=$selected_post; // append edited post to the end of file
     file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the users post json data
 
-    // give updated message
-    display_message('Updated post #'.$selected_post['uid'].'!');
     return true;
-    //header('Location: index.php'); // redirect to index -- REMINDER TO SELF: move this and displayed message into the respective CRUD page
 }
 
 // accepts a post ID and deletes it from it's user's post data
-function delete_post($post_uid){
+function delete_post($post_uid,$delete_attachment){
     // get the post info for the post to be deleted, then the authors's post list
     $selected_post=get_post($post_uid);
     $posts=get_user_posts($selected_post['author']);
@@ -131,12 +129,12 @@ function delete_post($post_uid){
     // splice post if uid was found and update real data file
     array_splice($posts,$index,$index+1);
     file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts,JSON_PRETTY_PRINT));
-    // delete post image if one is attached
-    if ($selected_post['attachments']['error'] != 'noFileUploaded'){
+    // delete post attachment if var is true and there's an attachment
+    if ($selected_post['attachments']['error'] != 'noFileUploaded' && $delete_attachment){
         $attachment_dir='../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name'];
         file_exists($attachment_dir)?unlink($attachment_dir):display_error('Warning: File not found at '.$attachment_dir.' (probably already deleted)');
     }
-    //header('Location: index.php'); // redirect to index -- REMINDER TO SELF: move this into the respective CRUD page
+    return true;
 }
 
 // sub functions

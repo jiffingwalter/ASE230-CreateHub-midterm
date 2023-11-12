@@ -5,13 +5,14 @@ $uid=$_GET['index'];
 $post=get_post($uid);
 
 if (isset($_POST['uid'])){
-    delete_post($_POST['uid']);
+    delete_post($uid,true)?display_message('Deleted post #'.$uid):'';
+    echo '<a href="./index.php">Back to post manager</a><br>';
     return;
 }
 ?>
 
 <head>
-    <title>Delete Post UID #<?=$post['uid']?></title>
+    <title>Delete Post UID #<?=$uid?></title>
     <link href="../../dist/css/admin.scss" rel="stylesheet" />
 </head>
 <body>
@@ -20,7 +21,7 @@ if (isset($_POST['uid'])){
     <a href="index.php"><< Back</a>
     <hr>
 
-    <h2 style="margin-bottom:0px">Are you sure you want to delete Post UID #<?=$post['uid']?>?</h2><br>
+    <h2 style="margin-bottom:0px">Are you sure you want to delete Post UID #<?=$uid?>?</h2><br>
     <p>This cannot be undone</p>
     <form method="POST">
         <input type="hidden" name="uid" value="<?= $uid ?>">

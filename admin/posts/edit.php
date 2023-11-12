@@ -11,7 +11,9 @@ $postHasAttachment=($post['attachments']['error'] == 0);
 // if author id is set, edit post. error if not
 if (isset($_POST['author'])){
     if(strlen($_POST['author'])>0) {
-        edit_post($_POST,$_FILES);
+        edit_post($_POST,$_FILES)?display_message('Updated post #'.$uid.'!'):'';
+        echo '<a href="./index.php">Back to posts manager</a><br>';
+        echo '<a href="./edit.php?index='.$uid.'">Go to post</a><br>';
         return;
     }else{
         display_error('Must select an author!');
@@ -21,10 +23,11 @@ if (isset($_POST['author'])){
 // handle post deletion and confirmation dialog
 $show_confirm_delete=false;
 if (isset($_POST['confirm_delete'])){
-    // show confirmation dialog, 
+    // show confirmation dialog
     $show_confirm_delete=true;
     if (isset($_POST['delete_id']) && isset($_POST['confirm_delete'])){
-        delete_post($uid);
+        delete_post($uid,true)?display_message('Deleted post #'.$uid):'';
+        echo '<a href="./index.php">Back to posts manager</a><br>';
     }
 }
 
