@@ -6,6 +6,7 @@ require_once('../themes/nav.php');
 require_once('../../lib/posts.php');
 
 if(count($_POST)>0){
+    $_POST['author']=$userID;
     create_post($_POST,$_FILES);
     header("Location: userPage.php");
     die();
@@ -19,13 +20,12 @@ if(count($_POST)>0){
         <label for="content">Post Body:</label><br>
         <textarea name="content" rows="10" cols="50" required></textarea><br>
 
-        <label for="image">Upload an Image (Optional):</label><br>
-        <input type="file" name="image" accept=".png, .jpg, .jpeg"><br>
+        <label for="attachments">Upload an Image (Optional):</label><br>
+        <input type="file" name="attachments" accept=".png, .jpg, .jpeg"><br>
 
         <label for="tags">Post Tags (separated by commas):</label> <br>
         <input type="text" name="tags"> <br><br>
 
-        <input type="hidden" name="user_id" value="<?=$userID?>"><br>
         <input type="submit" value="Create Post">
     </form>
 </body>

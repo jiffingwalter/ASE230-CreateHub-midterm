@@ -3,9 +3,9 @@
         "title": "user 1's post",
         "author": "u000001",
         "content": "she sells sea shells by the sea shore",
-        "attachments": [
-            ""
-        ],
+        "attachments": {
+            "error": "noFileUploaded"
+        },
         "tags": [
             "test",
             "post",
@@ -20,8 +20,8 @@
         "author": "u000001",
         "content": "this picture is cool",
         "attachments": {
-            "name": "2mGKPSp.jpg",
-            "full_path": "2mGKPSp.jpg",
+            "name": "2RP5BgZ.jpg",
+            "full_path": "2RP5BgZ.jpg",
             "type": "image\/jpeg",
             "tmp_name": "D:\\Storage\\Programs\\Xampp\\tmp\\phpB4EF.tmp",
             "error": 0,

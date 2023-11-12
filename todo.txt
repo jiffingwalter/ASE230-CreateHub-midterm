@@ -1,8 +1,16 @@
 ADMIN post pages:
-- update edit and delete options for newer setup
-- add attachment area to post editor and details
+- add attachment areas to post editor and details
+- move page redirect logic out of posts.php and into respective pages after CRUD operations
 ADMIN user pages:
 - finish portfolio section
-- look into mkdir issue with user deletion
 
 main:
+user options:
+- add option for user's name?
+- give user option to edit their own info and delete their account
+
+
+other:
+- fix double session warning on portfolio page, make sure session calls are all before any html
+- look into session_destroy warning on logout
+- convert users and posts to object-oriented?

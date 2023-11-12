@@ -3,9 +3,9 @@
         "title": "POST TITLE",
         "author": "u000000",
         "content": "POST CONTENT",
-        "attachments": [
-            ""
-        ],
+        "attachments": {
+            "error": "noFileUploaded"
+        },
         "tags": [
             "POST TAG 1",
             "POST TAG 2",
@@ -19,7 +19,9 @@
         "title": "new post",
         "author": "u000000",
         "content": "",
-        "attachments": "",
+        "attachments": {
+            "error": "noFileUploaded"
+        },
         "tags": [
             ""
         ],

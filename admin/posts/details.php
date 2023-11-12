@@ -29,7 +29,7 @@ $post=get_post($uid);
             <td><?=$post['title']?></td></tr>
         <tr>
             <td><b>Author:</b></td>
-            <td><?=$post['author']?></td></tr>
+            <td><?=get_post_author($post['author'])?> [<?=$post['author']?>]</td></tr>
         <tr>
             <td><b>Content:</b></td>
             <td><?=$post['content']?></td></tr>
@@ -42,5 +42,17 @@ $post=get_post($uid);
         <tr>
             <td><b>Date Last Edited:</b></td>
             <td><?=$post['last_edited']?></td></tr>
+    </table>
+    <table border="1" cellpadding="5" cellspacing="2">
+        <tr><td><b>Post Attachments: </b></td></tr>
+        <tr><td>
+        <?php
+            if ($post['attachments']['error'] == 0){ ?>
+                <img src="../../data/users/<?=$post['author']?>/images/<?=$post['attachments']['name']?>" style="max-width: 1024px"><br>
+                <p><b>Location: </b>../../data/users/<?=$post['author']?>/images/<?=$post['attachments']['name']?></p> <?php
+            } else { ?>
+                <p>No attachment provided</p>
+            <?php } ?>
+        </tr></td>
     </table>
 </body>
