@@ -81,15 +81,14 @@ function edit_post($info_in,$file_in){
     // pull requested post by uid to get all its info
     $selected_post=get_post($info_in['uid']);
 
-    // TODO -- add logic for deleting attachment and also make sure changing author and attachments at same time doesn't blow everything up
+    // TODO -- make sure changing author and attachments at same time doesn't blow everything up
     // move attachment IF... there is an attachment, the author was changed, and if the attachment itself wasn't being changed
     if ($selected_post['attachments']['error'] != 'noFileUploaded' && $info_in['author']!=$selected_post['author'] && !isset($file_in)){
         change_attachment_user($selected_post['attachments']['name'],$selected_post['author'],$info_in['author']);
     }
 
     // update attachment if a one is provided
-    if ($file_in['attachments']['error']!=4){
-        echo 'update attachment code run';
+    if (isset($file_in['attachments']) && $file_in['attachments']['error']!=4){
         $selected_post['attachments']=replace_attachment($selected_post,$file_in);
     }
 
@@ -97,7 +96,7 @@ function edit_post($info_in,$file_in){
     $selected_post['title']=$info_in['title'];
     $selected_post['author']=$info_in['author'];
     $selected_post['content']=$info_in['content'];
-    $selected_post['tags']=(strlen($info_in['tags'][0])>0)?parse_tags_in($info_in['tags']):[""];
+    $selected_post['tags']=(isset($info_in['tags'][0]) && strlen($info_in['tags'][0])>0)?parse_tags_in($info_in['tags']):[""]; // sloppy way of avoiding php errors if tags arent set in different cases
     $selected_post['last_edited']=get_timestamp();
 
     // delete original post
@@ -242,9 +241,10 @@ function replace_attachment($post_current,$file_in){
 // reset an attachment back to empty
 function delete_attachment($post_id){
     $selected_post=get_post($post_id);
+    $empty_attachment['attachments']=['error' => 'noFileUploaded'];
     if ($selected_post['attachments']['error']!="noFileUploaded"){
         unlink('../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name']);
-        return edit_post($selected_post,['error' => 'noFileUploaded']);
+        return edit_post($selected_post,$empty_attachment);
     } else {
         return false;
     }
