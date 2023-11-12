@@ -13,8 +13,8 @@ if (isset($_POST['author'])){
     if(strlen($_POST['author'])>0) {
         edit_post($_POST,$_FILES)?display_message('Updated post #'.$uid.'!'):'';
         echo '<a href="./index.php">Back to posts manager</a><br>';
-        echo '<a href="./edit.php?index='.$uid.'">Go to post</a><br>';
-        return;
+        echo '<a href="./edit.php?index='.$uid.'">Go to post '.$uid.'</a><br>';
+        die;
     }else{
         display_error('Must select an author!');
     }

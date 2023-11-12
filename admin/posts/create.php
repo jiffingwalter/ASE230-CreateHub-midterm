@@ -7,10 +7,12 @@ $users=get_all_users();
 // if author id is set, create post. error if not
 if (isset($_POST['author'])){
     if(strlen($_POST['author'])>0) {
-        create_post($_POST,$_FILES)?display_message('Created post #'.$uid.'!'):'';
-        echo '<a href="./create.php">Create another post</a><br>
+        $new_uid=create_post($_POST,$_FILES);
+        (isset($new_uid))?display_message('Created post #'.$new_uid.'!'):'';
+        echo '<a href="./details.php?index='.$new_uid.'">Go to post '.$new_uid.'</a><br>
+            <a href="./create.php">Create another post</a><br>
             <a href="./index.php">Back to post manager</a><br>';
-        return;
+        die;
     }else{
         display_error('Must select an author!');
     }

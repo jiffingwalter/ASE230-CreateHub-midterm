@@ -72,9 +72,7 @@ function create_post($info_in,$file_in){
     // update post data files
     $posts_updated[count($posts_updated)]=$new_post; // append new post to the end of file
     file_put_contents('../../data/users/'.$info_in['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data
-    return true;
-    display_message('Created new post #'.$new_post['uid'].'!');
-    //header('Location: index.php'); // redirect to index -- REMINDER TO SELF: move this into the respective CRUD page
+    return $new_post['uid'];
 }
 
 function edit_post($info_in,$file_in){
@@ -238,13 +236,16 @@ function replace_attachment($post_current,$file_in){
     return $attachments_new;
 }
 
-// reset an attachment back to empty
+// reset an attachment back to empty, returns nothing if succeeded and false if it didnt detect any attachments
 function delete_attachment($post_id){
     $selected_post=get_post($post_id);
-    $empty_attachment['attachments']=['error' => 'noFileUploaded'];
     if ($selected_post['attachments']['error']!="noFileUploaded"){
-        unlink('../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name']);
-        return edit_post($selected_post,$empty_attachment);
+        // delete attachment and original post, recreate original post but with no attachment
+        $selected_post['attachments']['error']="noFileUploaded";
+        delete_post($post_id,true);
+        $posts_updated=get_user_posts($selected_post['author']);
+        $posts_updated[]=$selected_post; // append edited post to the end of file
+        file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the users post json data
     } else {
         return false;
     }

@@ -7,7 +7,7 @@ $post=get_post($uid);
 if (isset($_POST['uid'])){
     delete_post($uid,true)?display_message('Deleted post #'.$uid):'';
     echo '<a href="./index.php">Back to post manager</a><br>';
-    return;
+    die;
 }
 ?>
 
