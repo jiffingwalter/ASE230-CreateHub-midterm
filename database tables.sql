@@ -1,11 +1,16 @@
 create table users(
-    id int primary key,
+    uid int primary key,
     name varchar(32),
     email varchar(64),
     password varchar(64),
     date_created date,
     role int
     );
+    
+create table user_posts( -- user & posts relationship set
+	user_id int,
+    post_id int
+);
     
 create table posts(
     pid int primary key,
@@ -16,16 +21,22 @@ create table posts(
     last_edited date
 	);
 
+create table attached_to(  -- posts and attachment relationship set
+    attachment_id int,
+    post_id int
+);
+
 create table attachments(
+    aid int primary key,
 	file_path varchar(255),
     type varchar(32),
     tmp_name varchar(128),
     size int,
     ext varchar(5)
 );
-    
-create table post_tags(
-    id int primary key,
+
+create table post_tags(  -- post & tags relationship set
+    post_id int primary key,
     tag_id int(10)
 	);
 
