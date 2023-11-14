@@ -38,7 +38,7 @@ if (isset($_POST['author'])){
         <select name="author">
             <option value=""></option>
             <?php foreach($users as $user){
-                echo '<option value="'.$user['id'].'">'.$user['email'].' ['.$user['id'].']</option>';
+                echo '<option value="'.$user['uid'].'">'.$user['email'].' ['.$user['uid'].']</option>';
             } ?>
         </select><br>
         

@@ -10,7 +10,7 @@ function get_all_posts(){
 
     // go through all users, read their posts and append to list
     foreach($users as $user){
-        $post_list_all=array_merge($post_list_all,get_user_posts($user['id']));
+        $post_list_all=array_merge($post_list_all,get_user_posts($user['uid']));
     }
     
     return $post_list_all;
@@ -180,7 +180,7 @@ function get_post_author($user_id){
 
     // step through user data and compare ids until a match
     for ($i=0;$i<count($users);$i++){
-        if ($users[$i]['id'] == $user_id){
+        if ($users[$i]['uid'] == $user_id){
             $id_found=true;
             break;
         }

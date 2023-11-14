@@ -1,7 +1,7 @@
 <?php
 require_once('../../lib/auth/admin.php');
 require_once('../../lib/users.php');
-$user=get_user((count($_GET) > 0)?$_GET['index']:$_POST['id']);
+$user=get_user((count($_GET) > 0)?$_GET['index']:$_POST['uid']);
 
 // edit account
 if (isset($_POST['new_email']) && isset($_POST['new_password'])){
@@ -11,9 +11,9 @@ if (isset($_POST['new_email']) && isset($_POST['new_password'])){
     }
     // update admin status
     if (isset($_POST['is_admin'])){
-        add_admin($user['id']);
+        add_admin($user['uid']);
     } else {
-        remove_admin(($user['id']));
+        remove_admin(($user['uid']));
     }
     echo '<a href="./index.php">Back to index</a><br>';
     return;
@@ -31,7 +31,7 @@ if (isset($_POST['confirm_delete'])){
 ?>
 
 <head>
-    <title>Editing User Information for ID #<?=$user['id']?></title>
+    <title>Editing User Information for ID #<?=$user['uid']?></title>
 </head>
 
 <body>
@@ -39,7 +39,7 @@ if (isset($_POST['confirm_delete'])){
     <a href="index.php"><< Back</a>
     <hr>
 
-    <h2>Editing User Information for ID #<?=$user['id']?></h2>
+    <h2>Editing User Information for ID #<?=$user['uid']?></h2>
     <form method="POST" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
         <label for="new_email">Email:</label><br>
         <input type="email" name="new_email" value="<?= $user['email'] ?>"><br>
@@ -48,9 +48,9 @@ if (isset($_POST['confirm_delete'])){
         <label for="confirm_new_password">Confirm New Password:</label><br>
         <input type="password" name="confirm_new_password"><br>
         <label for="is_admin">Admin rights?</label><br>
-        <input type="checkbox" id="is_admin" name="is_admin" value=<?php if(is_user_admin($user['id'])) echo 'Yes checked="checked"'; ?>>
+        <input type="checkbox" id="is_admin" name="is_admin" value=<?php if(is_user_admin($user['uid'])) echo 'Yes checked="checked"'; ?>>
         <br><br>
-        <input type="hidden" name="id" value="<?= $user['id'] ?>">
+        <input type="hidden" name="id" value="<?= $user['uid'] ?>">
         <button type="submit">Save Changes</button>
     </form> <hr>
     <?php if(!$show_confirm_delete){ ?>
@@ -62,7 +62,7 @@ if (isset($_POST['confirm_delete'])){
     <?php if($show_confirm_delete){ ?>
         <form method="POST">
             <p>Are you sure you want to delete this user? This cannot be undone.</p>
-            <input type="hidden" name="delete_id" value="<?= $user['id'] ?>">
+            <input type="hidden" name="delete_id" value="<?= $user['uid'] ?>">
             <input type="hidden" name="confirm_delete" value="confirm_delete">
             <button>Delete user</button>
         </form>

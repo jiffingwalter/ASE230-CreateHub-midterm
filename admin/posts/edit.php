@@ -61,10 +61,10 @@ if (isset($_POST['delete_attachment'])){
         <select name="author">
             <?php // select the current author of the post in the list by default
             foreach($users as $user){
-                if($user['id']==$post['author']){
-                    echo '<option value="'.$user['id'].'" selected>'.$user['email'].' ['.$user['id'].']</option>';
+                if($user['uid']==$post['author']){
+                    echo '<option value="'.$user['uid'].'" selected>'.$user['email'].' ['.$user['uid'].']</option>';
                 } else {
-                    echo '<option value="'.$user['id'].'">'.$user['email'].' ['.$user['id'].']</option>';
+                    echo '<option value="'.$user['uid'].'">'.$user['email'].' ['.$user['uid'].']</option>';
                 }
             }
             ?>
