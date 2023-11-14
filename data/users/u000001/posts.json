@@ -1,7 +1,7 @@
 [
     {
         "title": "user 1's post",
-        "author": "u000001",
+        "author": "000001",
         "content": "she sells sea shells by the sea shore",
         "attachments": {
             "error": "noFileUploaded"
@@ -13,11 +13,11 @@
         ],
         "date_created": "10\/14\/2023",
         "last_edited": "10\/14\/2023",
-        "pid": "p000001"
+        "pid": "000001"
     },
     {
         "title": "cool picture",
-        "author": "u000001",
+        "author": "000001",
         "content": "this picture is cool",
         "attachments": {
             "name": "2RP5BgZ.jpg",
@@ -37,6 +37,6 @@
         ],
         "date_created": "10\/15\/23 11:43:05pm",
         "last_edited": "10\/15\/23 11:43:05pm",
-        "pid": "p123903"
+        "pid": "123903"
     }
 ]

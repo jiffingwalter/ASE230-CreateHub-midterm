@@ -50,7 +50,7 @@ function generate_user_id(){
     $id_is_unique=false;
     // step through user data and check ids
     while(!$id_is_unique){
-        $new_id="u".rand(100000,999999);
+        $new_id=rand(100000,999999);
 
         for ($i=0;$i<count($users);$i++){
             if ($users[$i]['uid'] == $new_id){

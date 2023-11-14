@@ -1,7 +1,7 @@
 [
     {
         "title": "testing new posts",
-        "author": "u520790",
+        "author": "520790",
         "content": "test post",
         "attachments": {
             "name": "20231019183921_2.jpg",
@@ -18,11 +18,11 @@
         ],
         "date_created": "10\/31\/23 12:00:30am",
         "last_edited": "11\/08\/23 03:15:23am",
-        "pid": "p770308"
+        "pid": "770308"
     },
     {
         "title": "",
-        "author": "u520790",
+        "author": "520790",
         "content": "",
         "attachments": {
             "name": "2023-04-20.png",
@@ -38,6 +38,6 @@
         ],
         "date_created": "11\/09\/23 10:56:15pm",
         "last_edited": "11\/09\/23 10:56:15pm",
-        "pid": "p328885"
+        "pid": "328885"
     }
 ]

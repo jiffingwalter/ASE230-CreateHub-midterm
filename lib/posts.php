@@ -141,7 +141,7 @@ function generate_pid(){
     $id_is_unique=false;
     // step through post data file by pids and ensure pid is actually unique. probably not scalable for a million users or something but it works for this
     while(!$id_is_unique){
-        $new_pid='p'.rand(100000,999999);
+        $new_pid=rand(100000,999999);
 
         for ($i=0;$i<count($posts);$i++){
             if ($posts[$i]['pid'] == $new_pid){
