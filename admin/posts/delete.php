@@ -1,18 +1,18 @@
 <?php
 require_once('../../lib/auth/admin.php');
 require_once('../../lib/posts.php');
-$uid=$_GET['index'];
-$post=get_post($uid);
+$pid=$_GET['index'];
+$post=get_post($pid);
 
-if (isset($_POST['uid'])){
-    delete_post($uid,true)?display_message('Deleted post #'.$uid):'';
+if (isset($_POST['pid'])){
+    delete_post($pid,true)?display_message('Deleted post PID#'.$pid):'';
     echo '<a href="./index.php">Back to post manager</a><br>';
     die;
 }
 ?>
 
 <head>
-    <title>Delete Post UID #<?=$uid?></title>
+    <title>Delete Post PID #<?=$pid?></title>
     <link href="../../dist/css/admin.scss" rel="stylesheet" />
 </head>
 <body>
@@ -21,10 +21,10 @@ if (isset($_POST['uid'])){
     <a href="index.php"><< Back</a>
     <hr>
 
-    <h2 style="margin-bottom:0px">Are you sure you want to delete Post UID #<?=$uid?>?</h2><br>
+    <h2 style="margin-bottom:0px">Are you sure you want to delete Post PID #<?=$pid?>?</h2><br>
     <p>This cannot be undone</p>
     <form method="POST">
-        <input type="hidden" name="uid" value="<?= $uid ?>">
+        <input type="hidden" name="pid" value="<?= $pid ?>">
         <button>Delete post</button>
     </form>
 </body>

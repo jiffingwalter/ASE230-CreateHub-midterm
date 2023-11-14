@@ -1,8 +1,8 @@
 <?php
 require_once('../../lib/auth/admin.php');
 require_once('../../lib/posts.php');
-$uid=(count($_GET) >= 1)?$_GET['index']:$_POST['uid'];
-$post=get_post($uid);
+$pid=(count($_GET) >= 1)?$_GET['index']:$_POST['pid'];
+$post=get_post($pid);
 require_once('../../lib/users.php');
 $users=get_all_users();
 
@@ -11,9 +11,9 @@ $postHasAttachment=($post['attachments']['error'] == 0);
 // if author id is set, edit post. error if not
 if (isset($_POST['author'])){
     if(strlen($_POST['author'])>0) {
-        edit_post($_POST,$_FILES)?display_message('Updated post #'.$uid.'!'):'';
+        edit_post($_POST,$_FILES)?display_message('Updated post PID #'.$pid.'!'):'';
         echo '<a href="./index.php">Back to posts manager</a><br>';
-        echo '<a href="./edit.php?index='.$uid.'">Go to post '.$uid.'</a><br>';
+        echo '<a href="./edit.php?index='.$pid.'">Go to post PID #'.$pid.'</a><br>';
         die;
     }else{
         display_error('Must select an author!');
@@ -26,23 +26,23 @@ if (isset($_POST['confirm_delete'])){
     // show confirmation dialog
     $show_confirm_delete=true;
     if (isset($_POST['delete_id']) && isset($_POST['confirm_delete'])){
-        delete_post($uid,true)?display_message('Deleted post #'.$uid):'';
+        delete_post($pid,true)?display_message('Deleted post PID #'.$pid):'';
         echo '<a href="./index.php">Back to posts manager</a><br>';
     }
 }
 
 // handle attachment deletion
 if (isset($_POST['delete_attachment'])){
-    delete_attachment($uid)?
+    delete_attachment($pid)?
         display_message('Deleted attachment successfully'):
         display_system_error('There was a problem deleting the attachment',$_SERVER['SCRIPT_NAME']);
-    header('Location: edit.php?index='.$uid);
+    header('Location: edit.php?index='.$pid);
 }
 
 ?>
 
 <head>
-    <title>Editing Post UID #<?=$post['uid']?></title>
+    <title>Editing Post PID #<?=$post['pid']?></title>
     <link href="../../dist/css/admin.scss" rel="stylesheet" />
 </head>
 <body>
@@ -51,7 +51,7 @@ if (isset($_POST['delete_attachment'])){
     <a href="index.php"><< Back</a>
     <hr>
 
-    <h2>Editing Post UID #<?=$post['uid']?></h2>
+    <h2>Editing Post PID #<?=$post['pid']?></h2>
     <p>Last edited: <?=$post['last_edited']?></p>
     <form method="POST" enctype="multipart/form-data" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
         <label for="title">Title:</label> <br>
@@ -88,7 +88,7 @@ if (isset($_POST['delete_attachment'])){
         <label for="tags">Tags (separated by commas):</label> <br>
         <input type="text" name="tags" style="width:512px" value="<?= parse_tags_out($post['tags'])?>"> <br><br>
 
-        <input type="hidden" name="uid" value="<?= $uid ?>">
+        <input type="hidden" name="pid" value="<?= $pid ?>">
         <button type="submit">Save changes</button><br><br>
     </form><hr>
     <?php if(!$show_confirm_delete){ ?>
@@ -100,7 +100,7 @@ if (isset($_POST['delete_attachment'])){
     <?php if($show_confirm_delete){ ?>
         <form method="POST">
             <p>Are you sure you want to delete this post? This cannot be undone.</p>
-            <input type="hidden" name="delete_id" value="<?= $uid ?>">
+            <input type="hidden" name="delete_id" value="<?= $pid ?>">
             <input type="hidden" name="confirm_delete" value="confirm_delete">
             <button>Delete post</button>
         </form>

@@ -7,9 +7,9 @@ $users=get_all_users();
 // if author id is set, create post. error if not
 if (isset($_POST['author'])){
     if(strlen($_POST['author'])>0) {
-        $new_uid=create_post($_POST,$_FILES);
-        (isset($new_uid))?display_message('Created post #'.$new_uid.'!'):'';
-        echo '<a href="./details.php?index='.$new_uid.'">Go to post '.$new_uid.'</a><br>
+        $new_pid=create_post($_POST,$_FILES);
+        (isset($new_pid))?display_message('Created post PID #'.$new_pid.'!'):'';
+        echo '<a href="./details.php?index='.$new_pid.'">Go to post '.$new_pid.'</a><br>
             <a href="./create.php">Create another post</a><br>
             <a href="./index.php">Back to post manager</a><br>';
         die;

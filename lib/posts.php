@@ -34,22 +34,22 @@ function get_user_portfolio($user_id){
     return readJSON('../../data/users/'.$user_id.'/portfolio.json');
 }
 
-// return single post by searching by UID in post file
-function get_post($uid){
+// return single post by searching by pid in post file
+function get_post($pid){
     $posts=get_all_posts();
-    $uid_found=false;
+    $pid_found=false;
 
     for ($i=0;$i<count($posts);$i++){
-        if ($posts[$i]['uid'] == $uid){
-            $uid_found=true;
+        if ($posts[$i]['pid'] == $pid){
+            $pid_found=true;
             break;
         }
     }
 
-    if ($uid_found){
+    if ($pid_found){
         return $posts[$i];
     } else {
-        display_system_error('Could not find post UID #'.$uid.' inside post data file',$_SERVER['SCRIPT_NAME']);
+        display_system_error('Could not find post pid #'.$pid.' inside post data file',$_SERVER['SCRIPT_NAME']);
         return $posts[0]; // return example post to attempt to avoid php errors
     }
 }
@@ -66,18 +66,18 @@ function create_post($info_in,$file_in){
         'tags' => parse_tags_in($info_in['tags']),
         'date_created' => get_timestamp(),
         'last_edited' => get_timestamp(),
-        'uid' => generate_uid(),
+        'pid' => generate_pid(),
     ];
 
     // update post data files
     $posts_updated[count($posts_updated)]=$new_post; // append new post to the end of file
     file_put_contents('../../data/users/'.$info_in['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data
-    return $new_post['uid'];
+    return $new_post['pid'];
 }
 
 function edit_post($info_in,$file_in){
-    // pull requested post by uid to get all its info
-    $selected_post=get_post($info_in['uid']);
+    // pull requested post by pid to get all its info
+    $selected_post=get_post($info_in['pid']);
 
     // TODO -- make sure changing author and attachments at same time doesn't blow everything up
     // move attachment IF... there is an attachment, the author was changed, and if the attachment itself wasn't being changed
@@ -98,7 +98,7 @@ function edit_post($info_in,$file_in){
     $selected_post['last_edited']=get_timestamp();
 
     // delete original post
-    delete_post($info_in['uid'],false);
+    delete_post($info_in['pid'],false);
 
     // get users post list add post to given user's post data file
     $posts_updated=get_user_posts($selected_post['author']);
@@ -109,21 +109,21 @@ function edit_post($info_in,$file_in){
 }
 
 // accepts a post ID and deletes it from it's user's post data
-function delete_post($post_uid,$delete_attachment){
+function delete_post($post_pid,$delete_attachment){
     // get the post info for the post to be deleted, then the authors's post list
-    $selected_post=get_post($post_uid);
+    $selected_post=get_post($post_pid);
     $posts=get_user_posts($selected_post['author']);
 
-    // find index in user posts that matches post uid for deletion
+    // find index in user posts that matches post pid for deletion
     $index=0;
     for ($i=0;$i<count($posts);$i++){
-        if ($posts[$i]['uid'] == $post_uid){
+        if ($posts[$i]['pid'] == $post_pid){
             $index=$i; // get index for modification
             break;
         }
     }
 
-    // splice post if uid was found and update real data file
+    // splice post if pid was found and update real data file
     array_splice($posts,$index,$index+1);
     file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts,JSON_PRETTY_PRINT));
     // delete post attachment if var is true and there's an attachment
@@ -135,23 +135,23 @@ function delete_post($post_uid,$delete_attachment){
 }
 
 // sub functions
-// generate uid for new posts and check if they're actually unique
-function generate_uid(){
+// generate pid for new posts and check if they're actually unique
+function generate_pid(){
     $posts=get_all_posts();
     $id_is_unique=false;
-    // step through post data file by UIDs and ensure uid is actually unique. probably not scalable for a million users or something but it works for this
+    // step through post data file by pids and ensure pid is actually unique. probably not scalable for a million users or something but it works for this
     while(!$id_is_unique){
-        $new_uid='p'.rand(100000,999999);
+        $new_pid='p'.rand(100000,999999);
 
         for ($i=0;$i<count($posts);$i++){
-            if ($posts[$i]['uid'] == $new_uid){
+            if ($posts[$i]['pid'] == $new_pid){
                 $id_is_unique=false;
                 break; // found non-unique id, break out with var set to false and generate another
             }
             $id_is_unique=true; // these ids were unique, set to true so while loop doesn't run again if for loop completes
         }
     }
-    return $new_uid;
+    return $new_pid;
 }
 
 // turn tags into array -- TODO: make it so blank tags get discarded

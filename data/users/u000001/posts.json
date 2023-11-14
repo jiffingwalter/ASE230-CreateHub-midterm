@@ -13,7 +13,7 @@
         ],
         "date_created": "10\/14\/2023",
         "last_edited": "10\/14\/2023",
-        "uid": "p000001"
+        "pid": "p000001"
     },
     {
         "title": "cool picture",
@@ -37,6 +37,6 @@
         ],
         "date_created": "10\/15\/23 11:43:05pm",
         "last_edited": "10\/15\/23 11:43:05pm",
-        "uid": "p123903"
+        "pid": "p123903"
     }
 ]

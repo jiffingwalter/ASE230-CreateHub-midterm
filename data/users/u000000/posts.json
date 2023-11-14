@@ -13,7 +13,7 @@
         ],
         "date_created": "POST CREATION DATE",
         "last_edited": "POST LAST EDITED DATE",
-        "uid": "p000000"
+        "pid": "p000000"
     },
     {
         "title": "new post",
@@ -27,6 +27,6 @@
         ],
         "date_created": "10\/15\/23 10:14:47pm",
         "last_edited": "10\/15\/23 10:14:47pm",
-        "uid": "p490872"
+        "pid": "p490872"
     }
 ]
