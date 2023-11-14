@@ -10,7 +10,7 @@ $admins=get_admins($admin_file);
 // step through user data and compare ids until a match
 
 for ($i=0;$i<count($admins);$i++){
-    if ($admins[$i]['id'] == $userID){
+    if ($admins[$i]['uid'] == $userID){
         $id_found=true;
         break;
     }
@@ -43,7 +43,7 @@ function is_user_admin($user_id){
 
     // step through user data and compare ids until a match
     for ($i=0;$i<count($admins);$i++){
-        if ($admins[$i]['id'] == $user_id){
+        if ($admins[$i]['uid'] == $user_id){
             return true;
         }
     }
@@ -70,7 +70,7 @@ function remove_admin($user_id) {
     $admin_updated=fopen($admin_file,'w');
     fputs($admin_updated,'id'.PHP_EOL);
     foreach($admins as $id){
-        if ($id['id']!=$user_id) fputs($admin_updated,$id['id'].PHP_EOL);
+        if ($id['uid']!=$user_id) fputs($admin_updated,$id['uid'].PHP_EOL);
     }
     fclose($admin_updated);
 }

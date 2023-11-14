@@ -19,7 +19,7 @@ function isUserAdmin($user_id){
 
     // step through user data and compare ids until a match
     for ($i=0;$i<count($admins);$i++){
-        if ($admins[$i]['id'] == $user_id){
+        if ($admins[$i]['uid'] == $user_id){
             $id_found=true;
             break;
         }
@@ -51,7 +51,7 @@ function getUserIndex($email){
     $users = readCSV('../../data/users/users.csv');
     for($i=0;$i<count($users);$i++){
         if($email == $users[$i]['email']){
-            return $users[$i]['id']; 
+            return $users[$i]['uid']; 
         }
     }
 }

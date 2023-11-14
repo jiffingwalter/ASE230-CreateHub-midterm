@@ -1,12 +1,12 @@
 <?php
 require_once('../../lib/auth/admin.php');
 require_once('../../lib/posts.php');
-$uid=$_GET['index'];
-$post=get_post($uid);
+$pid=$_GET['index'];
+$post=get_post($pid);
 ?>
 
 <head>
-    <title>Viewing Post UID #<?=$post['uid']?></title>
+    <title>Viewing Post PID #<?=$post['pid']?></title>
     <link href="../../dist/css/admin.scss" rel="stylesheet" />
 </head>
 
@@ -16,11 +16,11 @@ $post=get_post($uid);
     <a href="index.php"><< Back</a>
     <hr>
 
-    <h2>Viewing Post UID #<?=$post['uid']?></h2>
+    <h2>Viewing Post PID #<?=$post['pid']?></h2>
 
     <table border="1" cellpadding="5" cellspacing="2">
-        <td><a href="edit.php?index=<?=$post['uid']?>">Edit</a></td>
-        <td><a href="delete.php?index=<?=$post['uid']?>">Delete</a></td>
+        <td><a href="edit.php?index=<?=$post['pid']?>">Edit</a></td>
+        <td><a href="delete.php?index=<?=$post['pid']?>">Delete</a></td>
     </table>
     <hr>
     <table border="1" cellpadding="5" cellspacing="2">

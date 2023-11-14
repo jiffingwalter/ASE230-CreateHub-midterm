@@ -1,7 +1,7 @@
 [
     {
         "title": "test post",
-        "author": "u983282",
+        "author": "983282",
         "content": "post bod",
         "attachments": {
             "name": "Cave_Women.PNG",
@@ -17,11 +17,11 @@
         ],
         "date_created": "10\/16\/23 03:24:04am",
         "last_edited": "10\/16\/23 03:24:04am",
-        "uid": "p944839"
+        "pid": "944839"
     },
     {
         "title": "asdfasdf",
-        "author": "u983282",
+        "author": "983282",
         "content": "asdfasdf",
         "attachments": {
             "error": "noFileUploaded"
@@ -31,11 +31,11 @@
         ],
         "date_created": "10\/16\/23 03:24:11am",
         "last_edited": "10\/16\/23 03:24:11am",
-        "uid": "p902990"
+        "pid": "902990"
     },
     {
         "title": "testing for video",
-        "author": "u983282",
+        "author": "983282",
         "content": "thank you for watching this video",
         "attachments": {
             "name": "3c75d20.jpg",
@@ -52,6 +52,6 @@
         ],
         "date_created": "10\/16\/23 05:12:32am",
         "last_edited": "10\/16\/23 05:12:32am",
-        "uid": "p475467"
+        "pid": "475467"
     }
 ]

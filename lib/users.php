@@ -13,7 +13,7 @@ function get_user($user_id){
 
     // step through user data and compare ids until a match
     for ($i=0;$i<count($users);$i++){
-        if ($users[$i]['id'] == $user_id){
+        if ($users[$i]['uid'] == $user_id){
             $id_found=true;
             break;
         }
@@ -35,7 +35,7 @@ function does_user_exist($user_id){
 
     // step through user data and compare ids until a match
     for ($i=0;$i<count($users);$i++){
-        if ($users[$i]['id'] == $user_id){
+        if ($users[$i]['uid'] == $user_id){
             $id_found=true;
             break;
         }
@@ -50,10 +50,10 @@ function generate_user_id(){
     $id_is_unique=false;
     // step through user data and check ids
     while(!$id_is_unique){
-        $new_id="u".rand(100000,999999);
+        $new_id=rand(100000,999999);
 
         for ($i=0;$i<count($users);$i++){
-            if ($users[$i]['id'] == $new_id){
+            if ($users[$i]['uid'] == $new_id){
                 $id_is_unique=false;
                 break; // found non-unique id, break out with var set to false and generate another
             }
@@ -95,7 +95,7 @@ function edit_user($info_in,$user){
 
         // step through existing users, update infomation if their id matches and the field has been changed
         for ($row=0;$row < count($users_existing);$row++){
-            if ($users_existing[$row]['id'] == $user['id']){
+            if ($users_existing[$row]['uid'] == $user['uid']){
                 if (strlen($info_in['new_password'])>0){ // if new password was given, update password and hash it
                     $users_existing[$row]['password']=password_hash($info_in['new_password'],PASSWORD_DEFAULT);
                 }
@@ -108,7 +108,7 @@ function edit_user($info_in,$user){
             fputs($users_updated,$fields['email'].';'.
                 $fields['password'].';'.
                 $fields['date_created'].';'.
-                $fields['id'].
+                $fields['uid'].
                 PHP_EOL);
         }
         fclose($users_updated);
@@ -126,26 +126,26 @@ function delete_user($info_in){
     fputcsv($users_updated,['email','password','date_created','id'],';');
     foreach ($users_existing as $fields){
         // rewrite user info in file if current id doesn't match deletion id
-        if($fields['id']!=$info_in['id']){
+        if($fields['uid']!=$info_in['uid']){
             fwrite($users_updated,implode(';',$fields)."\n");
         }else{ // id matches, delete user files and directory. don't add them to file
             // get images directory content; if dir isn't empty, delete each image
-            $img_directory=get_directory_contents('../../data/users/'.$info_in['id'].'/images');
+            $img_directory=get_directory_contents('../../data/users/'.$info_in['uid'].'/images');
             if(count($img_directory)>0){
                 foreach($img_directory as $image){
-                    unlink('../../data/users/'.$info_in['id'].'/images/'.$image);
+                    unlink('../../data/users/'.$info_in['uid'].'/images/'.$image);
                 }
             }
-            rmdir('../../data/users/'.$info_in['id'].'/images');
-            unlink('../../data/users/'.$info_in['id'].'/portfolio.json');
-            unlink('../../data/users/'.$info_in['id'].'/posts.json');
-            $delete_success=rmdir('../../data/users/'.$info_in['id']);
+            rmdir('../../data/users/'.$info_in['uid'].'/images');
+            unlink('../../data/users/'.$info_in['uid'].'/portfolio.json');
+            unlink('../../data/users/'.$info_in['uid'].'/posts.json');
+            $delete_success=rmdir('../../data/users/'.$info_in['uid']);
         }
     }
     fclose($users_updated);
 
     // display success message and stop loading page to avoid nulls
-    ($delete_success)?display_message('Account '.$info_in['id'].' has been deleted'):'';
+    ($delete_success)?display_message('Account '.$info_in['uid'].' has been deleted'):'';
     echo '<a href="./index.php">Back to index</a><br>';
     die;
 }
@@ -183,7 +183,7 @@ function validate_user_edit($info_in,$user){
     //check if email exists (if its not the account being edited)
     $id_found=false;
     for($i=0;$i<count($users);$i++){
-        if($info_in['new_email'] == $users[$i]['email'] && $info_in['id'] != $users[$i]['id']){
+        if($info_in['new_email'] == $users[$i]['email'] && $info_in['uid'] != $users[$i]['uid']){
             $id_found=true;
             break;
         }

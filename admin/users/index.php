@@ -28,10 +28,10 @@ $users=get_all_users();
         }else {
             for($i=0;$i<count($users);$i++){ ?>
                 <tr>
-                    <td><b><?= $users[$i]['id'] ?></b></td>
+                    <td><b><?= $users[$i]['uid'] ?></b></td>
                     <td><p class="text-muted mb-5"><b><?=$users[$i]['email']?></td>
-                    <td style="width:80px"><a href="details.php?index=<?= $users[$i]['id'] ?>">View details</a></td>
-                    <td><a href="edit.php?index=<?= $users[$i]['id'] ?>">Edit</a></td>
+                    <td style="width:80px"><a href="details.php?index=<?= $users[$i]['uid'] ?>">View details</a></td>
+                    <td><a href="edit.php?index=<?= $users[$i]['uid'] ?>">Edit</a></td>
                 </tr>
         <?php }
         } ?>
