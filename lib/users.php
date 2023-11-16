@@ -1,6 +1,7 @@
 <?php
-require_once('general.php');
-require_once('../../scripts/readCSV.php');
+require_once(__DIR__.'/global.php');
+require_once($GLOBALS['generalDirectory']);
+require_once($GLOBALS['readCSVDirectory']);
 
 function get_all_users(){
     return readCSV('../../data/users/users.csv');

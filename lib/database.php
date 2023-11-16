@@ -29,4 +29,10 @@ class Database{
     function createPDO(){
         $this->pdo = new PDO('mysql:host='.$this->host.';dbname='.$this->name.';charset=utf8mb4',$this->user,$this->pass,$this->db_options);
     }
+
+    // runs a query and returns true if it could get it and false if not
+    function testConnection(){
+        $query=$this->pdo->query('SELECT uid FROM users');
+        return ($query->rowCount()>0);
+    }
 }
