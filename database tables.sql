@@ -16,7 +16,6 @@ create table posts(
     pid int primary key,
     title varchar(64),
     content longtext,
-    author int(6),
     date_created date,
     last_edited date
 	);

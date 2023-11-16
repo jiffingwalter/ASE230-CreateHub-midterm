@@ -1,4 +1,8 @@
+-- create test users
 insert into users values (000000,'UNDEFINED','template@createhub.com','$2y$10$OQ4aqiyJi6RWhXO3kuTHtus1bwIh6/TP0hOj4/yJ8r2qGwCihpz8m','0/0/0 00:00:00am',0);
 insert into users values (000001,'ADMIN','admin@createhub.com','$2y$10$OQ4aqiyJi6RWhXO3kuTHtus1bwIh6/TP0hOj4/yJ8r2qGwCihpz8m','0/0/0 00:00:00am',0);
 insert into users values (983282,'test account 1','test1@email.com','$2y$10$OQ4aqiyJi6RWhXO3kuTHtus1bwIh6/TP0hOj4/yJ8r2qGwCihpz8m','10/15/23 09:46:44pm',0);
 insert into users values (520790,'test account 2','test2@email.com','$2y$10$OQ4aqiyJi6RWhXO3kuTHtus1bwIh6/TP0hOj4/yJ8r2qGwCihpz8m','10/30/23 11:52:49pm',0);
+
+-- create test post, attachment, and tags
+insert into posts values(000000,'POST TITLE','POST CONTENT','0000-00-00','0000-00-00');

@@ -4,7 +4,6 @@
 require_once('../themes/head.php');
 require_once('../../lib/auth/auth.php');
 require_once('../../lib/users.php');
-$userID=isLoggedIn()?$_SESSION['userID']:'';
 ?>
 <body id="page-top">
 <?php
