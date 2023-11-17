@@ -1,8 +1,8 @@
 <?php
-require_once('../../lib/auth/auth.php');
+require_once('../../lib/global.php');
 $userID=isLoggedIn()?$_SESSION['userID']:forceLogin();
 require_once('../themes/head.php');
-require_once('../../lib/posts.php');
+require_once($GLOBALS['postHandlingDirectory']);
 $portfolios=get_user_portfolio($userID);
 ?>
 <body id="page-top" style="background-color: black; margin-top: 100px">

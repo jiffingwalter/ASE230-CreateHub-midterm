@@ -1,5 +1,5 @@
 <?php
-require_once('../../lib/general.php');
+require_once($GLOBALS['generalDirectory']);
 
 function readCSV($fileIn) {
     if (!file_exists($fileIn)){

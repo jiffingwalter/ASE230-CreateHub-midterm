@@ -1,6 +1,7 @@
 <?php
-require_once('../../scripts/readCSV.php');
 session_start();
+require_once($GLOBALS['readCSVDirectory']);
+require_once($GLOBALS['userHandlingDirectory']);
 
 // check if user is logged in
 function isLoggedIn(){
@@ -9,12 +10,12 @@ function isLoggedIn(){
 
 // force login
 function forceLogin(){
-    header("Location: ../../lib/auth/login.php");
+    header("Location: ../../".$GLOBALS['loginPage']);
 }
 
 // read through admin file and check if the user signed in is an admin
 function isUserAdmin($user_id){
-    $admins=readCSV('../../data/users/admins.csv');
+    $admins=readCSV($GLOBALS['adminListDirectory']);
     $id_found=false;
 
     // step through user data and compare ids until a match
@@ -28,7 +29,7 @@ function isUserAdmin($user_id){
 }
 
 function validateUser($email, $password){
-    $users = readCSV('../../data/users/users.csv');
+    $users = get_all_users();
     for($i=0;$i<count($users);$i++){
         if($email == $users[$i]['email'] && password_verify($password, $users[$i]['password'])){
             return true;
@@ -38,7 +39,7 @@ function validateUser($email, $password){
 }
 
 function validateUserEmail($email){
-    $users = readCSV('../../data/users/users.csv');
+    $users = get_all_users();
     for($i=0;$i<count($users);$i++){
         if($email == $users[$i]['email']){
             return false;
@@ -48,7 +49,7 @@ function validateUserEmail($email){
 }
 
 function getUserIndex($email){
-    $users = readCSV('../../data/users/users.csv');
+    $users = get_all_users();
     for($i=0;$i<count($users);$i++){
         if($email == $users[$i]['email']){
             return $users[$i]['uid']; 

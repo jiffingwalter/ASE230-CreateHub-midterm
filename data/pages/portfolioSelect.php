@@ -1,7 +1,7 @@
 <?php
-require_once('../../lib/auth/auth.php');
+require_once('../../lib/global.php');
 $userID=isLoggedIn()?$_SESSION['userID']:forceLogin();
-require_once('../../lib/posts.php');
+require_once($GLOBALS['postHandlingDirectory']);
 $portfolios=get_user_portfolio($userID);
 $index=$_GET['index'];
 ?>

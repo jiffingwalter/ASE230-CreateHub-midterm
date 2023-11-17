@@ -1,6 +1,6 @@
 <?php
-require_once('../../lib/auth/auth.php');
-$userID=isLoggedIn()?$_SESSION['userID']:'';
+
+
 require_once('../themes/head.php');
 
 ?>

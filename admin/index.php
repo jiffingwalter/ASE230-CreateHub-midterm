@@ -1,5 +1,6 @@
 <?php
-require_once('../lib/auth/admin.php');
+require_once('../lib/global.php');
+require_once($GLOBALS['authAdminOnlyDirectory']);
 
 ?>
 <head>

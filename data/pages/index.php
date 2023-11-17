@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
+require_once('../../lib/global.php');
+$userID=isLoggedIn()?$_SESSION['userID']:'';
+require_once($GLOBALS['userHandlingDirectory']);
 require_once('../themes/head.php');
-require_once('../../lib/auth/auth.php');
-require_once('../../lib/users.php');
+
 ?>
 <body id="page-top">
 <?php

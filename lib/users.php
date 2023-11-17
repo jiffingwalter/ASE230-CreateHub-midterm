@@ -1,10 +1,9 @@
 <?php
-require_once(__DIR__.'/global.php');
 require_once($GLOBALS['generalDirectory']);
 require_once($GLOBALS['readCSVDirectory']);
 
 function get_all_users(){
-    return readCSV('../../data/users/users.csv');
+    return readCSV($GLOBALS['userDataDirectory']);
 }
 
 // gets single user and returns their info
@@ -67,7 +66,7 @@ function generate_user_id(){
 function create_user($info_in){
     try{
         // append new user to end of user data file, 
-        $users_updated=fopen('../../data/users/users.csv','a');
+        $users_updated=fopen($GLOBALS['userDataDirectory'],'a');
         // generate user id and append new user info
         $user_id=generate_user_id();
         fputs($users_updated,$info_in['email'].';'.
@@ -92,7 +91,7 @@ function create_user($info_in){
 function edit_user($info_in,$user){
     try{
         $users_existing=get_all_users();
-        $users_updated=fopen('../../data/users/users.csv','w');
+        $users_updated=fopen($GLOBALS['userDataDirectory'],'w');
 
         // step through existing users, update infomation if their id matches and the field has been changed
         for ($row=0;$row < count($users_existing);$row++){
@@ -121,7 +120,7 @@ function edit_user($info_in,$user){
 
 function delete_user($info_in){
     $users_existing=get_all_users();
-    $users_updated=fopen('../../data/users/users.csv','w');
+    $users_updated=fopen($GLOBALS['userDataDirectory'],'w');
 
     // put column attributes, then rewrite users EXCEPT if its the user to delete
     fputcsv($users_updated,['email','password','date_created','id'],';');
@@ -154,7 +153,7 @@ function delete_user($info_in){
 // validates info for account creation
 function validate_user_signup($info_in){
     //check if email exists
-    $users = readCSV('../../data/users/users.csv');
+    $users = readCSV($GLOBALS['userDataDirectory']);
     $id_found=false;
     for($i=0;$i<count($users);$i++){
         if($info_in['email'] == $users[$i]['email']){
@@ -179,7 +178,7 @@ function validate_user_signup($info_in){
 
 // validates info for editing accounts
 function validate_user_edit($info_in,$user){
-    $users = readCSV('../../data/users/users.csv');
+    $users = readCSV($GLOBALS['userDataDirectory']);
 
     //check if email exists (if its not the account being edited)
     $id_found=false;

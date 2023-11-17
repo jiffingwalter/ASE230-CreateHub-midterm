@@ -1,6 +1,6 @@
 <?php
-require_once('auth.php');
-require_once('../users.php');
+require_once('../global.php');
+require_once($GLOBALS['userHandlingDirectory']);
 $showSignUp=True;
 if(isset($_SESSION['email'])) $showSignUp=false;
 if(count($_POST)>0){
@@ -18,7 +18,7 @@ if(count($_POST)>0){
             //go to index
             session_start();
             $_SESSION['userID'] = getUserIndex($_POST['LoginEmail']);
-            header("Location: ../../data/pages/index.php?");
+            header("Location: ../../".$GLOBALS['indexPage']);
             die();
         }else{
             display_error('Incorrect email/password, please try again or create an account');

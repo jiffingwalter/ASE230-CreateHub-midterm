@@ -1,9 +1,9 @@
 <?php
-require_once('../../lib/auth/auth.php');
+require_once('../../lib/global.php');
 $userID=isLoggedIn()?$_SESSION['userID']:forceLogin();
 require_once('../themes/head.php');
 require_once('../themes/nav.php');
-require_once('../../lib/posts.php');
+require_once($GLOBALS['postHandlingDirectory']);
 $posts=get_user_posts($userID);
 ?>
 <body id="page-top" style="background-color: black;">
