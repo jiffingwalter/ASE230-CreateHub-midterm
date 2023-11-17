@@ -1,16 +1,27 @@
-ADMIN post pages:
-- add attachment areas to post editor and details
-- move page redirect logic out of posts.php and into respective pages after CRUD operations
-ADMIN user pages:
-- finish portfolio section
 
-main:
-user options:
+LOGIC ----------------------------------------------------------------------------------------------
+users:
+- update user handling functions to pull from database instead of csv
 - add option for user's name?
-- give user option to edit their own info and delete their account
+- give user option to edit their own info and delete their account, as well as their posts and portfolios
+- need to experiment to make sure user cant cheat system and view/make posts by other users. maybe make sure post belongs to the userID?
 
+posts:
+- update post handling functions to pull from database instead of json files (this one will suck!)
+- add logic to delete and edit portfolios
 
 other:
-- fix double session warning on portfolio page, make sure session calls are all before any html
-- look into session_destroy warning on logout
-- convert users and posts to object-oriented?
+- make sure session calls are all before any html (think this is done after but may need to check again)
+----^ session_start() is now called in /lib/global.php, requiring this file first on all user pages should solve this issue
+- look into session_destroy warning on logout, possibly related to above?
+- convert users and posts to object-oriented style? (saving this for very last if we have time and wanna extra points since its not required. would be good practice tho)
+
+VISUAL -------------------------------------------------------------------------------------------
+general
+- finalize all pages
+- add user settings page where they can edit their info and change their shizz
+- add explore page where ALL posts show up by post date
+- implement tag search function
+- implement search function in general
+- add post and portfolio managment pages for users to edit their posts and content
+- 

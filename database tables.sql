@@ -3,7 +3,7 @@ create table users(
     name varchar(32),
     email varchar(64),
     password varchar(64),
-    date_created date,
+    date_created datetime,
     role int
     );
     
@@ -16,8 +16,8 @@ create table posts(
     pid int primary key,
     title varchar(64),
     content longtext,
-    date_created date,
-    last_edited date
+    date_created datetime,
+    last_edited datetime
 	);
 
 create table attached_to(  -- posts and attachment relationship set
