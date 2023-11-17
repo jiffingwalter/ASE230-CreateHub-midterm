@@ -1,7 +1,8 @@
 <?php // this file is to test user creation, editing, post handling, and deletion
-require_once('../../lib/auth/admin.php');
-require_once('../../lib/users.php');
-require_once('../../lib/posts.php');
+require_once('../../lib/global.php');
+require_once($GLOBALS['authAdminOnlyDirectory']);
+require_once($GLOBALS['userHandlingDirectory']);
+require_once($GLOBALS['postHandlingDirectory']);
 
 $testUserInfo=[
     'email'=>'testUser1@email.com',

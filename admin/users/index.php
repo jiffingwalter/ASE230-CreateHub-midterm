@@ -1,6 +1,7 @@
 <?php
-require_once('../../lib/auth/admin.php');
-require_once('../../lib/users.php');
+require_once('../../lib/global.php');
+require_once($GLOBALS['authAdminOnlyDirectory']);
+require_once($GLOBALS['userHandlingDirectory']);
 $users=get_all_users();
 ?>
 

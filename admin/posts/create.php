@@ -1,7 +1,8 @@
 <?php
-require_once('../../lib/auth/admin.php');
-require_once('../../lib/posts.php');
-require_once('../../lib/users.php');
+require_once('../../lib/global.php');
+require_once($GLOBALS['authAdminOnlyDirectory']);
+require_once($GLOBALS['userHandlingDirectory']);
+require_once($GLOBALS['postHandlingDirectory']);
 $users=get_all_users();
 
 // if author id is set, create post. error if not

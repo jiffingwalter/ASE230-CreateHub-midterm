@@ -1,6 +1,7 @@
 <?php
-require_once('../../lib/auth/admin.php');
-require_once('../../lib/posts.php');
+require_once('../../lib/global.php');
+require_once($GLOBALS['authAdminOnlyDirectory']);
+require_once($GLOBALS['postHandlingDirectory']);
 $pid=(count($_GET) >= 1)?$_GET['index']:$_POST['pid'];
 $post=get_post($pid);
 require_once('../../lib/users.php');

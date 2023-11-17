@@ -1,5 +1,7 @@
 <?php
-require_once('../../lib/general.php');
+require_once('../../lib/global.php');
+require_once($GLOBALS['authAdminOnlyDirectory']);
+require_once($GLOBALS['generalDirectory']);
 
 function get_pages(){
     $pages=scandir('../../data/pages');
