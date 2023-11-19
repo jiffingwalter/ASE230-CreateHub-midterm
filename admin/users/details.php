@@ -1,7 +1,8 @@
 <?php
-require_once('../../lib/auth/admin.php');
-require_once('../../lib/users.php');
-require_once('../../lib/posts.php');
+require_once('../../lib/global.php');
+require_once($GLOBALS['authAdminOnlyDirectory']);
+require_once($GLOBALS['userHandlingDirectory']);
+require_once($GLOBALS['postHandlingDirectory']);
 $user=get_user($_GET['index']);
 $user_posts=get_user_posts($user['uid']);
 $user_portfolios=get_user_portfolio($user['uid']);

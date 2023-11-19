@@ -1,10 +1,10 @@
 <?php
-require_once('../../lib/auth/auth.php');
+require_once('../../lib/global.php');
 $userID=isLoggedIn()?$_SESSION['userID']:forceLogin();
 require_once('../themes/head.php');
 require_once('../themes/nav.php');
-require_once('../../scripts/readJSON.php');
-$posts=readJSON('../users/'.$userID.'/posts.json');
+require_once($GLOBALS['postHandlingDirectory']);
+$posts=get_user_posts($userID);
 $index = $_GET['index'];
 ?>
 <style>

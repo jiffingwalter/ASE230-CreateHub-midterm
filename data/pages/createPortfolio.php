@@ -1,11 +1,10 @@
 <?php
-session_start();
-$userID=$_SESSION['userID'];
+require_once('../../lib/global.php');
+$userID=isLoggedIn()?$_SESSION['userID']:forceLogin();
 require_once('../themes/head.php');
 require_once('../themes/nav.php');
-require_once('../../scripts/readJSON.php');
-require_once('../../lib/posts.php');
-$extensions = ['png', 'jpg', 'jpeg', 'PNG'];
+require_once($GLOBALS['readJSONDirectory']);
+require_once($GLOBALS['postHandlingDirectory']);
 if(count($_POST)>0){
     create_portfolio($_POST, $_FILES);
 }
