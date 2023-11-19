@@ -25,7 +25,7 @@ create table user_posts( -- user & posts relationship set
     
 create table posts(
     pid int primary key,
-    title varchar(64),
+    title varchar(255),
     content longtext,
     has_attachment int(1),
     date_created datetime,
@@ -40,9 +40,10 @@ create table attached_to(  -- posts and attachment relationship set
 create table attachments(
     aid int primary key,
 	file_name varchar(255),
-    ext varchar(5),
+    ext varchar(6),
     size int,
-    type varchar(32)
+    type varchar(32),
+    date_created datetime
 );
 
 create table post_tags(  -- post & tags relationship set
@@ -59,7 +60,7 @@ create table portfolios(
     fid int primary key,
     name varchar(128),
     category varchar(32),
-    images varchar(128)
+    images varchar(255)
     );
 
 create table user_portfolios(
@@ -89,7 +90,7 @@ insert into posts values(000000,'POST TITLE','POST CONTENT',0,'0000-00-00','0000
 
 -- create test posts, attachments, and tags
 insert into posts values(770308,'testing new posts','test post body',1,'2023-10-30 12:00:30','2023-11-08 03:15:23');
-insert into attachments values (123456,'20231019183921_2.jpg','jpg',149728,'image/jpeg');
+insert into attachments values (123456,'20231019183921_2.jpg','jpg',149728,'image/jpeg','2023-10-30 12:00:30');
 insert into tags values (0,'red dead redemption 2');
 insert into tags values (3,'horses');
 insert into user_posts values (520790,770308); 
@@ -98,12 +99,12 @@ insert into post_tags values (0,770308);
 insert into post_tags values (3,770308);
 
 insert into posts values(944839,'test post','post bod',1,'2023-10-16 03:24:04','2023-11-08 03:15:23');
-insert into attachments values (468516,'Cave_Women.PNG','png',149728,'image/png');
+insert into attachments values (468516,'Cave_Women.PNG','png',149728,'image/png','2023-10-16 03:24:04');
 insert into user_posts values (983282,944839); 
 insert into attached_to values(468516,944839);
 
 insert into posts values(475467,'testing for posts','thank you for viewing this post',1,'2023-10-16 12:00:30','2023-10-16 12:00:30');
-insert into attachments values (985456,'3c75d20.jpg','jpg',2899318,'image/jpeg');
+insert into attachments values (985456,'3c75d20.jpg','jpg',2899318,'image/jpeg','2023-10-16 12:00:30');
 insert into tags values (1,'cool');
 insert into tags values (2,'art');
 insert into user_posts values (983282,475467); 
@@ -112,7 +113,7 @@ insert into post_tags values (1,475467);
 insert into post_tags values (2,475467);
 
 insert into posts values(328885,'','',1,'2023-11-09 12:00:30','2023-11-18 03:15:23');
-insert into attachments values (569485,'2023-04-20.png','png',149728,'image/png');
+insert into attachments values (569485,'2023-04-20.png','png',149728,'image/png','2023-11-09 12:00:30');
 insert into user_posts values (520790,328885); 
 insert into attached_to values(569485,328885);
 
@@ -126,7 +127,7 @@ insert into post_tags values (5,000001);
 insert into post_tags values (6,000001);
 
 insert into posts values(123903,'cool picture','this picture is cool',1,'2023-10-15 11:43:05','2023-10-15 11:43:05');
-insert into attachments values (456735,'2RP5BgZ.jpg','jpg',520855,'image/jpeg');
+insert into attachments values (456735,'2RP5BgZ.jpg','jpg',520855,'image/jpeg','2023-10-15 11:43:05');
 insert into tags values (7,'this');
 insert into tags values (8,'is');
 insert into tags values (9,'a');
