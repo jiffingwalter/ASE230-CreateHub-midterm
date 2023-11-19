@@ -44,7 +44,7 @@ $GLOBALS['attachmentExts']=['png', 'jpg', 'jpeg'];
 // create database -----------------------------
 $GLOBALS['databaseDirectory']=$rootPath.'lib/database.php';
 require_once ($GLOBALS['databaseDirectory']);
-$db=new Database();
+const db=new Database();
 //echo $db->testConnection()?'database connected':'database not connected';
 
 // start session & handle authenticaton --------------------------------

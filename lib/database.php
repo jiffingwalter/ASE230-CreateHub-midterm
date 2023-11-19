@@ -1,7 +1,7 @@
-<?php
+<?php 
 // database object, creates pdo connection to database and provides options for handling the connection
 class Database{
-    public $pdo;
+    private $pdo;
     private $host;
     private $name;
     private $user;
@@ -33,5 +33,43 @@ class Database{
     function testConnection(){
         $query=$this->pdo->query('SELECT uid FROM users');
         return ($query->rowCount()>0);
+    }
+
+    // performs query operation with pdo object and returns SINGLE result in array
+    function query($query){
+        $newQuery = $this->pdo->query($query);
+        return $newQuery->fetch();
+    }
+
+    // performs prepared query operation with pdo object and returns SINGLE result in array
+    // $query is for the prepared query, $parameters is the stuff to input
+    function preparedQuery($query,$parameters){
+        $newQuery = $this->pdo->prepare($query);
+        $newQuery->execute($parameters);
+        return $newQuery->fetch();
+    }
+
+    // performs query operation with pdo object and returns result in array, use for queries with multiple results
+    function queryAll($query){
+        $newQuery = $this->pdo->query($query);
+        return $newQuery->fetchAll();
+    }
+
+    // performs prepared query operation with pdo object and returns result, use for queries with multiple results
+    // $query is for the prepared query, $parameters is the stuff to input
+    function preparedQueryAll($query,$parameters){
+        $newQuery = $this->pdo->prepare($query);
+        $newQuery->execute($parameters);
+        return $newQuery->fetchAll();
+    }
+
+    // checks if any result was found in a processed query, returns true or false (just saves having to type row count and etc)
+    function resultFound($query){
+        return count($query)>0;
+    }
+
+    // converts date format from sql to perferred format
+    function convertDate(){
+
     }
 }

@@ -2,58 +2,41 @@
 require_once($GLOBALS['generalDirectory']);
 require_once($GLOBALS['readCSVDirectory']);
 
+// returns list of all users
 function get_all_users(){
-    return readCSV($GLOBALS['userDataDirectory']);
+    return db->queryAll('SELECT * FROM users');
 }
 
 // gets single user and returns their info
 function get_user($user_id){
-    $users=get_all_users();
-    $id_found=false;
-
-    // step through user data and compare ids until a match
-    for ($i=0;$i<count($users);$i++){
-        if ($users[$i]['uid'] == $user_id){
-            $id_found=true;
-            break;
-        }
-    }
-
-    // return user info if found. return empty user and throw error if user not found
-    if ($id_found){
-        return $users[$i];
+    $user=db->preparedQuery('SELECT * FROM users WHERE uid=?',[$user_id]);
+    if (db->resultFound($user)){
+        return $user;
     } else {
         display_system_error('Could not find user with ID #'.$user_id.' inside user data file',$_SERVER['SCRIPT_NAME']);
-        return $users[0];
+        return db->query('SELECT * FROM users WHERE uid=0');
     }
 }
 
-// accepts an id and tells you if that user exists in the system or not
+// accepts an id and returns true if that user exists in the system or not
 function does_user_exist($user_id){
-    $users=get_all_users();
-    $id_found=false;
-
-    // step through user data and compare ids until a match
-    for ($i=0;$i<count($users);$i++){
-        if ($users[$i]['uid'] == $user_id){
-            $id_found=true;
-            break;
-        }
+    $user=db->preparedQuery('SELECT * FROM users WHERE uid=?',[$user_id]);
+    if (db->resultFound($user)){
+        return true;
+    } else {
+        return false;
     }
-
-    // return if user was found or not
-    return ($id_found)?true:false;
 }
 
 function generate_user_id(){
-    $users=get_all_users();
+    $user_ids=db->queryAll('SELECT uid FROM users');
     $id_is_unique=false;
     // step through user data and check ids
     while(!$id_is_unique){
         $new_id=rand(100000,999999);
 
-        for ($i=0;$i<count($users);$i++){
-            if ($users[$i]['uid'] == $new_id){
+        for ($i=0;$i<count($user_ids);$i++){
+            if ($user_ids[$i]['uid'] == $new_id){
                 $id_is_unique=false;
                 break; // found non-unique id, break out with var set to false and generate another
             }
@@ -63,24 +46,24 @@ function generate_user_id(){
     return $new_id;
 }
 
+// creates a new user and returns true + user_id if successful or false + the error if not
 function create_user($info_in){
     try{
-        // append new user to end of user data file, 
-        $users_updated=fopen($GLOBALS['userDataDirectory'],'a');
-        // generate user id and append new user info
+        // generate new user id and push the info into the database
         $user_id=generate_user_id();
-        fputs($users_updated,$info_in['email'].';'.
-            password_hash($info_in['password'],PASSWORD_DEFAULT).';'.
-            get_timestamp().';'.
-            $user_id.
-            PHP_EOL);
-        fclose($users_updated);
+        db->preparedQuery('INSERT INTO users VALUES (:uid,:name,:email,:password,CURRENT_TIMESTAMP,:role)',[
+            'uid'=>$user_id,
+            'name'=>$info_in['name'],
+            'email'=>$info_in['email'],
+            'password'=>password_hash($info_in['password'],PASSWORD_DEFAULT),
+            'role' => 1 // default role is ALWAYS user. can be changed by admin manually or through verification after creation
+        ]);
         
         // create user dependencies
         mkdir('../../data/users/'.$user_id, 0755);
         mkdir('../../data/users/'.$user_id.'/images', 0755);
-        file_put_contents('../../data/users/'.$user_id.'/posts.json', json_encode([], JSON_PRETTY_PRINT));
-        file_put_contents('../../data/users/'.$user_id.'/portfolio.json', json_encode([], JSON_PRETTY_PRINT));
+        file_put_contents('../../data/users/'.$user_id.'/posts.json', json_encode([], JSON_PRETTY_PRINT)); // remove after posts are migrated to DB
+        file_put_contents('../../data/users/'.$user_id.'/portfolio.json', json_encode([], JSON_PRETTY_PRINT)); // remove after posts are migrated to DB
         return [true,$user_id];
     } catch (Exception $ex){
         return [false,$ex];
@@ -90,28 +73,15 @@ function create_user($info_in){
 // edits a user by going through and matching
 function edit_user($info_in,$user){
     try{
-        $users_existing=get_all_users();
-        $users_updated=fopen($GLOBALS['userDataDirectory'],'w');
+        // insert new values into user
+        db->preparedQuery('UPDATE `users` SET `name`=:name,`email`=:email,`password`=:password,`role`=:role WHERE `uid`=:uid',[
+            'uid'=>$info_in['uid'],
+            'name'=>$info_in['name'],
+            'email'=>$info_in['email'],
+            'password'=>password_hash($info_in['password'],PASSWORD_DEFAULT),
+            'role' => isset($info_in['role'])?$info_in['role']:1 // set roll if its given, otherwise default to normal user
+        ]);
 
-        // step through existing users, update infomation if their id matches and the field has been changed
-        for ($row=0;$row < count($users_existing);$row++){
-            if ($users_existing[$row]['uid'] == $user['uid']){
-                if (strlen($info_in['new_password'])>0){ // if new password was given, update password and hash it
-                    $users_existing[$row]['password']=password_hash($info_in['new_password'],PASSWORD_DEFAULT);
-                }
-                $users_existing[$row]['email']=$info_in['new_email'];
-            }
-        }
-        // put column attributes, then rewrite each line with updated user and close file
-        fputcsv($users_updated,['email','password','date_created','id'],';');
-        foreach ($users_existing as $fields){
-            fputs($users_updated,$fields['email'].';'.
-                $fields['password'].';'.
-                $fields['date_created'].';'.
-                $fields['uid'].
-                PHP_EOL);
-        }
-        fclose($users_updated);
         return true;
     } catch (Exception $ex){
         return $ex;
@@ -119,42 +89,34 @@ function edit_user($info_in,$user){
 }
 
 function delete_user($info_in){
-    $users_existing=get_all_users();
-    $users_updated=fopen($GLOBALS['userDataDirectory'],'w');
+    try{
+        // delete user if they are found
+        db->preparedQuery('DELETE FROM users WHERE `uid`=:uid',[$info_in['uid']]);
 
-    // put column attributes, then rewrite users EXCEPT if its the user to delete
-    fputcsv($users_updated,['email','password','date_created','id'],';');
-    foreach ($users_existing as $fields){
-        // rewrite user info in file if current id doesn't match deletion id
-        if($fields['uid']!=$info_in['uid']){
-            fwrite($users_updated,implode(';',$fields)."\n");
-        }else{ // id matches, delete user files and directory. don't add them to file
-            // get images directory content; if dir isn't empty, delete each image
-            $img_directory=get_directory_contents('../../data/users/'.$info_in['uid'].'/images');
-            if(count($img_directory)>0){
-                foreach($img_directory as $image){
-                    unlink('../../data/users/'.$info_in['uid'].'/images/'.$image);
-                }
+        // delete user files and directory
+        // get images directory content; if dir isn't empty, delete each image
+        $img_directory=get_directory_contents('../../data/users/'.$info_in['uid'].'/images');
+        if(count($img_directory)>0){
+            foreach($img_directory as $image){
+                unlink('../../data/users/'.$info_in['uid'].'/images/'.$image);
             }
-            rmdir('../../data/users/'.$info_in['uid'].'/images');
-            unlink('../../data/users/'.$info_in['uid'].'/portfolio.json');
-            unlink('../../data/users/'.$info_in['uid'].'/posts.json');
-            $delete_success=rmdir('../../data/users/'.$info_in['uid']);
         }
+        rmdir('../../data/users/'.$info_in['uid'].'/images');
+        unlink('../../data/users/'.$info_in['uid'].'/portfolio.json');
+        unlink('../../data/users/'.$info_in['uid'].'/posts.json');
+        $delete_success=rmdir('../../data/users/'.$info_in['uid']);
+        
+        return $delete_success;
+    } catch (Exception $ex){
+        return $ex;
     }
-    fclose($users_updated);
-
-    // display success message and stop loading page to avoid nulls
-    ($delete_success)?display_message('Account '.$info_in['uid'].' has been deleted'):'';
-    echo '<a href="./index.php">Back to index</a><br>';
-    die;
 }
 
 // validates info for account creation
 function validate_user_signup($info_in){
     //check if email exists
-    $users = readCSV($GLOBALS['userDataDirectory']);
-    $id_found=false;
+    $users = get_all_users();
+    $email_found=false;
     for($i=0;$i<count($users);$i++){
         if($info_in['email'] == $users[$i]['email']){
             $id_found=true;
@@ -162,7 +124,7 @@ function validate_user_signup($info_in){
         }
     }
     // validate password if user doesn't already exist, error if they do
-    if(!$id_found){
+    if(!$email_found){
         if(strlen($info_in['password'])<1){ // check if blank
             display_error('Password cannot be blank');
         }elseif($info_in['password'] != $info_in['confirmPassword']){ // check if passwords match
@@ -178,7 +140,7 @@ function validate_user_signup($info_in){
 
 // validates info for editing accounts
 function validate_user_edit($info_in,$user){
-    $users = readCSV($GLOBALS['userDataDirectory']);
+    $users = get_all_users();
 
     //check if email exists (if its not the account being edited)
     $id_found=false;
