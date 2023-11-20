@@ -5,56 +5,40 @@ require_once('../../scripts/readJSON.php');
 
 //get list of all user posts
 function get_all_posts(){
-    $users=get_all_users();
-    $post_list_all=[];
-
-    // go through all users, read their posts and append to list
-    foreach($users as $user){
-        $post_list_all=array_merge($post_list_all,get_user_posts($user['uid']));
-    }
-    
-    return $post_list_all;
+    return db->queryAll('SELECT * FROM posts');
 }
 
 // return all posts by a specific user by ID
 function get_user_posts($user_id){
-    $user_posts=readJSON('../../data/users/'.$user_id.'/posts.json');
-    $post_list=[];
-
-    // go through user posts, read their posts and append to list
-    foreach($user_posts as $post){
-        $post_list+=$post;
-    }
-
-    return readJSON('../../data/users/'.$user_id.'/posts.json');
-}
-
-//return portfolio of user
-function get_user_portfolio($user_id){
-    return readJSON('../../data/users/'.$user_id.'/portfolio.json');
+    return db->preparedQueryAll('SELECT * FROM posts NATURAL JOIN user_posts WHERE uid=:uid',[
+        'uid'=>$user_id
+    ]);
 }
 
 // return single post by searching by pid in post file
 function get_post($pid){
-    $posts=get_all_posts();
-    $pid_found=false;
-
-    for ($i=0;$i<count($posts);$i++){
-        if ($posts[$i]['pid'] == $pid){
-            $pid_found=true;
-            break;
-        }
-    }
-
-    if ($pid_found){
-        return $posts[$i];
+    $post=db->preparedQuery('SELECT * FROM posts WHERE pid=?',[$pid]);
+    if (db->resultFound($post)){
+        return $post;
     } else {
-        display_system_error('Could not find post pid #'.$pid.' inside post data file',$_SERVER['SCRIPT_NAME']);
-        return $posts[0]; // return example post to attempt to avoid php errors
+        display_system_error('Could not find post with ID #'.$pid.' inside user data file',$_SERVER['SCRIPT_NAME']);
+        return db->query('SELECT * FROM posts WHERE pid=0'); // return example post to avoid php errors
     }
 }
 
+// creates a new post, and attachments/tags if added. returns true if made successfully and false if not
 function create_post($info_in,$file_in){
+    try {
+        $post_id=generate_pid();
+        // push post info to database
+        // handle attachment and push infos to database if one is provided
+        // handle tags and push infos to database if any are provided
+        // return post pid if successful
+    } catch (Exception $ex) {
+        return false;
+    }
+
+    die; //OLD----------------------------
     $posts_updated=get_user_posts($info_in['author']);
 
     // lay out new post text
@@ -154,54 +138,68 @@ function generate_pid(){
     return $new_pid;
 }
 
-// turn tags into array -- TODO: make it so blank tags get discarded
+// parse tags into database
 function parse_tags_in($tags_in){
     $tags_out=explode(',',$tags_in);
     for($i=0;$i < count($tags_out);$i++){
         $tags_out[$i]=trim($tags_out[$i]);
     }
-    return $tags_out;
-}
+    foreach ($tags_out as $tag) {
 
-// print array of tags
-function parse_tags_out($tags_in){
-    $tags_out='';
-    foreach ($tags_in as $tag){
-        echo $tag;
-        echo ($tag !== $tags_in[count($tags_in) - 1])?", ":""; // check if tag is last tag, add comma appropriately
-    } 
-    return $tags_out;
-}
-
-// read through user list and return an author's email from their id
-function get_post_author($user_id){
-    $users=get_all_users();
-    $id_found=false;
-
-    // step through user data and compare ids until a match
-    for ($i=0;$i<count($users);$i++){
-        if ($users[$i]['uid'] == $user_id){
-            $id_found=true;
-            break;
-        }
     }
+}
 
-    // return user id if found. return empty user and throw error if user not found
-    if ($id_found){
-        return $users[$i]['email'];
+// reads database and returns array of tags from a post id, if the post has any
+function get_post_tags($pid){
+    $tags=db->preparedQueryAll('SELECT tag FROM post_tags NATURAL JOIN tags WHERE pid=:pid',[
+        'pid'=>$pid
+    ]);
+    return (db->resultFound($tags))? $tags : false;
+}
+
+// reads database for a posts tags and prints them out in basic format if there are any. returns false if there's no tags found
+function parse_tags_out($pid){
+    $tags=get_post_tags($pid);
+    if ($tags){
+        foreach ($tags as $tag){
+            echo $tag['tag'];
+            echo ($tag !== $tags[count($tags) - 1])?", ":""; // check if tag is last tag, add comma appropriately
+        }
     } else {
-        display_system_error('Could not find user with ID #'.$user_id.' inside user data file',$_SERVER['SCRIPT_NAME']);
-        return $users[0];
+        return false;
+    }
+}
+
+// read through user list and returns a users info where the post id matches
+function get_post_author($pid){
+    $user=db->preparedQuery('SELECT * FROM users NATURAL JOIN user_posts WHERE pid=:pid',[
+        'pid'=>$pid
+    ]);
+    if (db->resultFound($user)){
+        return $user;
+    } else {
+        display_system_error('Could not find post with ID #'.$pid.' inside database',$_SERVER['SCRIPT_NAME']);
+        return db->query('SELECT * FROM posts WHERE pid=0'); // return example post to avoid php errors
     }
 }
 
 // attachment stuff ------------------------------------------------------------------
-// parse attachments to readable format and return attachment array - TODO -- if support for more attachments on one post is added, need to refactor
+// parse attachment names and info to database and move files to respective user's directories
+function is_attachment_provided($file_in){
+    return (isset($file_in['attachments']) && $file_in['attachments']['error'] != 4);
+}
+
 function parse_attachments($post_info,$file_in){
+    if(is_attachment_provided($file_in) && in_array(strtolower(pathinfo($file_in['attachments']['name'], PATHINFO_EXTENSION)),$GLOBALS['attachmentExts'])){
+        echo '<pre>'; var_dump($file_in);
+        // db insert statement for attachment table and the post relationship set
+        // move files by temp name to user dir
+    }
+
+    die;// OLD -----------------------
     $new_attachment=[];
     if(isset($file_in['attachments']) && $file_in['attachments']['error'] != 4
-        &&
-        in_array(strtolower(pathinfo($file_in['attachments']['name'], PATHINFO_EXTENSION)),get_file_extensions())){
+        && in_array(strtolower(pathinfo($file_in['attachments']['name'], PATHINFO_EXTENSION)),$GLOBALS['attachmentExts'])){
         $file = $file_in['attachments'];
         $file[count($file)] = pathinfo($file['name'], PATHINFO_EXTENSION);
         $new_attachment = $file;
@@ -212,10 +210,12 @@ function parse_attachments($post_info,$file_in){
     return $new_attachment;
 }
 
-// accepts a post id and returns a list of its attachment filenames -- TODO: if we add support for multiple images in one post, add support for that
-function get_post_attachments($post_id){
-    $selected_post=get_post($post_id);
-    return [$selected_post['attachments']['name']];
+// accepts a post id and returns an array of its attachments if it has any
+function get_post_attachments($pid){
+    $attachments=db->preparedQueryAll('SELECT * FROM attachments NATURAL JOIN attached_to WHERE pid=:pid',[
+        'pid'=>$pid
+    ]);
+    return (db->resultFound($attachments))? $attachments : false;
 }
 
 // moves a post's attachment to a new user
@@ -269,4 +269,20 @@ function create_portfolio($info, $file){
     $portfolio_updated[count($portfolio_updated)]=$new_portfolio;
     file_put_contents('../../data/users/'.$info['user_id'].'/portfolio.json', json_encode($portfolio_updated,JSON_PRETTY_PRINT));
     header('Location: index.php');
+}
+
+//return portfolios of user from their uid if they have any
+function get_user_portfolio($uid){
+    $portfolio=db->preparedQueryAll('SELECT * FROM portfolios NATURAL JOIN user_portfolios WHERE uid=:uid',[
+        'uid'=>$uid
+    ]);
+    if (db->resultFound($portfolio)){
+        // convert images string into array before returning portfolio object
+        for($i=0;$i<count($portfolio);$i++){
+            $portfolio[$i]['images']=explode(',',$portfolio[$i]['images']);
+        }
+        return $portfolio;
+    } else {
+        return false;
+    }
 }

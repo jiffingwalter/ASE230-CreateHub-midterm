@@ -70,8 +70,8 @@ $user_portfolios=get_user_portfolio($user['uid']);
         <tr>
         <td><b>Portfolios:</b></td>
             <td style="min-width:512px"><table border="1" cellpadding="5" cellspacing="2" style="width:100%">
-            <?php 
-            if(count($user_portfolios)<1){ ?>
+            <?php
+            if(!$user_portfolios){ ?>
                 <tr><td style="text-align:center">No Portfolios by this user</td></tr>
             <?php
             }else{ ?>

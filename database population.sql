@@ -5,7 +5,7 @@ drop table attached_to;
 drop table attachments;
 drop table post_tags;
 drop table tags;
-drop table portfolio;
+drop table portfolios;
 drop table user_portfolios;
 drop table roles;
 
@@ -19,8 +19,8 @@ create table users(
     );
     
 create table user_posts( -- user & posts relationship set
-	user_id int,
-    post_id int
+	uid int,
+    pid int
 );
     
 create table posts(
@@ -33,8 +33,8 @@ create table posts(
 	);
 
 create table attached_to(  -- posts and attachment relationship set
-    attachment_id int,
-    post_id int
+    aid int,
+    pid int
 );
 
 create table attachments(
@@ -47,12 +47,12 @@ create table attachments(
 );
 
 create table post_tags(  -- post & tags relationship set
-    tag_id int,
-    post_id int
+    tid int,
+    pid int
 	);
 
 create table tags(
-	id int primary key,
+	tid int primary key,
     tag varchar(128)
 	);
 
@@ -60,12 +60,12 @@ create table portfolios(
     fid int primary key,
     name varchar(128),
     category varchar(32),
-    images varchar(255)
+    images longtext
     );
 
 create table user_portfolios(
-    user_id int,
-    portfolio_id int
+    uid int,
+    fid int
     );
 
 create table roles(
@@ -87,6 +87,7 @@ insert into users values (983282,'test account 1','test1@email.com','$2y$10$OQ4a
 insert into users values (520790,'test account 2','test2@email.com','$2y$10$OQ4aqiyJi6RWhXO3kuTHtus1bwIh6/TP0hOj4/yJ8r2qGwCihpz8m','2023-10-20 11:52:49',1);
 
 insert into posts values(000000,'POST TITLE','POST CONTENT',0,'0000-00-00','0000-00-00 00:00:00am');
+insert into user_posts values (0,0); 
 
 -- create test posts, attachments, and tags
 insert into posts values(770308,'testing new posts','test post body',1,'2023-10-30 12:00:30','2023-11-08 03:15:23');
