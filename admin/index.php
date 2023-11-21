@@ -19,4 +19,6 @@ require_once($GLOBALS['postHandlingDirectory']);
 <?php // database testing area
 echo '<pre><hr>database testing area<br><br><br>';
 
-
+$test_tags='tag 1, art, post, newthing';
+$pid=1;
+parse_tags_in($test_tags,$pid);

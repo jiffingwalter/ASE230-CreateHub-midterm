@@ -65,7 +65,7 @@ class Database{
 
     // checks if any result was found in a processed query, returns true or false (just saves having to type row count and etc)
     function resultFound($query){
-        return count($query)>0;
+        return !($query==false || (count($query)<1));
     }
 
     // converts date format from sql to perferred format
