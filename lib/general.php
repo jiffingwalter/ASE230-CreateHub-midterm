@@ -30,7 +30,7 @@ function get_file_extensions(){
 
 // generates a timestamp
 function get_timestamp(){
-    return date("m-d-y h:i:s");
+    return date("Y-m-d h:i:s");
 }
 
 // gets an array of files in a directory

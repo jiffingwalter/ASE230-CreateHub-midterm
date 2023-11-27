@@ -9,7 +9,7 @@ function get_all_posts(){
     return db->queryAll('SELECT * FROM posts');
 }
 
-// return all posts by a specific user by ID
+// return all posts by a specific user by ID -- todo: add order parameter to modify order of returned query
 //  -- DONE
 function get_user_posts($user_id){
     return db->preparedQueryAll('SELECT * FROM posts NATURAL JOIN user_posts WHERE uid=:uid',[
@@ -35,55 +35,43 @@ function create_post($info_in,$file_in){
     try {
         // initialization
         $post_id=generate_pid();
-        $attachment=(is_attachment_provided($file_in));
-        $tags=(count($info_in['tags'])>0);
+        $attachment=(is_attachment_provided($file_in['attachments']));
+        $tags=(strlen($info_in['tags'])>0);
+
+        // debug
+        // echo '<pre> incoming data...<br>';
+        // var_dump($info_in);
+        // var_dump($file_in);
+
         // push post info to database
-        db->preparedQuery('INSERT INTO posts VALUES (:pid,:title,:content,:has_attachment,:date_created,:last_edited)',[
+        db->preparedQuery('INSERT INTO posts VALUES (:pid,:title,:content,:has_attachment,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)',[
             'pid'=>$post_id,
             'title'=>$info_in['title'],
             'content'=>$info_in['content'],
-            'has_attachment'=>($attachment),
-            'date_created' => get_timestamp(),
-            'last_edited' => get_timestamp()
+            'has_attachment'=>($attachment)
         ]);
         // push user and post relationship to database
         db->preparedQuery('INSERT INTO user_posts VALUES (:user_id,:post_id)',[
             'user_id'=>$info_in['author'],
             'post_id'=>$post_id
         ]);
+
         // handle attachment and push infos to database if one is provided
         if ($attachment) {
-            parse_attachments($info_in,$file_in['attachments']);
+            parse_attachments($post_id,$file_in['attachments']);
         }
         // handle tags and push infos to database if any are provided
         if ($tags) {
-            parse_tags_in($info_in['tags'],$info_in['pid']);
+            parse_tags_in($info_in['tags'],$post_id);
         }
+
         // return post pid if successful
         return $post_id;
-    } catch (Exception $ex) {
+    } catch (Throwable $error) {
+        display_system_error('Encountered fatal error when creating post',$_SERVER['SCRIPT_NAME']);
+        echo '<pre>'.$error;
         return false;
     }
-
-    //OLD----------------------------
-    // $posts_updated=get_user_posts($info_in['author']);
-
-    // // lay out new post text
-    // $new_post=[
-    //     'title' => $info_in['title'],
-    //     'author' => $info_in['author'],
-    //     'content' => $info_in['content'],
-    //     'attachments' => parse_attachments($info_in,$file_in),
-    //     'tags' => parse_tags_in($info_in['tags']),
-    //     'date_created' => get_timestamp(),
-    //     'last_edited' => get_timestamp(),
-    //     'pid' => generate_pid(),
-    // ];
-
-    // // update post data files
-    // $posts_updated[count($posts_updated)]=$new_post; // append new post to the end of file
-    // file_put_contents('../../data/users/'.$info_in['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the json data
-    // return $new_post['pid'];
 }
 
 // accepts a post and attachment info and edits an existing post, returns pid on success, false if not
@@ -191,11 +179,11 @@ function parse_tags_in($tags_in,$pid){
             // if tag is found in DB, set tid to its tid for attribution to post
             $tid=$tag_query['tid'];
         }
+
         // run insert to post_tags if the association doesn't already exist
         if (!db->resultFound(db->preparedQuery('SELECT * FROM post_tags WHERE tid=:tid AND pid=:pid',[
             'tid'=>$tid,
-            'pid'=>$pid
-        ]))) {
+            'pid'=>$pid]))) {
             db->preparedQuery('INSERT INTO post_tags VALUES (:tid,:pid)',[
                 'tid'=>$tid,
                 'pid'=>$pid
@@ -244,30 +232,33 @@ function get_post_author($pid){
 // attachment stuff ------------------------------------------------------------------
 // gets attachment info and verifies if its empty or not
 function is_attachment_provided($file_in){
-    return (isset($file_in['attachments']) && $file_in['attachments']['error'] != 4);
+    return (isset($file_in) && $file_in['error'] != 4);
 }
 
 // parse attachment names and info to database and move files to respective user's directories
 //  -- IN PROGRESS
-function parse_attachments($post_info,$file_in){
-    if(is_attachment_provided($file_in) && in_array(strtolower(pathinfo($file_in['attachments']['name'], PATHINFO_EXTENSION)),$GLOBALS['attachmentExts'])){
-        echo '<pre>'; var_dump($file_in);
+function parse_attachments($pid,$file_in){
+    // check if attachment exists and it is an allowed filetype. throw exception if not
+    if(in_array(strtolower(pathinfo($file_in['name'], PATHINFO_EXTENSION)),$GLOBALS['attachmentExts'])){
+        $aid=count(db->queryAll('SELECT aid FROM attachments'))+1;
+        $ext=strtolower(pathinfo($file_in['name'], PATHINFO_EXTENSION));
         // db insert statement for attachment table and the post relationship set
+        db->preparedQuery('INSERT INTO attachments VALUES (:aid,:file_name,:ext,:size,:type,CURRENT_TIMESTAMP)',[
+            'aid'=>$aid,
+            'file_name'=>$file_in['name'],
+            'ext'=>$ext,
+            'size'=>$file_in['size'],
+            'type'=>$file_in['type']
+        ]);
+        db->preparedQuery('INSERT INTO attached_to VALUES (:aid,:pid)',[
+            'aid'=>$aid,
+            'pid'=>$pid
+        ]);
         // move files by temp name to user dir
+        move_uploaded_file($file_in['tmp_name'],'../../data/users/'.get_post_author($pid)['uid'].'/images/'.$file_in['name']);
+    } else {
+        throw new Exception('File is not an accepted file type or no file was provided');
     }
-
-    die;// OLD -----------------------
-    $new_attachment=[];
-    if(isset($file_in['attachments']) && $file_in['attachments']['error'] != 4
-        && in_array(strtolower(pathinfo($file_in['attachments']['name'], PATHINFO_EXTENSION)),$GLOBALS['attachmentExts'])){
-        $file = $file_in['attachments'];
-        $file[count($file)] = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $new_attachment = $file;
-        move_uploaded_file($file['tmp_name'],'../../data/users/'.$post_info['author'].'/images/'.$file['full_path']);
-    }else{
-        $new_attachment = ['error' => 'noFileUploaded'];
-    }
-    return $new_attachment;
 }
 
 // accepts a post id and returns an array of its attachments if it has any

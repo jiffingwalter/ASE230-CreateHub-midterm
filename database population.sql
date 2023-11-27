@@ -132,7 +132,7 @@ insert into attachments values (456735,'2RP5BgZ.jpg','jpg',520855,'image/jpeg','
 insert into tags values (7,'this');
 insert into tags values (8,'is');
 insert into tags values (9,'a');
-insert into tags values (10,'cool');
+insert into tags values (10,'nice');
 insert into tags values (11,'picture');
 insert into user_posts values (000001,123903); 
 insert into attached_to values(456735,123903);
