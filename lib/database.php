@@ -1,5 +1,6 @@
 <?php 
 // database object, creates pdo connection to database and provides options for handling the connection
+// as well as all functions relating to connecting to the database
 class Database{
     private $pdo;
     private $host;

@@ -15,7 +15,7 @@ create table users(
     email varchar(64),
     password varchar(64),
     date_created datetime,
-    role int
+    role tinyint
     );
     
 create table user_posts( -- user & posts relationship set
@@ -27,7 +27,7 @@ create table posts(
     pid int primary key,
     title varchar(255),
     content longtext,
-    has_attachment int(1),
+    has_attachment tinyint(1),
     date_created datetime,
     last_edited datetime
 	);
@@ -143,11 +143,11 @@ insert into post_tags values (10,123903);
 insert into post_tags values (11,123903);
 
 -- create user test portfolios
-insert into portfolios values (123456,'Test portfolio','Work','["DV4pD0pVAAUVWFf.png","feelsbetterman.jpg","Kronk_.jpg"]');
+insert into portfolios values (123456,'Test portfolio','Work','DV4pD0pVAAUVWFf.png,feelsbetterman.jpg,Kronk_.jpg');
 insert into user_portfolios values (983282,123456);
 
-insert into portfolios values (234567,'another Portfolio','Images','["gort.jpg","patproj.jpg"]');
+insert into portfolios values (234567,'another Portfolio','Images','gort.jpg,patproj.jpg');
 insert into user_portfolios values (983282,234567);
 
-insert into portfolios values (894567,'Resume','Art','["astrowave wallpaper.jpg"]');
+insert into portfolios values (894567,'Resume','Art','astrowave wallpaper.jpg');
 insert into user_portfolios values (983282,894567);

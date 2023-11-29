@@ -48,4 +48,6 @@ $all_posts=get_all_posts();
             } ?>
         </table>
     </div>
+    <br><hr><br>
+    <a href='./testPosts.php'>Post testing area</a>
 </body>
