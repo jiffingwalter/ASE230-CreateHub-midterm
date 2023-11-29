@@ -5,7 +5,7 @@ require_once($GLOBALS['postHandlingDirectory']);
 $pid=$_GET['index'];
 $post=get_post($pid);
 $author=get_post_author($post['pid']);
-$attachments=get_post_attachments($post['pid']);
+$attachments=get_attachments($post['pid']);
 ?>
 
 <head>
@@ -38,7 +38,7 @@ $attachments=get_post_attachments($post['pid']);
             <td><?=$post['content']?></td></tr>
         <tr>
             <td><b>Tags:</b></td>
-            <td><?=$tags=parse_tags_out($post['pid'])?></td></tr>
+            <td><?=parse_tags_out($post['pid'])?></td></tr>
         <tr>
             <td><b>Date Created:</b></td>
             <td><?=$post['date_created']?></td></tr>

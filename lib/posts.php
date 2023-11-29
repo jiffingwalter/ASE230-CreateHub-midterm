@@ -30,7 +30,7 @@ function get_post($pid){
 }
 
 // creates a new post, and attachments/tags if added. returns true if made successfully and false if not
-//  -- IN PROGRESS
+//  -- DONE
 function create_post($info_in,$file_in){
     try {
         // initialization
@@ -69,7 +69,7 @@ function create_post($info_in,$file_in){
         return $post_id;
     } catch (Throwable $error) {
         display_system_error('Encountered fatal error when creating post',$_SERVER['SCRIPT_NAME']);
-        echo '<pre>'.$error;
+        echo '<pre>'.$error.'</pre>';
         return false;
     }
 }
@@ -77,6 +77,27 @@ function create_post($info_in,$file_in){
 // accepts a post and attachment info and edits an existing post, returns pid on success, false if not
 //  -- OUT OF DATE
 function edit_post($info_in,$file_in){ 
+    try{
+        // run comparison function to chek what has changed in comparison to the post current in the datbase
+        $updates=compare_post($info_in,$file_in);
+        $is_text_updated=$updates['textChanged'];
+        $is_attachment_updated=$updates['attachmentChanged'];
+        $is_tags_updated=$updates['tagsChanged'];
+        $is_author_updated=$updates['authorChanged'];
+
+        // update the post text fields if any text was updated
+        
+        // update the post attachment if it was updated
+        // update the post tags if they were updated
+        // update the post author if the author was updated (admin-only ability)
+        // return the post pid if all operations successful/if nothing changed
+    } catch (Throwable $error) {
+        display_system_error('Encountered fatal error when editing post #'.get_post_author($info_in['pid'])['uid'],$_SERVER['SCRIPT_NAME']);
+        echo '<pre>'.$error.'</pre>';
+        return false;
+    }
+
+    //OLD ------------------------------------------------------------
     // pull requested post by pid to get all its info
     $selected_post=get_post($info_in['pid']);
 
@@ -157,13 +178,23 @@ function generate_pid(){
     return $new_pid;
 }
 
-// parse tags into database for a post
+// convert a string of tags into array format. returns the array if successful, false if not
+function tags_to_array($tags_in){
+    if (isset($tags_in)){
+        $tags_in=explode(',',$tags_in);
+        $tags_out=[];
+        foreach ($tags_in as $tag){
+            $tags_out[]=trim($tag);
+        }
+    } else return false;
+    return $tags_out;
+}
+
+
+// parse an array of tags into database for a given post id
 //  -- DONE
 function parse_tags_in($tags_in,$pid){
-    $tags_out=explode(',',$tags_in);
-    for($i=0;$i < count($tags_out);$i++){
-        $tags_out[$i]=trim($tags_out[$i]);
-    }
+    $tags_out=tags_to_array($tags_in);
     foreach ($tags_out as $tag) {
         // run query to check if tag name exists in database
         // if tag doesn't exist in tags table, run query to create tag and its id
@@ -176,7 +207,7 @@ function parse_tags_in($tags_in,$pid){
                 'tag'=>$tag
             ]);
         } else { 
-            // if tag is found in DB, set tid to its tid for attribution to post
+            // if tag is found in DB, set tid to found tags tid for attribution to post
             $tid=$tag_query['tid'];
         }
 
@@ -198,21 +229,127 @@ function get_post_tags($pid){
     $tags=db->preparedQueryAll('SELECT tag FROM post_tags NATURAL JOIN tags WHERE pid=:pid',[
         'pid'=>$pid
     ]);
-    return (db->resultFound($tags))? $tags : false;
+    if (db->resultFound($tags)) {
+        $tags_out=[];
+            foreach ($tags as $tag){
+                $tags_out[]=$tag['tag'];
+            }
+        return $tags_out;
+    } else return false;
 }
 
-// reads database for a posts tags and prints them out in basic format if there are any. returns false if there's no tags found
+// reads database for a post's tags and prints them out in basic string format if there are any. returns null if there's no tags
 //  -- DONE
 function parse_tags_out($pid){
     $tags=get_post_tags($pid);
+    $tags_string='';
     if ($tags){
         foreach ($tags as $tag){
-            echo $tag['tag'];
-            echo ($tag !== $tags[count($tags) - 1])?", ":""; // check if tag is last tag, add comma appropriately
+            $tags_string.=$tag;
+            $tags_string.=($tag !== $tags[count($tags) - 1])?", ":""; // check if tag is last tag, add comma appropriately
         }
     } else {
         return false;
     }
+    return $tags_string;
+}
+
+// post comparisons
+// accepts a raw post info array and compares its text fields with the same post in the DB, returns true if it was modified and false if not
+function compare_post_text($post_in){
+    $postDB=db->preparedQuery('SELECT * FROM posts WHERE pid=:pid',[
+        'pid'=>$post_in['pid']
+    ]);
+    //echo '<br>incoming post text: ';var_dump($post_in); echo 'database post text: '; var_dump($postDB); // debug
+
+    // go through text fields of incoming post and compare with db post. return false if anything doesn't match
+    if ($post_in['pid']!==$postDB['pid']) return true;
+    if ($post_in['title']!==$postDB['title']) return true;
+    if ($post_in['content']!==$postDB['content']) return true;
+    return false;
+}
+// compares a raw posts tags with the same post in the db 
+function compare_post_tags($post_in){
+    // check if the incoming post has any tags assigned. if so, break them into an array. if not, assign tags to null
+    $tags_in=(isset($post_in['tags']))? tags_to_array($post_in['tags']) : null;
+    $tagsDB=get_post_tags($post_in['pid']);
+    echo '<br>incoming tags: ';var_dump($tags_in); echo 'database tags: '; var_dump($tagsDB); // debug
+    
+    // if no incoming tags and if no tags are found for the post in the db, return false
+    if ((isset($tags_in)==false && db->resultFound($tagsDB)==false)){
+        return false;
+    }
+    // if incoming tags is set but DB tags are not or vice versa, skip comparison and return true
+    if ((isset($tags_in)==true && db->resultFound($tagsDB)==false)
+        ||
+        (isset($tags_in)==false && db->resultFound($tagsDB)==true)){
+        return true;
+    }
+    // check if incoming post has the same amount of tags as the db post. if it does, check if each tag is inside the database post's tags. return true if mismatch found, false if all match
+    if (count($tags_in)==count($tagsDB)){
+        foreach ($tags_in as $tag){
+            if (!in_array($tag,$tagsDB)) return true;
+        }
+    } else return true;
+    return false;
+}
+// compares a raw post and attachment info with the same post and attachment in db (if attachment exists)
+function compare_post_attachment($post_in,$attachment_in){
+    // find the attachment based on the post id in relationship set and get its array
+    $attachmentProvided=is_attachment_provided($attachment_in);
+    $attachmentDB=db->preparedQuery(
+        'SELECT *
+        FROM attachments NATURAL JOIN attached_to
+        WHERE pid=:pid',[
+        'pid'=>$post_in['pid']
+    ]);
+    //echo '<br>local att: ';var_dump($attachment_in); echo 'database att: '; var_dump($attachmentDB); // debug
+
+    // if no attachment incoming detected and no attachment found in db, return false
+    if (($attachmentProvided==false && db->resultFound($attachmentDB)==false)){
+        return false;
+    }
+    // if only one has an attachment, return true without comparing
+    if (($attachmentProvided==true && db->resultFound($attachmentDB)==false)
+        ||
+        $attachmentProvided==false && (db->resultFound($attachmentDB)==true)){
+        return true;
+    }
+    // if both have attachments, compare their values and return accordingly
+    if ($attachmentProvided==true && db->resultFound($attachmentDB)==true){
+        if ($attachment_in['file_name']!==$attachmentDB['file_name']) return true;
+        if (strtolower(pathinfo($attachment_in['file_name'], PATHINFO_EXTENSION))!==$attachmentDB['ext']) return true;
+        if ($attachment_in['size']!==$attachmentDB['size']) return true;
+        if ($attachment_in['type']!==$attachmentDB['type']) return true;
+    }
+    return false;
+}
+// checks if a raw post info still has the same author marked
+function compare_post_author($post_in){
+    $authorDB=get_post_author($post_in['pid'])['uid'];
+    //echo '<br>local author: ';var_dump($post_in['author']); echo 'database author: '; var_dump($authorDB); // debug
+    return ($post_in['author']!==$authorDB);
+}
+
+// accepts a raw post array and compares its text, tags, attachments, and assigned authors. returns an array with true/false for each if they were changed or not
+function compare_post($post_in,$attachment_in){
+    // echo '<br><b>incoming post data: </b>'; var_dump($post_in); // debug
+    // echo '<br><b>incoming attachment data: </b>'; var_dump($attachment_in); // debug 
+    // echo '<hr>'; // debug
+
+    $text_changed=compare_post_text($post_in);
+    //echo '<b>post text changed...</b> ';echo $text_changed?'true<br>':'false<br>'; // debug
+    $tags_changed=compare_post_tags($post_in);
+    //echo '<b>post tags changed...</b> ';echo $tags_changed?'true<br>':'false<br>'; // debug
+    $attachment_changed=compare_post_attachment($post_in,$attachment_in);
+    //echo '<b>post attachment changed...</b> ';echo $attachment_changed?'true<br>':'false<br>'; // debug
+    $author_changed=compare_post_author($post_in);
+    // echo '<b>post author changed...</b> ';echo $author_changed?'true<br>':'false<br>'; // debug
+    return [
+        'textChanged'=>$text_changed,
+        'tagsChanged'=>$tags_changed,
+        'attachmentChanged'=>$attachment_changed,
+        'authorChanged'=>$author_changed];
 }
 
 // read through user list and returns a users info where the post id matches
@@ -230,9 +367,10 @@ function get_post_author($pid){
 }
 
 // attachment stuff ------------------------------------------------------------------
-// gets attachment info and verifies if its empty or not
+// gets attachment info and verifies if its fields are empty or not
 function is_attachment_provided($file_in){
-    return (isset($file_in) && $file_in['error'] != 4);
+    // check if its already set to false, if not, continue with field check
+    return ($file_in && $file_in['error'] != 4);
 }
 
 // parse attachment names and info to database and move files to respective user's directories
@@ -263,7 +401,7 @@ function parse_attachments($pid,$file_in){
 
 // accepts a post id and returns an array of its attachments if it has any
 //  -- DONE
-function get_post_attachments($pid){
+function get_attachments($pid){
     $attachments=db->preparedQueryAll('SELECT * FROM attachments NATURAL JOIN attached_to WHERE pid=:pid',[
         'pid'=>$pid
     ]);
