@@ -3,6 +3,11 @@ session_start();
 require_once($GLOBALS['readCSVDirectory']);
 require_once($GLOBALS['userHandlingDirectory']);
 
+// if debug mode is on, show information at the top of the page
+if ($GLOBALS['debug']){
+    echo 'development mode is on. current user: '; echo isset($_SESSION['userID'])?$_SESSION['userID']:'not logged in';
+}
+
 // check if user is logged in
 function isLoggedIn(){
     return isset($_SESSION['userID'])?true:false;
