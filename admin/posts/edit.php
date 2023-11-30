@@ -2,12 +2,17 @@
 require_once('../../lib/global.php');
 require_once($GLOBALS['authAdminOnlyDirectory']);
 require_once($GLOBALS['postHandlingDirectory']);
+
+// get pid from index, get post info with pid and add author uid key
 $pid=(count($_GET) >= 1)?$_GET['index']:$_POST['pid'];
 $post=get_post($pid);
+$post['author']=get_post_author($pid)['uid'];
+
 require_once('../../lib/users.php');
 $users=get_all_users();
 
-$postHasAttachment=($post['attachments']['error'] == 0);
+$postAttachment=get_attachments($pid);
+$postHasAttachment=($postAttachment);
 
 // if author id is set, edit post. error if not
 if (isset($_POST['author'])){
@@ -78,7 +83,7 @@ if (isset($_POST['delete_attachment'])){
         <label for="current-attachment">Current Attachment:</label> <br>
         <div class="attachment-display">
         <?php if ($postHasAttachment){ ?>
-            <img src="../../data/users/<?=$post['author']?>/images/<?=$post['attachments']['name']?>" style="max-width: 256px"><br>
+            <img src="../../data/users/<?=$post['author']?>/images/<?=$postAttachment[0]['file_name']?>" style="max-width: 256px"><br>
         <?php } else { ?>
             <p>(no attachment)</p>
         <?php } ?>
@@ -87,7 +92,7 @@ if (isset($_POST['delete_attachment'])){
         <input type="file" name="attachments" accept=".png, .jpg, .jpeg"><br>
 
         <label for="tags">Tags (separated by commas):</label> <br>
-        <input type="text" name="tags" style="width:512px" value="<?= parse_tags_out($post['tags'])?>"> <br><br>
+        <input type="text" name="tags" style="width:512px" value="<?= parse_tags_out($pid)?>"> <br><br>
 
         <input type="hidden" name="pid" value="<?= $pid ?>">
         <button type="submit">Save changes</button><br><br>

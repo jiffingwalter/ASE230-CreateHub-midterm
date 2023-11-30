@@ -15,6 +15,7 @@ posts:
 
 other:
 - add debug variable to globals file that will show extra text and stuff from echo statements in functions being run? current stuff that could be helpful is marked with "// debug" comment
+- update attachment functions to rename attachments when uploading them to server (prof said this was good practice)
 - make sure session calls are all before any html (think this is done after but may need to check again)
         NOTE: session_start() is now called in /lib/global.php, requiring this file first on all user pages should solve this issue
 - look into session_destroy warning on logout, possibly related to above?
