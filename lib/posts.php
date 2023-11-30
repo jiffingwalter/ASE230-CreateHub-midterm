@@ -38,10 +38,10 @@ function create_post($info_in,$file_in){
         $attachment=(is_attachment_provided($file_in['attachments']));
         $tags=(strlen($info_in['tags'])>0);
 
-        // debug
-        // echo '<pre> incoming data...<br>';
-        // var_dump($info_in);
-        // var_dump($file_in);
+        // debug info
+        if ($GLOBALS['debug']){
+            echo '<pre> incoming data...<br>';var_dump($info_in);var_dump($file_in);
+        }
 
         // push post info to database
         db->preparedQuery('INSERT INTO posts VALUES (:pid,:title,:content,:has_attachment,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)',[
@@ -315,7 +315,7 @@ function compare_post_text($post_in){
     $postDB=db->preparedQuery('SELECT * FROM posts WHERE pid=:pid',[
         'pid'=>$post_in['pid']
     ]);
-    //echo '<br>incoming post text: ';var_dump($post_in); echo 'database post text: '; var_dump($postDB); // debug
+    if ($GLOBALS['debug']) { echo '<br>incoming post text: ';var_dump($post_in); echo 'database post text: '; var_dump($postDB); }
 
     // go through text fields of incoming post and compare with db post. return false if anything doesn't match
     if ($post_in['title']!==$postDB['title']) return true;
@@ -327,8 +327,10 @@ function compare_post_tags($post_in){
     // check if the incoming post has any tags assigned. if so, break them into an array. if not, assign tags to null
     $tags_in=(isset($post_in['tags']))? tags_to_array($post_in['tags']) : null;
     $tagsDB=get_post_tags($post_in['pid']);
-    //echo '<br>incoming tags: ';var_dump($tags_in); echo 'database tags: '; var_dump($tagsDB); // debug
-    
+
+    // output debug info
+    if ($GLOBALS['debug']){echo '<br>incoming tags: ';var_dump($tags_in); echo 'database tags: '; var_dump($tagsDB);}
+
     // if no incoming tags and if no tags are found for the post in the db, return false
     if ((isset($tags_in)==false && db->resultFound($tagsDB)==false)){
         return false;
@@ -357,7 +359,7 @@ function compare_post_attachment($post_in,$attachment_in){
         WHERE pid=:pid',[
         'pid'=>$post_in['pid']
     ]);
-    //echo '<br>local att: ';var_dump($attachment_in); echo 'database att: '; var_dump($attachmentDB); // debug
+    if ($GLOBALS['debug']){echo '<br>local att: ';var_dump($attachment_in); echo 'database att: '; var_dump($attachmentDB);}
 
     // if no attachment incoming detected and no attachment found in db, return false
     if (($attachmentProvided==false && db->resultFound($attachmentDB)==false)){
@@ -381,23 +383,32 @@ function compare_post_attachment($post_in,$attachment_in){
 // checks if a raw post info still has the same author marked
 function compare_post_author($post_in){
     $authorDB=get_post_author($post_in['pid'])['uid'];
-    //echo '<br>local author: ';var_dump($post_in['author']); echo 'database author: '; var_dump($authorDB); // debug
+
+    // output debug info
+    if ($GLOBALS['debug']){echo '<br>local author: ';var_dump($post_in['author']); echo 'database author: '; var_dump($authorDB);}
+
     return ($post_in['author']!==$authorDB);
 }
 
 // accepts a raw post array and compares its text, tags, attachments, and assigned authors. returns an array with true/false for each if they were changed or not
 function compare_post($post_in,$attachment_in){
-    // echo '<br><b>incoming post data: </b>'; var_dump($post_in); // debug
-    // echo '<br><b>incoming attachment data: </b>'; var_dump($attachment_in); echo '<hr>'; // debug
+    // output debug info
+    if ($GLOBALS['debug']){
+        echo '<br><b>incoming post data: </b>'; var_dump($post_in);
+        echo '<br><b>incoming attachment data: </b>'; var_dump($attachment_in); echo '<hr>';
+    }
 
     $text_changed=compare_post_text($post_in);
-    //echo '<b>post text changed...</b> ';echo $text_changed?'true<br>':'false<br>'; // debug
+    if ($GLOBALS['debug']){ echo '<b>post text changed...</b> ';echo $text_changed?'true<br>':'false<br>'; }
+
     $tags_changed=compare_post_tags($post_in);
-    //echo '<b>post tags changed...</b> ';echo $tags_changed?'true<br>':'false<br>'; // debug
+    if ($GLOBALS['debug']){ echo '<b>post tags changed...</b> ';echo $tags_changed?'true<br>':'false<br>'; }
+
     $attachment_changed=isset($attachment_in)?compare_post_attachment($post_in,$attachment_in):false;
-    //echo '<b>post attachment changed...</b> ';echo $attachment_changed?'true<br>':'false<br>'; // debug
+    if ($GLOBALS['debug']){ echo '<b>post attachment changed...</b> ';echo $attachment_changed?'true<br>':'false<br>'; }
+    
     $author_changed=compare_post_author($post_in);
-    // echo '<b>post author changed...</b> ';echo $author_changed?'true<br>':'false<br>'; // debug
+    if ($GLOBALS['debug']){ echo '<b>post author changed...</b> ';echo $author_changed?'true<br>':'false<br>'; }
     return [
         'textChanged'=>$text_changed,
         'tagsChanged'=>$tags_changed,
@@ -450,8 +461,11 @@ function get_attachments($pid){
 // moves a post's attachment to a new user
 //  -- DONE?, NEEDS TESTING
 function change_attachment_user($filename,$user_id_old,$user_id_new){
-    echo 'attempting to move file ../../data/users/'.$user_id_old.'/images/'.$filename; // debug
-    echo '<br>to ../../data/users/'.$user_id_new.'/images/'.$filename; // debug
+    // output debug
+    if ($GLOBALS['debug']){
+        echo 'attempting to move file ../../data/users/'.$user_id_old.'/images/'.$filename;
+        echo '<br>to ../../data/users/'.$user_id_new.'/images/'.$filename;
+    }
     return rename('../../data/users/'.$user_id_old.'/images/'.$filename,'../../data/users/'.$user_id_new.'/images/'.$filename);
 }
 
