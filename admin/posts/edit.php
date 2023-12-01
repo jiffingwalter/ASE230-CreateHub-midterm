@@ -14,9 +14,12 @@ $users=get_all_users();
 $postAttachment=get_attachments($pid);
 $postHasAttachment=($postAttachment);
 
+//echo '<pre>';var_dump($post);var_dump($postAttachment);echo '</pre>';
+
 // if author id is set, edit post. error if not
 if (isset($_POST['author'])){
     if(strlen($_POST['author'])>0) {
+        $_POST['author']=intval($_POST['author']); // make sure uid is an int and not a string
         edit_post($_POST,$_FILES)?display_message('Updated post PID #'.$pid.'!'):'';
         echo '<a href="./index.php">Back to posts manager</a><br>';
         echo '<a href="./edit.php?index='.$pid.'">Go to post PID #'.$pid.'</a><br>';
@@ -39,7 +42,7 @@ if (isset($_POST['confirm_delete'])){
 
 // handle attachment deletion
 if (isset($_POST['delete_attachment'])){
-    delete_attachment($pid)?
+    delete_post_attachment($pid)?
         display_message('Deleted attachment successfully'):
         display_system_error('There was a problem deleting the attachment',$_SERVER['SCRIPT_NAME']);
     header('Location: edit.php?index='.$pid);

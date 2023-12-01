@@ -35,12 +35,12 @@ function create_post($info_in,$file_in){
     try {
         // initialization
         $post_id=generate_pid();
-        $attachment=(is_attachment_provided($file_in['attachments']));
-        $tags=(strlen($info_in['tags'])>0);
+        $isAttachmentProvided=(is_attachment_provided($file_in['attachments']));
+        $isTagsProvided=(strlen($info_in['tags'])>0);
 
         // debug info
         if ($GLOBALS['debug']){
-            echo '<pre> incoming data...<br>';var_dump($info_in);var_dump($file_in);
+            echo 'incoming data...<br>';var_dump($info_in);var_dump($file_in);
         }
 
         // push post info to database
@@ -48,7 +48,7 @@ function create_post($info_in,$file_in){
             'pid'=>$post_id,
             'title'=>$info_in['title'],
             'content'=>$info_in['content'],
-            'has_attachment'=>($attachment)
+            'has_attachment'=>($isAttachmentProvided)
         ]);
         // push user and post relationship to database
         db->preparedQuery('INSERT INTO user_posts VALUES (:user_id,:post_id)',[
@@ -57,11 +57,11 @@ function create_post($info_in,$file_in){
         ]);
 
         // handle attachment and push infos to database if one is provided
-        if ($attachment) {
+        if ($isAttachmentProvided) {
             parse_attachments($post_id,$file_in['attachments']);
         }
         // handle tags and push infos to database if any are provided
-        if ($tags) {
+        if ($isTagsProvided) {
             parse_tags_in($info_in['tags'],$post_id);
         }
 
@@ -78,8 +78,13 @@ function create_post($info_in,$file_in){
 //  -- IN PROGRESS
 function edit_post($info_in,$file_in){ 
     try{
+        // debug info
+        if ($GLOBALS['debug']){
+            echo 'incoming data...<br>';var_dump($info_in);var_dump($file_in['attachments']);
+        }
+        
         // run comparison functions to check what has changed in comparison to the post current in the database
-        $updates=compare_post($info_in,$file_in);
+        $updates=compare_post($info_in,$file_in['attachments']);
         $isTextUpdated=$updates['textChanged'];
         $isAttachmentUpdated=$updates['attachmentChanged'];
         $isTagsUpdated=$updates['tagsChanged'];
@@ -87,6 +92,7 @@ function edit_post($info_in,$file_in){
 
         // update the post text fields if any text was updated
         if ($isTextUpdated){
+            if ($GLOBALS['debug']) echo 'updating post text...';
             db->preparedQuery('UPDATE posts SET title=:title, content=:content WHERE pid=:pid',[
                 'title'=>$info_in['title'],
                 'content'=>$info_in['content'],
@@ -95,22 +101,25 @@ function edit_post($info_in,$file_in){
         }
         // update the post attachment if it was updated
         if ($isAttachmentUpdated){
-            replace_attachment($info_in,$file_in);
+            if ($GLOBALS['debug']) echo '<br>updating post attachment...';
+            replace_attachment($info_in,$file_in['attachments']);
         }
         // update the post tags if they were updated
         if ($isTagsUpdated){
+            if ($GLOBALS['debug']) echo '<br>updating post tags...';
             replace_post_tags($info_in['tags'],$info_in['pid']);
         }
         // update the post author if the author was updated (admin-only ability)
         if ($isAuthorUpdated){
+            if ($GLOBALS['debug']) echo '<br>updating post author...';
             // check if the post has an attachment; if so, move it to new author's dir
-            if (get_attachments($info_in['pid'])){
+            if ($attachment=get_attachments($info_in['pid'])){
                 $old_uid=get_post_author($info_in['pid'])['uid'];
-                change_attachment_user($file_in['name'],$old_uid,$info_in['uid']);
+                change_attachment_user($attachment[0]['file_name'],$old_uid,$info_in['author']);
             }
             // update post author association in db
             db->preparedQuery('UPDATE user_posts SET uid=:uid WHERE pid=:pid',[
-                'uid'=>$info_in['uid'],
+                'uid'=>$info_in['author'],
                 'pid'=>$info_in['pid']
             ]);
         }
@@ -121,38 +130,6 @@ function edit_post($info_in,$file_in){
         echo '<pre>'.$error.'</pre>';
         return false;
     }
-
-    //OLD ------------------------------------------------------------
-    // pull requested post by pid to get all its info
-    $selected_post=get_post($info_in['pid']);
-
-    // TODO -- make sure changing author and attachments at same time doesn't blow everything up
-    // move attachment IF... there is an attachment, the author was changed, and if the attachment itself wasn't being changed
-    if ($selected_post['attachments']['error'] != 'noFileUploaded' && $info_in['author']!=$selected_post['author'] && !isset($file_in)){
-        change_attachment_user($selected_post['attachments']['name'],$selected_post['author'],$info_in['author']);
-    }
-
-    // update attachment if a one is provided
-    if (isset($file_in['attachments']) && $file_in['attachments']['error']!=4){
-        $selected_post['attachments']=replace_attachment($selected_post,$file_in);
-    }
-
-    // update/reinsert the post text info that was returned
-    $selected_post['title']=$info_in['title'];
-    $selected_post['author']=$info_in['author'];
-    $selected_post['content']=$info_in['content'];
-    $selected_post['tags']=(isset($info_in['tags'][0]) && strlen($info_in['tags'][0])>0)?parse_tags_in($info_in['tags'],$info_in['pid']):[""]; // sloppy way of avoiding php errors if tags arent set in different cases
-    $selected_post['last_edited']=get_timestamp();
-
-    // delete original post
-    delete_post($info_in['pid'],false);
-
-    // get users post list add post to given user's post data file
-    $posts_updated=get_user_posts($selected_post['author']);
-    $posts_updated[]=$selected_post; // append edited post to the end of file
-    file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the users post json data
-
-    return true;
 }
 
 // accepts a post ID and deletes it from it's user's post data
@@ -304,7 +281,7 @@ function replace_post_tags($tags,$pid){
 // deletes any associations of tags that match a pid
 // does NOT delete unused tags in db
 function delete_post_tag_associations($pid){
-    db->preparedQuery('DELETE FROM tags WHERE pid=:pid',[
+    db->preparedQuery('DELETE FROM post_tags WHERE pid=:pid',[
         'pid'=>$pid
     ]);
 }
@@ -324,21 +301,21 @@ function compare_post_text($post_in){
 }
 // compares a raw posts tags with the same post in the db 
 function compare_post_tags($post_in){
-    // check if the incoming post has any tags assigned. if so, break them into an array. if not, assign tags to null
-    $tags_in=(isset($post_in['tags']))? tags_to_array($post_in['tags']) : null;
+    // check if the incoming post has any tags assigned. if so, break them into an array. if not, assign tags to false
+    $tags_in=(strlen($post_in['tags'])>0)? tags_to_array($post_in['tags']) : false;
     $tagsDB=get_post_tags($post_in['pid']);
 
     // output debug info
     if ($GLOBALS['debug']){echo '<br>incoming tags: ';var_dump($tags_in); echo 'database tags: '; var_dump($tagsDB);}
 
     // if no incoming tags and if no tags are found for the post in the db, return false
-    if ((isset($tags_in)==false && db->resultFound($tagsDB)==false)){
+    if ($tags_in==false && db->resultFound($tagsDB)==false){
         return false;
     }
     // if incoming tags is set but DB tags are not or vice versa, skip comparison and return true
-    if ((isset($tags_in)==true && db->resultFound($tagsDB)==false)
+    if (($tags_in==true && db->resultFound($tagsDB)==false)
         ||
-        (isset($tags_in)==false && db->resultFound($tagsDB)==true)){
+        ($tags_in==false && db->resultFound($tagsDB)==true)){
         return true;
     }
     // check if incoming post has the same amount of tags as the db post. if it does, check if each tag is inside the database post's tags. return true if mismatch found, false if all match
@@ -361,20 +338,18 @@ function compare_post_attachment($post_in,$attachment_in){
     ]);
     if ($GLOBALS['debug']){echo '<br>local att: ';var_dump($attachment_in); echo 'database att: '; var_dump($attachmentDB);}
 
-    // if no attachment incoming detected and no attachment found in db, return false
-    if (($attachmentProvided==false && db->resultFound($attachmentDB)==false)){
+    // if no attachment incoming detected, return false (attachment should only read as changed if one is provided)
+    if (($attachmentProvided==false)){
         return false;
     }
     // if only one has an attachment, return true without comparing
-    if (($attachmentProvided==true && db->resultFound($attachmentDB)==false)
-        ||
-        $attachmentProvided==false && (db->resultFound($attachmentDB)==true)){
+    if (($attachmentProvided !== db->resultFound($attachmentDB))){
         return true;
     }
     // if both have attachments, compare their values and return accordingly
     if ($attachmentProvided==true && db->resultFound($attachmentDB)==true){
-        if ($attachment_in['file_name']!==$attachmentDB['file_name']) return true;
-        if (strtolower(pathinfo($attachment_in['file_name'], PATHINFO_EXTENSION))!==$attachmentDB['ext']) return true;
+        if ($attachment_in['name']!==$attachmentDB['file_name']) return true;
+        if (strtolower(pathinfo($attachment_in['name'], PATHINFO_EXTENSION))!==$attachmentDB['ext']) return true;
         if ($attachment_in['size']!==$attachmentDB['size']) return true;
         if ($attachment_in['type']!==$attachmentDB['type']) return true;
     }
@@ -387,15 +362,15 @@ function compare_post_author($post_in){
     // output debug info
     if ($GLOBALS['debug']){echo '<br>local author: ';var_dump($post_in['author']); echo 'database author: '; var_dump($authorDB);}
 
-    return ($post_in['author']!==$authorDB);
+    return (intval($post_in['author'])!==$authorDB);
 }
 
 // accepts a raw post array and compares its text, tags, attachments, and assigned authors. returns an array with true/false for each if they were changed or not
 function compare_post($post_in,$attachment_in){
     // output debug info
     if ($GLOBALS['debug']){
-        echo '<br><b>incoming post data: </b>'; var_dump($post_in);
-        echo '<br><b>incoming attachment data: </b>'; var_dump($attachment_in); echo '<hr>';
+        echo '<br><b>incoming post data to compare: </b>'; var_dump($post_in);
+        echo '<br><b>incoming attachment data to compare: </b>'; var_dump($attachment_in);
     }
 
     $text_changed=compare_post_text($post_in);
@@ -404,7 +379,7 @@ function compare_post($post_in,$attachment_in){
     $tags_changed=compare_post_tags($post_in);
     if ($GLOBALS['debug']){ echo '<b>post tags changed...</b> ';echo $tags_changed?'true<br>':'false<br>'; }
 
-    $attachment_changed=isset($attachment_in)?compare_post_attachment($post_in,$attachment_in):false;
+    $attachment_changed=compare_post_attachment($post_in,$attachment_in);
     if ($GLOBALS['debug']){ echo '<b>post attachment changed...</b> ';echo $attachment_changed?'true<br>':'false<br>'; }
     
     $author_changed=compare_post_author($post_in);
@@ -417,7 +392,7 @@ function compare_post($post_in,$attachment_in){
 }
 
 // ATTACHMENT HANDLING ------------------------------------------------------------------
-// gets attachment info and verifies if its fields are empty or not
+// gets a file array and returns if it has any data or not
 function is_attachment_provided($file_in){
     // check if its already set to false, if not, continue with field check
     return ($file_in && $file_in['error'] != 4);
@@ -426,8 +401,15 @@ function is_attachment_provided($file_in){
 // parse attachment names and info to database and move files to respective user's directories
 //  -- DONE
 function parse_attachments($pid,$file_in){
-    // check if attachment exists and it is an allowed filetype. throw exception if not
-    if(in_array(strtolower(pathinfo($file_in['name'], PATHINFO_EXTENSION)),$GLOBALS['attachmentExts'])){
+    // check if file coming in has an attachment, do nothing if so
+    if (!is_attachment_provided($file_in)){
+        if($GLOBALS['debug']) {echo '<br>no attachment provided, skipping attachment parse...<br>';}
+        return false;
+    }
+    // if attachment incoming, check if its an allowed filetype. throw exception if not
+    else if(in_array(strtolower(pathinfo($file_in['name'], PATHINFO_EXTENSION)),$GLOBALS['attachmentExts'])){
+        if($GLOBALS['debug']) {echo '<br>parsing attachment into system...<br>';}
+
         $aid=count(db->queryAll('SELECT aid FROM attachments'))+1;
         $ext=strtolower(pathinfo($file_in['name'], PATHINFO_EXTENSION));
         // db insert statement for attachment table and the post relationship set
@@ -445,7 +427,7 @@ function parse_attachments($pid,$file_in){
         // move files by temp name to user dir
         move_uploaded_file($file_in['tmp_name'],'../../data/users/'.get_post_author($pid)['uid'].'/images/'.$file_in['name']);
     } else {
-        throw new Exception('File is not an accepted file type or no file was provided');
+        throw new Exception('File is not an accepted file type');
     }
 }
 
@@ -459,7 +441,7 @@ function get_attachments($pid){
 }
 
 // moves a post's attachment to a new user
-//  -- DONE?, NEEDS TESTING
+//  -- DONE
 function change_attachment_user($filename,$user_id_old,$user_id_new){
     // output debug
     if ($GLOBALS['debug']){
@@ -469,32 +451,25 @@ function change_attachment_user($filename,$user_id_old,$user_id_new){
     return rename('../../data/users/'.$user_id_old.'/images/'.$filename,'../../data/users/'.$user_id_new.'/images/'.$filename);
 }
 
-// accepts a post and an attachment array, returns new attachment array and deletes old attachment files
-//  -- DONE?, NEEDS TESTING
+// accepts a post and an attachment array, deletes old post attachment files and association and parses a new one
+//  -- DONE
 function replace_attachment($post_current,$file_in){
-    // parse new attachment 
-    $attachments_new=parse_attachments($post_current,$file_in);
-    // if there was an attachment previously, delete it
-    if ($post_current['attachments']['error']!="noFileUploaded"){
-        unlink('../../data/users/'.$post_current['author'].'/images/'.$post_current['attachments']['name']);
-    }
-    return $attachments_new;
+    delete_post_attachment($post_current['pid']);
+    return parse_attachments($post_current['pid'],$file_in);
 }
 
-// reset an attachment back to empty, returns nothing if succeeded and false if it didnt detect any attachments
-//  -- OUT OF DATE
-function delete_attachment($post_id){
-    $selected_post=get_post($post_id);
-    if ($selected_post['attachments']['error']!="noFileUploaded"){
-        // delete attachment and original post, recreate original post but with no attachment
-        $selected_post['attachments']['error']="noFileUploaded";
-        delete_post($post_id,true);
-        $posts_updated=get_user_posts($selected_post['author']);
-        $posts_updated[]=$selected_post; // append edited post to the end of file
-        file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts_updated,JSON_PRETTY_PRINT)); // update the users post json data
-    } else {
-        return false;
-    }
+// accepts a post id and deletes the attachment file and the db association with the post
+//  -- DONE
+function delete_post_attachment($pid){
+    $attachments_old=get_attachments($pid);
+    db->preparedQuery('DELETE FROM attached_to WHERE aid=:aid AND pid=:pid',[
+        'aid'=>$attachments_old[0]['aid'],
+        'pid'=>$pid
+    ]);
+    db->preparedQuery('DELETE FROM attachments WHERE aid=:aid',[
+        'aid'=>$attachments_old[0]['aid']
+    ]);
+    unlink('../../data/users/'.get_post_author($pid)['uid'].'/images/'.$attachments_old[0]['file_name']);
 }
 
 // PORTFOLIO HANDLING ------------------------------------------------------------------------
