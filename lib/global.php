@@ -22,7 +22,7 @@ function getRootDirectory(){
 $rootPath=getRootDirectory();
 
 // debug global variable, will trigger extra output like echo statements and var dumps. should be probably be false unless you specifically want it on. should ALWAYS be false in any kind of release environment
-$GLOBALS['debug']=true;
+$GLOBALS['debug']=false;
 
 // library directory globals
 $GLOBALS['userHandlingDirectory']=$rootPath.'lib/users.php';

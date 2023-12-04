@@ -80,6 +80,7 @@ function edit_post($info_in,$file_in){
     try{
         // debug info
         if ($GLOBALS['debug']){
+            echo 'attempting to edit post '.$info_in['pid'].'<br>';
             echo 'incoming data...<br>';var_dump($info_in);var_dump($file_in['attachments']);
         }
         
@@ -126,37 +127,41 @@ function edit_post($info_in,$file_in){
         // return the post pid if all operations successful/if nothing changed
         return $info_in['pid'];
     } catch (Throwable $error) {
-        display_system_error('Encountered fatal error when editing post #'.get_post_author($info_in['pid'])['uid'],$_SERVER['SCRIPT_NAME']);
+        display_system_error('Encountered fatal error when editing post #'.$info_in['pid'],$_SERVER['SCRIPT_NAME']);
         echo '<pre>'.$error.'</pre>';
         return false;
     }
 }
 
-// accepts a post ID and deletes it from it's user's post data
-//  -- OUT OF DATE
-function delete_post($post_pid,$delete_attachment){
-    // get the post info for the post to be deleted, then the authors's post list
-    $selected_post=get_post($post_pid);
-    $posts=get_user_posts($selected_post['author']);
-
-    // find index in user posts that matches post pid for deletion
-    $index=0;
-    for ($i=0;$i<count($posts);$i++){
-        if ($posts[$i]['pid'] == $post_pid){
-            $index=$i; // get index for modification
-            break;
+// accepts a post ID and deletes it and relevant data from the database
+//  -- IN PROGRESS
+function delete_post($pid){
+    if ($GLOBALS['debug']) echo '<br>attempting to delete post #'.$pid.'<br>';
+    try {
+        // delete tag associations with the post from the DB
+        if (get_post_tags($pid)){
+            if ($GLOBALS['debug']) echo '<br>post tags detected -- attempting tag deletion<br>';
+            delete_post_tag_associations($pid);
         }
+        // delete attachment and associations from DB
+        if (get_attachments($pid)) {
+            if ($GLOBALS['debug']) echo '<br>post attatchment detected -- attempting attachment deletion<br>';
+            delete_post_attachment($pid);
+        }
+        // delete the post and user/post association from DB
+        if ($GLOBALS['debug']) echo '<br>deleting post and post association in database<br>';
+        db->preparedQuery('DELETE FROM user_posts WHERE pid=:pid',[
+            'pid'=>$pid
+        ]);
+        db->preparedQuery('DELETE FROM posts WHERE pid=:pid',[
+            'pid'=>$pid
+        ]);
+        return true;
+    } catch (Throwable $error) {
+        display_system_error('Encountered fatal error when deleting post #'.$pid,$_SERVER['SCRIPT_NAME']);
+        echo '<pre>'.$error.'</pre>';
+        return false;
     }
-
-    // splice post if pid was found and update real data file
-    array_splice($posts,$index,$index+1);
-    file_put_contents('../../data/users/'.$selected_post['author'].'/posts.json',json_encode($posts,JSON_PRETTY_PRINT));
-    // delete post attachment if var is true and there's an attachment
-    if ($selected_post['attachments']['error'] != 'noFileUploaded' && $delete_attachment){
-        $attachment_dir='../../data/users/'.$selected_post['author'].'/images/'.$selected_post['attachments']['name'];
-        file_exists($attachment_dir)?unlink($attachment_dir):display_error('Warning: File not found at '.$attachment_dir.' (probably already deleted)');
-    }
-    return true;
 }
 
 // SUB FUNCTIONS --------------------------------------------------------------------------
@@ -462,14 +467,20 @@ function replace_attachment($post_current,$file_in){
 //  -- DONE
 function delete_post_attachment($pid){
     $attachments_old=get_attachments($pid);
-    db->preparedQuery('DELETE FROM attached_to WHERE aid=:aid AND pid=:pid',[
-        'aid'=>$attachments_old[0]['aid'],
-        'pid'=>$pid
-    ]);
-    db->preparedQuery('DELETE FROM attachments WHERE aid=:aid',[
-        'aid'=>$attachments_old[0]['aid']
-    ]);
-    unlink('../../data/users/'.get_post_author($pid)['uid'].'/images/'.$attachments_old[0]['file_name']);
+    // make sure there's an attachment before doing deletions, otherwise return false
+    if ($attachments_old) {
+        db->preparedQuery('DELETE FROM attached_to WHERE aid=:aid AND pid=:pid',[
+            'aid'=>$attachments_old[0]['aid'],
+            'pid'=>$pid
+        ]);
+        db->preparedQuery('DELETE FROM attachments WHERE aid=:aid',[
+            'aid'=>$attachments_old[0]['aid']
+        ]);
+        unlink('../../data/users/'.get_post_author($pid)['uid'].'/images/'.$attachments_old[0]['file_name']);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 // PORTFOLIO HANDLING ------------------------------------------------------------------------

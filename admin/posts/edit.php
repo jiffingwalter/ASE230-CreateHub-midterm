@@ -35,7 +35,7 @@ if (isset($_POST['confirm_delete'])){
     // show confirmation dialog
     $show_confirm_delete=true;
     if (isset($_POST['delete_id']) && isset($_POST['confirm_delete'])){
-        delete_post($pid,true)?display_message('Deleted post PID #'.$pid):'';
+        delete_post($pid)?display_message('Deleted post PID #'.$pid):'';
         echo '<a href="./index.php">Back to posts manager</a><br>';
     }
 }

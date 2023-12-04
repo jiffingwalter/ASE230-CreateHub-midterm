@@ -6,7 +6,7 @@ $pid=$_GET['index'];
 $post=get_post($pid);
 
 if (isset($_POST['pid'])){
-    delete_post($pid,true)?display_message('Deleted post PID#'.$pid):'';
+    delete_post($pid)?display_message('Deleted post PID#'.$pid):'';
     echo '<a href="./index.php">Back to post manager</a><br>';
     die;
 }
