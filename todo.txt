@@ -1,25 +1,18 @@
 
 LOGIC ----------------------------------------------------------------------------------------------
 users:
-- update user handling functions to pull from database instead of csv -- DONE
 - add option for user's name? -- db fields exist, need to add to signup & admin user manager
 - give user option to edit their own info and delete their account, as well as their posts and portfolios
-- need to experiment to make sure user cant cheat system and view/make posts by other users. maybe make sure post belongs to the userID?
+- need to experiment to make sure user cant cheat system and view/make posts by other users. maybe make sure post belongs to the userID on page load?
 
 posts:
-- update post handling functions to pull from database instead of json files -- IN PROGRESS
-        > admin side details and creation are finished
-        > currently working on edit and deletion logic
-        > STILL NEED TO UPDATE USER-SIDE FOR DIFFERENT KEY NAMES
 - add logic to delete and edit portfolios
+- modify database population file to have incremential ids for tags, portfolios, and attachments (to avoid issues when attachments are deleted)
 
 other:
-- add debug variable to globals file that will show extra text and stuff from echo statements in functions being run? current stuff that could be helpful is marked with "// debug" comment
 - update attachment functions to rename attachments when uploading them to server (prof said this was good practice)
-- make sure session calls are all before any html (think this is done after but may need to check again)
-        NOTE: session_start() is now called in /lib/global.php, requiring this file first on all user pages should solve this issue
-- look into session_destroy warning on logout, possibly related to above?
 - convert users and posts to object-oriented style? (saving this for very last if we have time and wanna extra points since its not required. would be good practice tho)
+- go through and remove code thats not used anymore (pre db stuff?)
 
 VISUAL -------------------------------------------------------------------------------------------
 general

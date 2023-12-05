@@ -4,13 +4,11 @@ require_once('users.php');
 require_once($GLOBALS['readJSONDirectory']);
 
 //get list of all user posts
-//  -- DONE
 function get_all_posts(){
     return db->queryAll('SELECT * FROM posts');
 }
 
 // return all posts by a specific user by ID -- todo: add order parameter to modify order of returned query
-//  -- DONE
 function get_user_posts($user_id){
     return db->preparedQueryAll('SELECT * FROM posts NATURAL JOIN user_posts WHERE uid=:uid',[
         'uid'=>$user_id
@@ -18,7 +16,6 @@ function get_user_posts($user_id){
 }
 
 // return single post by searching by pid in post file
-//  -- DONE
 function get_post($pid){
     $post=db->preparedQuery('SELECT * FROM posts WHERE pid=?',[$pid]);
     if (db->resultFound($post)){
@@ -30,7 +27,6 @@ function get_post($pid){
 }
 
 // creates a new post, and attachments/tags if added. returns true if made successfully and false if not
-//  -- DONE
 function create_post($info_in,$file_in){
     try {
         // initialization
@@ -75,7 +71,6 @@ function create_post($info_in,$file_in){
 }
 
 // accepts a post and attachment info and edits an existing post, returns pid on success, false if not
-//  -- IN PROGRESS
 function edit_post($info_in,$file_in){ 
     try{
         // debug info
@@ -134,7 +129,6 @@ function edit_post($info_in,$file_in){
 }
 
 // accepts a post ID and deletes it and relevant data from the database
-//  -- IN PROGRESS
 function delete_post($pid){
     if ($GLOBALS['debug']) echo '<br>attempting to delete post #'.$pid.'<br>';
     try {
@@ -166,7 +160,6 @@ function delete_post($pid){
 
 // SUB FUNCTIONS --------------------------------------------------------------------------
 // read through user list and returns a users info where the post id matches
-//  -- DONE
 function get_post_author($pid){
     $user=db->preparedQuery('SELECT * FROM users NATURAL JOIN user_posts WHERE pid=:pid',[
         'pid'=>$pid
@@ -180,7 +173,6 @@ function get_post_author($pid){
 }
 
 // generate pid for new posts and check if they're actually unique
-//  -- DONE??
 function generate_pid(){
     $posts=get_all_posts();
     $id_is_unique=false;
@@ -214,7 +206,6 @@ function tags_to_array($tags_in){
 
 
 // parse an array of tags into database for a given post id
-//  -- DONE
 function parse_tags_in($tags_in,$pid){
     $tags_out=tags_to_array($tags_in);
     foreach ($tags_out as $tag) {
@@ -246,7 +237,6 @@ function parse_tags_in($tags_in,$pid){
 }
 
 // reads database and returns array of tags from a post id, if the post has any
-//  -- DONE
 function get_post_tags($pid){
     $tags=db->preparedQueryAll('SELECT tag FROM post_tags NATURAL JOIN tags WHERE pid=:pid',[
         'pid'=>$pid
@@ -261,7 +251,6 @@ function get_post_tags($pid){
 }
 
 // reads database for a post's tags and prints them out in basic string format if there are any. returns null if there's no tags
-//  -- DONE
 function parse_tags_out($pid){
     $tags=get_post_tags($pid);
     $tags_string='';
@@ -404,7 +393,6 @@ function is_attachment_provided($file_in){
 }
 
 // parse attachment names and info to database and move files to respective user's directories
-//  -- DONE
 function parse_attachments($pid,$file_in){
     // check if file coming in has an attachment, do nothing if so
     if (!is_attachment_provided($file_in)){
@@ -437,7 +425,6 @@ function parse_attachments($pid,$file_in){
 }
 
 // accepts a post id and returns an array of its attachments if it has any
-//  -- DONE
 function get_attachments($pid){
     $attachments=db->preparedQueryAll('SELECT * FROM attachments NATURAL JOIN attached_to WHERE pid=:pid',[
         'pid'=>$pid
@@ -446,7 +433,6 @@ function get_attachments($pid){
 }
 
 // moves a post's attachment to a new user
-//  -- DONE
 function change_attachment_user($filename,$user_id_old,$user_id_new){
     // output debug
     if ($GLOBALS['debug']){
@@ -457,14 +443,12 @@ function change_attachment_user($filename,$user_id_old,$user_id_new){
 }
 
 // accepts a post and an attachment array, deletes old post attachment files and association and parses a new one
-//  -- DONE
 function replace_attachment($post_current,$file_in){
     delete_post_attachment($post_current['pid']);
     return parse_attachments($post_current['pid'],$file_in);
 }
 
 // accepts a post id and deletes the attachment file and the db association with the post
-//  -- DONE
 function delete_post_attachment($pid){
     $attachments_old=get_attachments($pid);
     // make sure there's an attachment before doing deletions, otherwise return false
@@ -485,8 +469,47 @@ function delete_post_attachment($pid){
 
 // PORTFOLIO HANDLING ------------------------------------------------------------------------
 // accepts text info and files and creates a porfolio for a user
-//  -- OUT OF DATE
 function create_portfolio($info, $file){
+    if ($GLOBALS['debug']){
+        echo '<pre><br>creating portfolio with data:<br>';
+        echo '<br>info: ';var_dump($info);
+        echo '<br>file: ';var_dump($file);
+        echo '</pre>';
+    }
+    try {
+        // take uploaded image(s) and move to users folder & concat names to name array
+        $filenames='';
+        for($i=0;$i<count($file['images']['name']);$i++){
+            if(in_array(strtolower(pathinfo($file['images']['name'][0], PATHINFO_EXTENSION)),get_file_extensions())){
+                if ($GLOBALS['debug']) echo '<br>parsing in file '.$file['images']['full_path'][$i].' i='.$i.'</br>';
+
+                move_uploaded_file($file['images']['tmp_name'][$i],'../../data/users/'.$info['user_id'].'/images/'.$file['images']['full_path'][$i]);
+
+                // add filename(s) to name array and add comma if its not the last in the list
+                $filenames.=$file['images']['full_path'][$i];
+                $filenames.=($i!=count($file['images']['full_path'])-1) ? ',' : '';
+            }
+        }
+        // get portfolio id and push portfolio info to database & association table
+        $fid=count(db->queryAll('SELECT fid FROM portfolios'))+1;
+        db->preparedQuery('INSERT INTO portfolios VALUES (:fid,:name,:category,:images)',[
+            'fid' => $fid,
+            'name' => $info['name'],
+            'category' => $info['category'],
+            'images' => $filenames
+        ]);
+        db->preparedQuery('INSERT INTO user_portfolios VALUES (:uid,:fid)',[
+            'uid'=>$info['uid'],
+            'fid'=>$fid
+        ]);
+        return true;
+    } catch (Throwable $error) {
+        display_system_error('Encountered fatal error when attempting to create portfolio',$_SERVER['SCRIPT_NAME']);
+        echo '<pre>'.$error.'</pre>';
+        return false;
+    }
+    
+    // OLD -----------
     for($i=0;$i<count($file['images']['name']);$i++){
         if(in_array(strtolower(pathinfo($file['images']['name'][0], PATHINFO_EXTENSION)),get_file_extensions())){
             //put image in images folder
@@ -506,7 +529,6 @@ function create_portfolio($info, $file){
 }
 
 //return portfolios of user from their uid if they have any
-//  -- DONE
 function get_user_portfolio($uid){
     $portfolio=db->preparedQueryAll('SELECT * FROM portfolios NATURAL JOIN user_portfolios WHERE uid=:uid',[
         'uid'=>$uid

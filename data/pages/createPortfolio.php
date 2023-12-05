@@ -6,6 +6,8 @@ require_once('../themes/nav.php');
 require_once($GLOBALS['readJSONDirectory']);
 require_once($GLOBALS['postHandlingDirectory']);
 if(count($_POST)>0){
+    // append user id to POST array, run portfolio creation function
+    $_POST['uid']=$userID;
     create_portfolio($_POST, $_FILES);
 }
 ?>
@@ -21,7 +23,6 @@ if(count($_POST)>0){
         <input type="file" name="images[]" accept=".png, .jpg, .jpeg" multiple required><br>
 
         <input type="hidden" name="user_id" value="<?=$userID?>">
-        <input type="hidden" name="date_created" value="<?=date("Y-m-d")?>"><br>
         <input type="submit" value="Create Portfolio">
     </form>
 </body>

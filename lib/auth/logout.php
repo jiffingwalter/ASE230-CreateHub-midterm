@@ -1,4 +1,5 @@
 <?php
+require_once('../../lib/global.php');
 require_once('../general.php');
 // unset and destroy session, then redirect to home
 $_SESSION=array();
