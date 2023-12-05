@@ -11,7 +11,9 @@ Your starting point is the work you submitted for the Mid-term, which should inc
 Design and development ---
 
 ~~1. Finalize and implement the complete DATA LAYER of your application using MySQL.~~
+
 ~~2. Implement an authentication module that enables signing the user up, in, and out, recognizing their role (regular user or admin)~~
+
 3. Implement the complete LOGIC LAYER of the Content Management System, which should be organized into
     1. Entities of your application:
         1. Each entity type should be accessible via a URL that looks like "yourwebsite/entityname".
@@ -20,10 +22,10 @@ Design and development ---
         1. public "content": this involves content that a visitor can see even if they are not signed in. By "content", I mean an entire set of entities (e.g., the products of an e-commerce website are visible to everybody), a group of pages (e.g., the index and detail pages could be visible to everybody, but the create page should be visible to registered users only), and elements of a page (e.g., the "modify" or "edit" buttons inside a page should only be visible to the author of the entity and the admin, even if the rest of the page is visible to everybody).
         2. members "area": this involves content that a user can see only after logging in. For example, this can be a series of pages that only users can see (e.g., "your orders" in an e-commerce website) or specific interface components that are visible to the owners of the entity only (e.g., the button for modifying or deleting a post in a social media website). 
         3. admin "area": for each entity, this involves a separate area that enables the admin of the website to index, detail, create, edit, and delete everything. 
-4. Finalize the PRESENTATION LAYER of the Content Management System by applying the chosen theme to EVERY page (including the admin area)
-5. The team leader will create a new repository (public) on GitHub, invite the other members as collaborators, and create a file called "README.md" where they will list the collaborators.
-6. Each member will push their work on GitHub on their branch.
-7. The team leader will integrate (merge) the work of each team member into the main branch and push the changes.
+5. Finalize the PRESENTATION LAYER of the Content Management System by applying the chosen theme to EVERY page (including the admin area)
+6. The team leader will create a new repository (public) on GitHub, invite the other members as collaborators, and create a file called "README.md" where they will list the collaborators.
+7. Each member will push their work on GitHub on their branch.
+8. The team leader will integrate (merge) the work of each team member into the main branch and push the changes.
 
 
 Documentation
