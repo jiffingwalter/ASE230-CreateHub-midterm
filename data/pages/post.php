@@ -4,8 +4,10 @@ $userID=isLoggedIn()?$_SESSION['userID']:forceLogin();
 require_once('../themes/head.php');
 require_once('../themes/nav.php');
 require_once($GLOBALS['postHandlingDirectory']);
-$posts=get_user_posts($userID);
 $index = $_GET['index'];
+$posts=get_user_posts($userID);
+$attachment=get_attachments($posts[$index]['pid']);
+
 ?>
 <style>
     .table{
@@ -33,9 +35,10 @@ $index = $_GET['index'];
     <table class="table">
         <tr>
             <th>Image</th>
-            <td><img src="<?php
-                    if($posts[$index]['attachments']['error'] != 'noFileUploaded'){
-                        echo '../users/'.$userID.'/images/'.$posts[$index]['attachments']['name'];
+            <td><img class="card-img-top" style="height: 300px" src="<?php
+                    // test for an attachment on the current post and show the image if it exists. show blank image otherwise
+                    if($attachment=get_attachments($posts[$index]['pid'])){
+                        echo '../users/'.$userID.'/images/'.$attachment[0]['file_name'];
                     }else{
                         echo '../users/No-image-found.jpg';
                     }

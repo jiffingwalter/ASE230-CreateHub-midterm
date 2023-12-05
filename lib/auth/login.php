@@ -15,9 +15,8 @@ if(count($_POST)>0){
     //Login
     if(isset($_POST['LoginEmail']) && isset($_POST['LoginPassword'])){
         if (validateUser($_POST['LoginEmail'], $_POST['LoginPassword'])){
-            //go to index
-            session_start();
-            $_SESSION['userID'] = getUserIndex($_POST['LoginEmail']);
+            // assign user id to session variable and redirect to index
+            $_SESSION['userID'] = get_user_id($_POST['LoginEmail']);
             header("Location: ../../".$GLOBALS['indexPage']);
             die();
         }else{

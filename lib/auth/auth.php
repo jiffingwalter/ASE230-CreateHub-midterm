@@ -3,9 +3,9 @@ session_start();
 require_once($GLOBALS['readCSVDirectory']);
 require_once($GLOBALS['userHandlingDirectory']);
 
-// if debug mode is on, show information at the top of the page
+// if debug mode is on, show current login information at the top of the page
 if ($GLOBALS['debug']){
-    echo 'development mode is on. signed in as: '; echo isset($_SESSION['userID'])?$_SESSION['userID']:'not logged in';
+    echo '<div style="background-color: white">development mode is on. signed in as user #'; echo isset($_SESSION['userID'])?$_SESSION['userID'].' - '.get_user($_SESSION['userID'])['email']:'not logged in';echo '</div>';
 }
 
 // check if user is logged in
@@ -41,23 +41,4 @@ function validateUser($email, $password){
         }
     }
     return false;
-}
-
-function validateUserEmail($email){
-    $users = get_all_users();
-    for($i=0;$i<count($users);$i++){
-        if($email == $users[$i]['email']){
-            return false;
-        }
-    }
-    return true;
-}
-
-function getUserIndex($email){
-    $users = get_all_users();
-    for($i=0;$i<count($users);$i++){
-        if($email == $users[$i]['email']){
-            return $users[$i]['uid']; 
-        }
-    }
 }

@@ -7,7 +7,7 @@ function get_all_users(){
     return db->queryAll('SELECT * FROM users');
 }
 
-// gets single user and returns their info
+// gets single user by their id and returns their info
 function get_user($user_id){
     $user=db->preparedQuery('SELECT * FROM users WHERE uid=?',[$user_id]);
     if (db->resultFound($user)){
@@ -16,6 +16,15 @@ function get_user($user_id){
         display_system_error('Could not find user with ID #'.$user_id.' inside user data file',$_SERVER['SCRIPT_NAME']);
         return db->query('SELECT * FROM users WHERE uid=0');
     }
+}
+
+// looks up a user in the db by email and returns their id if found, and false if not found
+function get_user_id($email){
+    $uid=db->preparedQuery('SELECT uid FROM users WHERE email=:email',[
+        "email"=>$email
+    ])['uid'];
+    if ($GLOBALS['debug']) echo '<br>returning user #'.$uid.'<br>';
+    return $uid;
 }
 
 // accepts an id and returns true if that user exists in the system or not
@@ -46,6 +55,7 @@ function generate_user_id(){
     return $new_id;
 }
 
+// user modification ----------------------------------------------------------------------------------------------
 // creates a new user and returns true + user_id if successful or false + the error if not
 function create_user($info_in){
     try{
@@ -112,6 +122,7 @@ function delete_user($info_in){
     }
 }
 
+// user validation ----------------------------------------------------------------------------------------------
 // validates info for account creation
 function validate_user_signup($info_in){
     //check if email exists
