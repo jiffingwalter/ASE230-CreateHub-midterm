@@ -27,16 +27,18 @@ $all_posts=get_all_posts();
                 <!-- column labels -->
                 <tr>
                     <td><b>Post PID:</b></td>
-                    <td><p><b>Post Author:</p></td>
+                    <td><p><b>Post Author/UID:</p></td>
                     <td><p><b>Post Title:</p></td>
                     <td colspan="3"><p><b>Post Options:</p></td>
                 </tr>
                 <!-- table entries -->
                 <?php
-                for($i=0;$i<count($all_posts);$i++){ ?>
+                for($i=0;$i<count($all_posts);$i++){ 
+                    $user=get_post_author($all_posts[$i]['pid']);
+                    ?>
                     <tr>
                         <td class="table_col_id"><b><?=$all_posts[$i]['pid']?></b></td>
-                        <td class="table_col_author"><p><?=get_post_author($all_posts[$i]['author'])?> [<?=$all_posts[$i]['author']?>]</p></td>
+                        <td class="table_col_author"><p><?=$user['email']?> [<?=$user['uid']?>]</p></td>
                         <td class="table_col_title"><p><?=$all_posts[$i]['title']?></p></td>
                         <td class="table_col_details"><a href="details.php?index=<?=$all_posts[$i]['pid']?>">View details</a></td>
                         <td class="table_col_edit"><a href="edit.php?index=<?=$all_posts[$i]['pid']?>">Edit</a></td>
@@ -46,4 +48,6 @@ $all_posts=get_all_posts();
             } ?>
         </table>
     </div>
+    <br><hr><br>
+    <a href='./testPosts.php'>Post testing area</a>
 </body>

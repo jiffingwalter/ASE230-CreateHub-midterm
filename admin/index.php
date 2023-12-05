@@ -1,6 +1,7 @@
 <?php
 require_once('../lib/global.php');
 require_once($GLOBALS['authAdminOnlyDirectory']);
+require_once($GLOBALS['postHandlingDirectory']);
 
 ?>
 <head>
@@ -14,9 +15,3 @@ require_once($GLOBALS['authAdminOnlyDirectory']);
     <h4><a href="./posts/index.php">Posts management</a></h4>
     <h4><a href="./pages/index.php">Page management</a></h4>
 </body>
-
-<?php // database testing area
-echo '<pre><hr>database testing area<br><br><br>';
-
-var_dump(db->queryAll('SELECT uid FROM users'));
-

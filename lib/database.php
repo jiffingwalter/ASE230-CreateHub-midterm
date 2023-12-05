@@ -1,5 +1,6 @@
 <?php 
 // database object, creates pdo connection to database and provides options for handling the connection
+// as well as all functions relating to connecting to the database
 class Database{
     private $pdo;
     private $host;
@@ -65,7 +66,7 @@ class Database{
 
     // checks if any result was found in a processed query, returns true or false (just saves having to type row count and etc)
     function resultFound($query){
-        return count($query)>0;
+        return !($query==false || (count($query)<1));
     }
 
     // converts date format from sql to perferred format

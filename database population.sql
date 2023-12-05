@@ -5,7 +5,7 @@ drop table attached_to;
 drop table attachments;
 drop table post_tags;
 drop table tags;
-drop table portfolio;
+drop table portfolios;
 drop table user_portfolios;
 drop table roles;
 
@@ -15,26 +15,26 @@ create table users(
     email varchar(64),
     password varchar(64),
     date_created datetime,
-    role int
+    role tinyint
     );
     
 create table user_posts( -- user & posts relationship set
-	user_id int,
-    post_id int
+	uid int,
+    pid int
 );
     
 create table posts(
     pid int primary key,
     title varchar(255),
     content longtext,
-    has_attachment int(1),
+    has_attachment tinyint(1),
     date_created datetime,
     last_edited datetime
 	);
 
 create table attached_to(  -- posts and attachment relationship set
-    attachment_id int,
-    post_id int
+    aid int,
+    pid int
 );
 
 create table attachments(
@@ -47,12 +47,12 @@ create table attachments(
 );
 
 create table post_tags(  -- post & tags relationship set
-    tag_id int,
-    post_id int
+    tid int,
+    pid int
 	);
 
 create table tags(
-	id int primary key,
+	tid int primary key,
     tag varchar(128)
 	);
 
@@ -60,12 +60,12 @@ create table portfolios(
     fid int primary key,
     name varchar(128),
     category varchar(32),
-    images varchar(255)
+    images longtext
     );
 
 create table user_portfolios(
-    user_id int,
-    portfolio_id int
+    uid int,
+    fid int
     );
 
 create table roles(
@@ -87,6 +87,7 @@ insert into users values (983282,'test account 1','test1@email.com','$2y$10$OQ4a
 insert into users values (520790,'test account 2','test2@email.com','$2y$10$OQ4aqiyJi6RWhXO3kuTHtus1bwIh6/TP0hOj4/yJ8r2qGwCihpz8m','2023-10-20 11:52:49',1);
 
 insert into posts values(000000,'POST TITLE','POST CONTENT',0,'0000-00-00','0000-00-00 00:00:00am');
+insert into user_posts values (0,0); 
 
 -- create test posts, attachments, and tags
 insert into posts values(770308,'testing new posts','test post body',1,'2023-10-30 12:00:30','2023-11-08 03:15:23');
@@ -131,7 +132,7 @@ insert into attachments values (456735,'2RP5BgZ.jpg','jpg',520855,'image/jpeg','
 insert into tags values (7,'this');
 insert into tags values (8,'is');
 insert into tags values (9,'a');
-insert into tags values (10,'cool');
+insert into tags values (10,'nice');
 insert into tags values (11,'picture');
 insert into user_posts values (000001,123903); 
 insert into attached_to values(456735,123903);
@@ -142,11 +143,11 @@ insert into post_tags values (10,123903);
 insert into post_tags values (11,123903);
 
 -- create user test portfolios
-insert into portfolios values (123456,'Test portfolio','Work','["DV4pD0pVAAUVWFf.png","feelsbetterman.jpg","Kronk_.jpg"]');
+insert into portfolios values (123456,'Test portfolio','Work','DV4pD0pVAAUVWFf.png,feelsbetterman.jpg,Kronk_.jpg');
 insert into user_portfolios values (983282,123456);
 
-insert into portfolios values (234567,'another Portfolio','Images','["gort.jpg","patproj.jpg"]');
+insert into portfolios values (234567,'another Portfolio','Images','gort.jpg,patproj.jpg');
 insert into user_portfolios values (983282,234567);
 
-insert into portfolios values (894567,'Resume','Art','["astrowave wallpaper.jpg"]');
+insert into portfolios values (894567,'Resume','Art','astrowave wallpaper.jpg');
 insert into user_portfolios values (983282,894567);

@@ -4,6 +4,8 @@ require_once($GLOBALS['authAdminOnlyDirectory']);
 require_once($GLOBALS['postHandlingDirectory']);
 $pid=$_GET['index'];
 $post=get_post($pid);
+$author=get_post_author($post['pid']);
+$attachments=get_attachments($post['pid']);
 ?>
 
 <head>
@@ -30,13 +32,13 @@ $post=get_post($pid);
             <td><?=$post['title']?></td></tr>
         <tr>
             <td><b>Author:</b></td>
-            <td><?=get_post_author($post['author'])?> [<?=$post['author']?>]</td></tr>
+            <td><?=$author['email']?> [<?=$author['uid']?>]</td></tr>
         <tr>
             <td><b>Content:</b></td>
             <td><?=$post['content']?></td></tr>
         <tr>
             <td><b>Tags:</b></td>
-            <td><?= parse_tags_out($post['tags']) ?></td></tr>
+            <td><?=parse_tags_out($post['pid'])?></td></tr>
         <tr>
             <td><b>Date Created:</b></td>
             <td><?=$post['date_created']?></td></tr>
@@ -48,11 +50,11 @@ $post=get_post($pid);
         <tr><td><b>Post Attachments: </b></td></tr>
         <tr><td>
         <?php
-            if ($post['attachments']['error'] == 0){ ?>
-                <img src="../../data/users/<?=$post['author']?>/images/<?=$post['attachments']['name']?>" style="max-width: 1024px"><br>
-                <p><b>Location: </b>../../data/users/<?=$post['author']?>/images/<?=$post['attachments']['name']?></p> <?php
+            if ($attachments){?>
+                <img src="../../data/users/<?=$author['uid']?>/images/<?=$attachments[0]['file_name']?>" style="max-width: 1024px"><br>
+                <p><b>Location: </b>../../data/users/<?=$author['uid']?>/images/<?=$attachments[0]['file_name']?></p> <?php
             } else { ?>
-                <p>No attachment provided</p>
+                <p><sub>(No attachment provided)</sub></p>
             <?php } ?>
         </tr></td>
     </table>
