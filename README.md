@@ -3,6 +3,61 @@ By Bryce Bien and Justin Walter
 
 video: https://www.youtube.com/watch?v=hRlBTsFWfx8 
 
+## Requirements: 
+Instructions ---
+Your starting point is the work you submitted for the Mid-term, which should incorporate the feedback you already received for that assignment.
+
+
+Design and development ---
+
+~~1. Finalize and implement the complete DATA LAYER of your application using MySQL.~~
+~~2. Implement an authentication module that enables signing the user up, in, and out, recognizing their role (regular user or admin)~~
+3. Implement the complete LOGIC LAYER of the Content Management System, which should be organized into
+    1. Entities of your application:
+        1. Each entity type should be accessible via a URL that looks like "yourwebsite/entityname".
+        2. Each entity type should involve index, detail, create, edit, and delete pages. These pages should support roles and permissions as shown below. 
+    2. Roles and permissions: based on the way your application works, for each entity, you should implement:
+        1. public "content": this involves content that a visitor can see even if they are not signed in. By "content", I mean an entire set of entities (e.g., the products of an e-commerce website are visible to everybody), a group of pages (e.g., the index and detail pages could be visible to everybody, but the create page should be visible to registered users only), and elements of a page (e.g., the "modify" or "edit" buttons inside a page should only be visible to the author of the entity and the admin, even if the rest of the page is visible to everybody).
+        2. members "area": this involves content that a user can see only after logging in. For example, this can be a series of pages that only users can see (e.g., "your orders" in an e-commerce website) or specific interface components that are visible to the owners of the entity only (e.g., the button for modifying or deleting a post in a social media website). 
+        3. admin "area": for each entity, this involves a separate area that enables the admin of the website to index, detail, create, edit, and delete everything. 
+4. Finalize the PRESENTATION LAYER of the Content Management System by applying the chosen theme to EVERY page (including the admin area)
+5. The team leader will create a new repository (public) on GitHub, invite the other members as collaborators, and create a file called "README.md" where they will list the collaborators.
+6. Each member will push their work on GitHub on their branch.
+7. The team leader will integrate (merge) the work of each team member into the main branch and push the changes.
+
+
+Documentation
+
+Prepare a 3-slide presentation in which you describe:
+Slide 1: The project idea (what does it do?)
+Slide 2: The ER diagram
+Slide 3: The team members and their contribution
+
+
+Presentation
+
+Record a video (e.g., screencast, max 10 minutes) in which you present
+1. your slides (2 minutes). The emphasis here is to provide an overview of the idea, ER, and contribution of each team member
+2. a demo of your project and its key features (8 minutes), highlighting the aspects you consider worth mentioning and commenting on the source code where needed. You can have each member talk about what they implemented, or you can have one member record the video.
+
+The goal of the video is to demonstrate how the features work and provide a QUICK overview of the code
+At the end of the video, discuss any changes you've made to the original idea.
+
+
+Submission guidelines ---
+
+Submit:
+
+the link to the GitHub repository. The repository should contain:
+Your project files (the website)
+A "doc" folder that includes:
+the SQL dump of the database, which should have data in it
+a Readme.md file with:
+a set of user credentials for me to test the website
+a set of admin credentials for me to test the website
+a link to the video published on YouTube as "unlisted".
+
+
 
 ## Other stuff:
 # [Start Bootstrap - Creative](https://startbootstrap.com/theme/creative/)
