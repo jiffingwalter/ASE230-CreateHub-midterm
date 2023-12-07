@@ -69,16 +69,16 @@ insert into roles values (2,'Verified');
 insert into users (name,email,password,date_created,role) values ('UNDEFINED','template@createhub.com','$2y$10$OQ4aqiyJi6RWhXO3kuTHtus1bwIh6/TP0hOj4/yJ8r2qGwCihpz8m','0000-00-00 00:00:00',1);
 
 insert into users (name,email,password,date_created,role) values ('ADMIN','admin@createhub.com','$2y$10$OQ4aqiyJi6RWhXO3kuTHtus1bwIh6/TP0hOj4/yJ8r2qGwCihpz8m','0000-00-00 00:00:00',0);
-insert into portfolios (author,name,category,images)
-    values (2,'another Portfolio','Images','gort.jpg,patproj.jpg');
 
 insert into users (name,email,password,date_created,role) values ('test account 1','test1@email.com','$2y$10$OQ4aqiyJi6RWhXO3kuTHtus1bwIh6/TP0hOj4/yJ8r2qGwCihpz8m','2023-10-15 09:46:44',1);
-insert into portfolios (author,name,category,images)
-    values (3,'Test portfolio','Work','DV4pD0pVAAUVWFf.png,feelsbetterman.jpg,Kronk_.jpg');
 
 insert into users (name,email,password,date_created,role) values ('test account 2','test2@email.com','$2y$10$OQ4aqiyJi6RWhXO3kuTHtus1bwIh6/TP0hOj4/yJ8r2qGwCihpz8m','2023-10-20 11:52:49',1);
 insert into portfolios (author,name,category,images)
+    values (4,'another Portfolio','Images','gort.jpg,patproj.jpg');
+insert into portfolios (author,name,category,images)
     values (4,'Resume','Art','astrowave wallpaper.jpg');
+insert into portfolios (author,name,category,images)
+    values (4,'Test portfolio','Work','DV4pD0pVAAUVWFf.png,feelsbetterman.jpg,Kronk_.jpg');
 
 insert into posts (author,title,content,has_attachment,date_created,last_edited) -- pid 1
     values (1,'POST TITLE','POST CONTENT',0,'0000-00-00','0000-00-00 00:00:00am');
