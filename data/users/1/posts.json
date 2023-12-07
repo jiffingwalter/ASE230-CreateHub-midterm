@@ -1,42 +1,32 @@
 [
     {
-        "title": "user 1's post",
-        "author": "000001",
-        "content": "she sells sea shells by the sea shore",
+        "title": "POST TITLE",
+        "author": "000000",
+        "content": "POST CONTENT",
         "attachments": {
             "error": "noFileUploaded"
         },
         "tags": [
-            "test",
-            "post",
-            "wee doggy"
+            "POST TAG 1",
+            "POST TAG 2",
+            "POST TAG 3"
         ],
-        "date_created": "10\/14\/2023",
-        "last_edited": "10\/14\/2023",
-        "pid": "000001"
+        "date_created": "POST CREATION DATE",
+        "last_edited": "POST LAST EDITED DATE",
+        "pid": "p000000"
     },
     {
-        "title": "cool picture",
-        "author": "000001",
-        "content": "this picture is cool",
+        "title": "new post",
+        "author": "000000",
+        "content": "",
         "attachments": {
-            "name": "2RP5BgZ.jpg",
-            "full_path": "2RP5BgZ.jpg",
-            "type": "image\/jpeg",
-            "tmp_name": "D:\\Storage\\Programs\\Xampp\\tmp\\phpB4EF.tmp",
-            "error": 0,
-            "size": 520855,
-            "6": "jpg"
+            "error": "noFileUploaded"
         },
         "tags": [
-            "this",
-            "is",
-            "a",
-            "cool",
-            "picture"
+            ""
         ],
-        "date_created": "10\/15\/23 11:43:05pm",
-        "last_edited": "10\/15\/23 11:43:05pm",
-        "pid": "123903"
+        "date_created": "10\/15\/23 10:14:47pm",
+        "last_edited": "10\/15\/23 10:14:47pm",
+        "pid": "490872"
     }
 ]
