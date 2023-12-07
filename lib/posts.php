@@ -10,7 +10,7 @@ function get_all_posts(){
 
 // return all posts by a specific user by ID -- todo: add order parameter to modify order of returned query
 function get_user_posts($user_id){
-    return db->preparedQueryAll('SELECT * FROM posts NATURAL JOIN user_posts WHERE uid=:uid',[
+    return db->preparedQueryAll('SELECT * FROM posts WHERE author=:uid',[
         'uid'=>$user_id
     ]);
 }
@@ -22,35 +22,32 @@ function get_post($pid){
         return $post;
     } else {
         display_system_error('Could not find post with ID #'.$pid.' inside user data file',$_SERVER['SCRIPT_NAME']);
-        return db->query('SELECT * FROM posts WHERE pid=0'); // return example post to avoid php errors
+        return db->query('SELECT * FROM posts WHERE pid=1'); // return example post to avoid php errors
     }
 }
 
-// creates a new post, and attachments/tags if added. returns true if made successfully and false if not
+// creates a new post, and attachments/tags if added. returns new post id if made successfully and false if not
 function create_post($info_in,$file_in){
     try {
         // initialization
-        $post_id=generate_pid();
         $isAttachmentProvided=(is_attachment_provided($file_in['attachments']));
         $isTagsProvided=(strlen($info_in['tags'])>0);
 
         // debug info
         if ($GLOBALS['debug']){
-            echo 'incoming data...<br>';var_dump($info_in);var_dump($file_in);
+            echo '<pre>incoming data...<br>';var_dump($info_in);var_dump($file_in);echo '</pre>';
         }
 
         // push post info to database
-        db->preparedQuery('INSERT INTO posts VALUES (:pid,:title,:content,:has_attachment,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)',[
-            'pid'=>$post_id,
+        db->preparedQuery('INSERT INTO posts (author,title,content,has_attachment,date_created,last_edited)
+            VALUES (:author,:title,:content,:has_attachment,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)',[
+            'author'=>$info_in['author'],
             'title'=>$info_in['title'],
             'content'=>$info_in['content'],
             'has_attachment'=>($isAttachmentProvided)
         ]);
-        // push user and post relationship to database
-        db->preparedQuery('INSERT INTO user_posts VALUES (:user_id,:post_id)',[
-            'user_id'=>$info_in['author'],
-            'post_id'=>$post_id
-        ]);
+        // get the new post's id after auto incrementation
+        $post_id=db->query('SELECT LAST_INSERT_ID()')['LAST_INSERT_ID()'];
 
         // handle attachment and push infos to database if one is provided
         if ($isAttachmentProvided) {
@@ -110,13 +107,12 @@ function edit_post($info_in,$file_in){
             if ($GLOBALS['debug']) echo '<br>updating post author...';
             // check if the post has an attachment; if so, move it to new author's dir
             if ($attachment=get_attachments($info_in['pid'])){
-                $old_uid=get_post_author($info_in['pid'])['uid'];
+                $old_uid=get_post_author($info_in['pid'])['author'];
                 change_attachment_user($attachment[0]['file_name'],$old_uid,$info_in['author']);
             }
             // update post author association in db
-            db->preparedQuery('UPDATE user_posts SET uid=:uid WHERE pid=:pid',[
-                'uid'=>$info_in['author'],
-                'pid'=>$info_in['pid']
+            db->preparedQuery('UPDATE posts SET author=:uid WHERE pid=:pid',[
+                'author'=>$info_in['author']
             ]);
         }
         // return the post pid if all operations successful/if nothing changed
@@ -142,11 +138,8 @@ function delete_post($pid){
             if ($GLOBALS['debug']) echo '<br>post attatchment detected -- attempting attachment deletion<br>';
             delete_post_attachment($pid);
         }
-        // delete the post and user/post association from DB
+        // delete the post from DB
         if ($GLOBALS['debug']) echo '<br>deleting post and post association in database<br>';
-        db->preparedQuery('DELETE FROM user_posts WHERE pid=:pid',[
-            'pid'=>$pid
-        ]);
         db->preparedQuery('DELETE FROM posts WHERE pid=:pid',[
             'pid'=>$pid
         ]);
@@ -159,20 +152,20 @@ function delete_post($pid){
 }
 
 // SUB FUNCTIONS --------------------------------------------------------------------------
-// read through user list and returns a users info where the post id matches
+// read through user db and returns all of users info where the post id matches
 function get_post_author($pid){
-    $user=db->preparedQuery('SELECT * FROM users NATURAL JOIN user_posts WHERE pid=:pid',[
+    $user=db->preparedQuery('SELECT * FROM users INNER JOIN posts ON users.uid=posts.author WHERE pid=:pid;',[
         'pid'=>$pid
     ]);
     if (db->resultFound($user)){
         return $user;
     } else {
         display_system_error('Could not find post with ID #'.$pid.' inside database',$_SERVER['SCRIPT_NAME']);
-        return db->query('SELECT * FROM posts WHERE pid=0'); // return example post to avoid php errors
+        return db->query('SELECT * FROM posts WHERE pid=1'); // return example post to avoid php errors
     }
 }
 
-// generate pid for new posts and check if they're actually unique
+// generate pid for new posts and check if they're actually unique -- DEPRECIATED
 function generate_pid(){
     $posts=get_all_posts();
     $id_is_unique=false;
@@ -210,17 +203,17 @@ function parse_tags_in($tags_in,$pid){
     $tags_out=tags_to_array($tags_in);
     foreach ($tags_out as $tag) {
         // run query to check if tag name exists in database
-        // if tag doesn't exist in tags table, run query to create tag and its id
+        // if tag doesn't exist in tags table, run query to create tag and get the new id
         $tid=0;
         $tag_query=db->preparedQuery('SELECT * FROM tags WHERE tag=?',[$tag]);
         if (!db->resultFound($tag_query)){
-            $tid=count(db->queryAll('SELECT tid FROM tags'))+1; // TEMP, will auto increment id in DB later
-            db->preparedQuery('INSERT INTO tags VALUES (:tid,:tag)',[
-                'tid'=>$tid,
+            db->preparedQuery('INSERT INTO tags (tag) VALUES (:tag)',[
                 'tag'=>$tag
             ]);
+            // get new tag's id from auto incrementation
+            $tid=db->query('SELECT LAST_INSERT_ID()')['LAST_INSERT_ID()'];
         } else { 
-            // if tag is found in DB, set tid to found tags tid for attribution to post
+            // if tag is found in DB, set tid to found tag's tid for attribution to post
             $tid=$tag_query['tid'];
         }
 
@@ -325,9 +318,7 @@ function compare_post_attachment($post_in,$attachment_in){
     // find the attachment based on the post id in relationship set and get its array
     $attachmentProvided=is_attachment_provided($attachment_in);
     $attachmentDB=db->preparedQuery(
-        'SELECT *
-        FROM attachments NATURAL JOIN attached_to
-        WHERE pid=:pid',[
+        'SELECT * FROM attachments WHERE pid=:pid',[
         'pid'=>$post_in['pid']
     ]);
     if ($GLOBALS['debug']){echo '<br>local att: ';var_dump($attachment_in); echo 'database att: '; var_dump($attachmentDB);}
@@ -394,7 +385,7 @@ function is_attachment_provided($file_in){
 
 // parse attachment names and info to database and move files to respective user's directories
 function parse_attachments($pid,$file_in){
-    // check if file coming in has an attachment, do nothing if so
+    // check if file coming in has an attachment, do nothing if none detected
     if (!is_attachment_provided($file_in)){
         if($GLOBALS['debug']) {echo '<br>no attachment provided, skipping attachment parse...<br>';}
         return false;
@@ -403,22 +394,18 @@ function parse_attachments($pid,$file_in){
     else if(in_array(strtolower(pathinfo($file_in['name'], PATHINFO_EXTENSION)),$GLOBALS['attachmentExts'])){
         if($GLOBALS['debug']) {echo '<br>parsing attachment into system...<br>';}
 
-        $aid=count(db->queryAll('SELECT aid FROM attachments'))+1;
         $ext=strtolower(pathinfo($file_in['name'], PATHINFO_EXTENSION));
         // db insert statement for attachment table and the post relationship set
-        db->preparedQuery('INSERT INTO attachments VALUES (:aid,:file_name,:ext,:size,:type,CURRENT_TIMESTAMP)',[
-            'aid'=>$aid,
+        db->preparedQuery('INSERT INTO attachments (pid,file_name,ext,size,type,date_created)
+            VALUES (:pid,:file_name,:ext,:size,:type,CURRENT_TIMESTAMP)',[
+            'pid'=>$pid,
             'file_name'=>$file_in['name'],
             'ext'=>$ext,
             'size'=>$file_in['size'],
             'type'=>$file_in['type']
         ]);
-        db->preparedQuery('INSERT INTO attached_to VALUES (:aid,:pid)',[
-            'aid'=>$aid,
-            'pid'=>$pid
-        ]);
         // move files by temp name to user dir
-        move_uploaded_file($file_in['tmp_name'],'../../data/users/'.get_post_author($pid)['uid'].'/images/'.$file_in['name']);
+        move_uploaded_file($file_in['tmp_name'],'../../data/users/'.get_post_author($pid)['author'].'/images/'.$file_in['name']);
     } else {
         throw new Exception('File is not an accepted file type');
     }
@@ -426,7 +413,7 @@ function parse_attachments($pid,$file_in){
 
 // accepts a post id and returns an array of its attachments if it has any
 function get_attachments($pid){
-    $attachments=db->preparedQueryAll('SELECT * FROM attachments NATURAL JOIN attached_to WHERE pid=:pid',[
+    $attachments=db->preparedQueryAll('SELECT * FROM attachments WHERE pid=:pid',[
         'pid'=>$pid
     ]);
     return (db->resultFound($attachments))? $attachments : false;
@@ -451,16 +438,12 @@ function replace_attachment($post_current,$file_in){
 // accepts a post id and deletes the attachment file and the db association with the post
 function delete_post_attachment($pid){
     $attachments_old=get_attachments($pid);
-    // make sure there's an attachment before doing deletions, otherwise return false
+    // make sure there's an attachment before attempting deletions, otherwise return false
     if ($attachments_old) {
-        db->preparedQuery('DELETE FROM attached_to WHERE aid=:aid AND pid=:pid',[
-            'aid'=>$attachments_old[0]['aid'],
-            'pid'=>$pid
-        ]);
         db->preparedQuery('DELETE FROM attachments WHERE aid=:aid',[
             'aid'=>$attachments_old[0]['aid']
         ]);
-        unlink('../../data/users/'.get_post_author($pid)['uid'].'/images/'.$attachments_old[0]['file_name']);
+        unlink('../../data/users/'.get_post_author($pid)['author'].'/images/'.$attachments_old[0]['file_name']);
         return true;
     } else {
         return false;
@@ -490,17 +473,13 @@ function create_portfolio($info, $file){
                 $filenames.=($i!=count($file['images']['full_path'])-1) ? ',' : '';
             }
         }
-        // get portfolio id and push portfolio info to database & association table
-        $fid=count(db->queryAll('SELECT fid FROM portfolios'))+1;
-        db->preparedQuery('INSERT INTO portfolios VALUES (:fid,:name,:category,:images)',[
-            'fid' => $fid,
+        // get portfolio id and push portfolio info to database
+        db->preparedQuery('INSERT INTO portfolios (author,name,category,images)
+            VALUES (:author,:name,:category,:images)',[
+            'author' => $info['uid'],
             'name' => $info['name'],
             'category' => $info['category'],
             'images' => $filenames
-        ]);
-        db->preparedQuery('INSERT INTO user_portfolios VALUES (:uid,:fid)',[
-            'uid'=>$info['uid'],
-            'fid'=>$fid
         ]);
         return true;
     } catch (Throwable $error) {
@@ -508,29 +487,11 @@ function create_portfolio($info, $file){
         echo '<pre>'.$error.'</pre>';
         return false;
     }
-    
-    // OLD -----------
-    for($i=0;$i<count($file['images']['name']);$i++){
-        if(in_array(strtolower(pathinfo($file['images']['name'][0], PATHINFO_EXTENSION)),get_file_extensions())){
-            //put image in images folder
-            move_uploaded_file($file['images']['tmp_name'][$i],'../../data/users/'.$info['user_id'].'/images/'.$file['images']['full_path'][$i]);
-        }
-    }
-    //add info to portfolio.json
-    $portfolio_updated=get_user_portfolio($info['user_id']);
-    $new_portfolio=[
-        'name' => $info['name'],
-        'category' => $info['category'],
-        'images' => $file['images']['name']
-    ];
-    $portfolio_updated[count($portfolio_updated)]=$new_portfolio;
-    file_put_contents('../../data/users/'.$info['user_id'].'/portfolio.json', json_encode($portfolio_updated,JSON_PRETTY_PRINT));
-    header('Location: index.php');
 }
 
 //return portfolios of user from their uid if they have any
 function get_user_portfolio($uid){
-    $portfolio=db->preparedQueryAll('SELECT * FROM portfolios NATURAL JOIN user_portfolios WHERE uid=:uid',[
+    $portfolio=db->preparedQueryAll('SELECT * FROM portfolios WHERE author=:uid',[
         'uid'=>$uid
     ]);
     if (db->resultFound($portfolio)){

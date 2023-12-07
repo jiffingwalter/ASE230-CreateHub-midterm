@@ -8,13 +8,15 @@ if(count($_POST)>0){
     if(isset($_POST['email']) && isset($_POST['password'])){
         // attempt to validate user's info, if its good give success message
         if(validate_user_signup($_POST)){
-            display_message('Your account has been created, please log in');
+            create_user($_POST)?
+            display_message('Your account has been created, please log in'):
+            '';
             $showSignUp=false;
         }
     }
     //Login
     if(isset($_POST['LoginEmail']) && isset($_POST['LoginPassword'])){
-        if (validateUser($_POST['LoginEmail'], $_POST['LoginPassword'])){
+        if (validate_user_login($_POST['LoginEmail'], $_POST['LoginPassword'])){
             // assign user id to session variable and redirect to index
             $_SESSION['userID'] = get_user_id($_POST['LoginEmail']);
             header("Location: ../../".$GLOBALS['indexPage']);

@@ -37,6 +37,7 @@ function does_user_exist($user_id){
     }
 }
 
+// DEPRECATED
 function generate_user_id(){
     $user_ids=db->queryAll('SELECT uid FROM users');
     $id_is_unique=false;
@@ -60,28 +61,28 @@ function generate_user_id(){
 function create_user($info_in){
     try{
         // generate new user id and push the info into the database
-        $user_id=generate_user_id();
-        db->preparedQuery('INSERT INTO users VALUES (:uid,:name,:email,:password,CURRENT_TIMESTAMP,:role)',[
-            'uid'=>$user_id,
+        db->preparedQuery('INSERT INTO users (name,email,password,date_created,role)
+            VALUES (:name,:email,:password,CURRENT_TIMESTAMP,:role)',[
             'name'=>$info_in['name'],
             'email'=>$info_in['email'],
             'password'=>password_hash($info_in['password'],PASSWORD_DEFAULT),
             'role' => 1 // default role is ALWAYS user. can be changed by admin manually or through verification after creation
         ]);
+        $user_id=db->query('SELECT LAST_INSERT_ID()')['LAST_INSERT_ID()'];
         
         // create user dependencies
         mkdir('../../data/users/'.$user_id, 0755);
         mkdir('../../data/users/'.$user_id.'/images', 0755);
-        file_put_contents('../../data/users/'.$user_id.'/posts.json', json_encode([], JSON_PRETTY_PRINT)); // remove after posts are migrated to DB
-        file_put_contents('../../data/users/'.$user_id.'/portfolio.json', json_encode([], JSON_PRETTY_PRINT)); // remove after posts are migrated to DB
-        return [true,$user_id];
-    } catch (Exception $ex){
-        return [false,$ex];
+        return $user_id;
+    } catch (Throwable $error){
+        display_system_error('Encountered error when creating user',$_SERVER['SCRIPT_NAME']);
+        echo '<pre>'.$error.'</pre>';
+        return false;
     }
 }
 
-// edits a user by going through and matching
-function edit_user($info_in,$user){
+// edits a user by looking up their info the database and replacing all text fields
+function edit_user($info_in){
     try{
         // insert new values into user
         db->preparedQuery('UPDATE `users` SET `name`=:name,`email`=:email,`password`=:password,`role`=:role WHERE `uid`=:uid',[
@@ -89,18 +90,20 @@ function edit_user($info_in,$user){
             'name'=>$info_in['name'],
             'email'=>$info_in['email'],
             'password'=>password_hash($info_in['password'],PASSWORD_DEFAULT),
-            'role' => isset($info_in['role'])?$info_in['role']:1 // set roll if its given, otherwise default to normal user
+            'role' => isset($info_in['role'])?$info_in['role']:1 // set role if its given, otherwise default to normal user
         ]);
 
         return true;
-    } catch (Exception $ex){
-        return $ex;
+    } catch (Throwable $error){
+        display_system_error('Encountered error when editing user #'.$info_in['uid'],$_SERVER['SCRIPT_NAME']);
+        echo '<pre>'.$error.'</pre>';
+        return false;
     }
 }
 
 function delete_user($info_in){
     try{
-        // delete user if they are found
+        // delete user & their portfolios if they are found
         db->preparedQuery('DELETE FROM users WHERE `uid`=:uid',[$info_in['uid']]);
 
         // delete user files and directory
@@ -112,17 +115,26 @@ function delete_user($info_in){
             }
         }
         rmdir('../../data/users/'.$info_in['uid'].'/images');
-        unlink('../../data/users/'.$info_in['uid'].'/portfolio.json');
-        unlink('../../data/users/'.$info_in['uid'].'/posts.json');
         $delete_success=rmdir('../../data/users/'.$info_in['uid']);
-        
         return $delete_success;
-    } catch (Exception $ex){
-        return $ex;
+    } catch (Throwable $error){
+        display_system_error('Encountered error when deleting user #'.$info_in['uid'],$_SERVER['SCRIPT_NAME']);
+        echo '<pre>'.$error.'</pre>';
+        return false;
     }
 }
 
 // user validation ----------------------------------------------------------------------------------------------
+function validate_user_login($email, $password){
+    $users = get_all_users();
+    for($i=0;$i<count($users);$i++){
+        if($email == $users[$i]['email'] && password_verify($password, $users[$i]['password'])){
+            return true;
+        }
+    }
+    return false;
+}
+
 // validates info for account creation
 function validate_user_signup($info_in){
     //check if email exists
@@ -130,7 +142,7 @@ function validate_user_signup($info_in){
     $email_found=false;
     for($i=0;$i<count($users);$i++){
         if($info_in['email'] == $users[$i]['email']){
-            $id_found=true;
+            $email_found=true;
             break;
         }
     }
@@ -140,8 +152,7 @@ function validate_user_signup($info_in){
             display_error('Password cannot be blank');
         }elseif($info_in['password'] != $info_in['confirmPassword']){ // check if passwords match
             display_error('Passwords do not match');
-        }else{ // it passes password and email validation, make the account
-            create_user($info_in);
+        }else{ // it passes password and email validation, return true
             return true;
         }
     }else{

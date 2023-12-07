@@ -32,13 +32,3 @@ function isUserAdmin($user_id){
     }
     return $id_found;
 }
-
-function validateUser($email, $password){
-    $users = get_all_users();
-    for($i=0;$i<count($users);$i++){
-        if($email == $users[$i]['email'] && password_verify($password, $users[$i]['password'])){
-            return true;
-        }
-    }
-    return false;
-}
