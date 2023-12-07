@@ -61,7 +61,8 @@ function generate_user_id(){
 function create_user($info_in){
     try{
         // generate new user id and push the info into the database
-        db->preparedQuery('INSERT INTO users VALUES (,:name,:email,:password,CURRENT_TIMESTAMP,:role)',[
+        db->preparedQuery('INSERT INTO users (name,email,password,date_created,role)
+            VALUES (:name,:email,:password,CURRENT_TIMESTAMP,:role)',[
             'name'=>$info_in['name'],
             'email'=>$info_in['email'],
             'password'=>password_hash($info_in['password'],PASSWORD_DEFAULT),
@@ -73,7 +74,9 @@ function create_user($info_in){
         mkdir('../../data/users/'.$user_id, 0755);
         mkdir('../../data/users/'.$user_id.'/images', 0755);
         return $user_id;
-    } catch (Exception $ex){
+    } catch (Throwable $error){
+        display_system_error('Encountered error when creating user',$_SERVER['SCRIPT_NAME']);
+        echo '<pre>'.$error.'</pre>';
         return false;
     }
 }
@@ -91,8 +94,10 @@ function edit_user($info_in){
         ]);
 
         return true;
-    } catch (Exception $ex){
-        return $ex;
+    } catch (Throwable $error){
+        display_system_error('Encountered error when editing user #'.$info_in['uid'],$_SERVER['SCRIPT_NAME']);
+        echo '<pre>'.$error.'</pre>';
+        return false;
     }
 }
 
@@ -112,12 +117,24 @@ function delete_user($info_in){
         rmdir('../../data/users/'.$info_in['uid'].'/images');
         $delete_success=rmdir('../../data/users/'.$info_in['uid']);
         return $delete_success;
-    } catch (Exception $ex){
-        return $ex;
+    } catch (Throwable $error){
+        display_system_error('Encountered error when deleting user #'.$info_in['uid'],$_SERVER['SCRIPT_NAME']);
+        echo '<pre>'.$error.'</pre>';
+        return false;
     }
 }
 
 // user validation ----------------------------------------------------------------------------------------------
+function validate_user_login($email, $password){
+    $users = get_all_users();
+    for($i=0;$i<count($users);$i++){
+        if($email == $users[$i]['email'] && password_verify($password, $users[$i]['password'])){
+            return true;
+        }
+    }
+    return false;
+}
+
 // validates info for account creation
 function validate_user_signup($info_in){
     //check if email exists
@@ -125,7 +142,7 @@ function validate_user_signup($info_in){
     $email_found=false;
     for($i=0;$i<count($users);$i++){
         if($info_in['email'] == $users[$i]['email']){
-            $id_found=true;
+            $email_found=true;
             break;
         }
     }
@@ -135,8 +152,7 @@ function validate_user_signup($info_in){
             display_error('Password cannot be blank');
         }elseif($info_in['password'] != $info_in['confirmPassword']){ // check if passwords match
             display_error('Passwords do not match');
-        }else{ // it passes password and email validation, make the account
-            create_user($info_in);
+        }else{ // it passes password and email validation, return true
             return true;
         }
     }else{

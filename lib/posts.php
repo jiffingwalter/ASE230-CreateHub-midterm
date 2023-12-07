@@ -35,16 +35,16 @@ function create_post($info_in,$file_in){
 
         // debug info
         if ($GLOBALS['debug']){
-            echo 'incoming data...<br>';var_dump($info_in);var_dump($file_in);
+            echo '<pre>incoming data...<br>';var_dump($info_in);var_dump($file_in);echo '</pre>';
         }
 
         // push post info to database
         db->preparedQuery('INSERT INTO posts (author,title,content,has_attachment,date_created,last_edited)
             VALUES (:author,:title,:content,:has_attachment,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)',[
-            'author'=>1,
-            'title'=>'testing',
-            'content'=>'testing',
-            'has_attachment'=>0
+            'author'=>$info_in['author'],
+            'title'=>$info_in['title'],
+            'content'=>$info_in['content'],
+            'has_attachment'=>($isAttachmentProvided)
         ]);
         // get the new post's id after auto incrementation
         $post_id=db->query('SELECT LAST_INSERT_ID()')['LAST_INSERT_ID()'];
@@ -107,7 +107,7 @@ function edit_post($info_in,$file_in){
             if ($GLOBALS['debug']) echo '<br>updating post author...';
             // check if the post has an attachment; if so, move it to new author's dir
             if ($attachment=get_attachments($info_in['pid'])){
-                $old_uid=get_post_author($info_in['pid'])['uid'];
+                $old_uid=get_post_author($info_in['pid'])['author'];
                 change_attachment_user($attachment[0]['file_name'],$old_uid,$info_in['author']);
             }
             // update post author association in db
@@ -152,7 +152,7 @@ function delete_post($pid){
 }
 
 // SUB FUNCTIONS --------------------------------------------------------------------------
-// read through user db and returns a users info where the post id matches
+// read through user db and returns all of users info where the post id matches
 function get_post_author($pid){
     $user=db->preparedQuery('SELECT * FROM users INNER JOIN posts ON users.uid=posts.author WHERE pid=:pid;',[
         'pid'=>$pid
@@ -396,7 +396,8 @@ function parse_attachments($pid,$file_in){
 
         $ext=strtolower(pathinfo($file_in['name'], PATHINFO_EXTENSION));
         // db insert statement for attachment table and the post relationship set
-        db->preparedQuery('INSERT INTO attachments VALUES (:pid,:file_name,:ext,:size,:type,CURRENT_TIMESTAMP)',[
+        db->preparedQuery('INSERT INTO attachments (pid,file_name,ext,size,type,date_created)
+            VALUES (:pid,:file_name,:ext,:size,:type,CURRENT_TIMESTAMP)',[
             'pid'=>$pid,
             'file_name'=>$file_in['name'],
             'ext'=>$ext,
@@ -404,7 +405,7 @@ function parse_attachments($pid,$file_in){
             'type'=>$file_in['type']
         ]);
         // move files by temp name to user dir
-        move_uploaded_file($file_in['tmp_name'],'../../data/users/'.get_post_author($pid)['uid'].'/images/'.$file_in['name']);
+        move_uploaded_file($file_in['tmp_name'],'../../data/users/'.get_post_author($pid)['author'].'/images/'.$file_in['name']);
     } else {
         throw new Exception('File is not an accepted file type');
     }
@@ -442,7 +443,7 @@ function delete_post_attachment($pid){
         db->preparedQuery('DELETE FROM attachments WHERE aid=:aid',[
             'aid'=>$attachments_old[0]['aid']
         ]);
-        unlink('../../data/users/'.get_post_author($pid)['uid'].'/images/'.$attachments_old[0]['file_name']);
+        unlink('../../data/users/'.get_post_author($pid)['author'].'/images/'.$attachments_old[0]['file_name']);
         return true;
     } else {
         return false;
@@ -473,7 +474,8 @@ function create_portfolio($info, $file){
             }
         }
         // get portfolio id and push portfolio info to database
-        db->preparedQuery('INSERT INTO portfolios VALUES (:author,:name,:category,:images)',[
+        db->preparedQuery('INSERT INTO portfolios (author,name,category,images)
+            VALUES (:author,:name,:category,:images)',[
             'author' => $info['uid'],
             'name' => $info['name'],
             'category' => $info['category'],
