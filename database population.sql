@@ -85,7 +85,7 @@ insert into posts (author,title,content,has_attachment,date_created,last_edited)
 
 -- create test posts, attachments, and tags
 insert into posts (author,title,content,has_attachment,date_created,last_edited) -- pid 2
-	values(2,'testing new posts','test post body',1,'2023-10-30 12:00:30','2023-11-08 03:15:23');
+	values(3,'testing new posts','test post body',1,'2023-10-30 12:00:30','2023-11-08 03:15:23');
 insert into attachments (pid,file_name,ext,size,type,date_created)
 	values (2,'20231019183921_2.jpg','jpg',149728,'image/jpeg','2023-10-30 12:00:30');
 insert into tags (tag) values ('picture');
@@ -94,12 +94,12 @@ insert into post_tags (tid,pid) values (1,2);
 insert into post_tags values (2,2);
 
 insert into posts (author,title,content,has_attachment,date_created,last_edited) -- pid 3
-    values (3,'test post','post bod',1,'2023-10-16 03:24:04','2023-11-08 03:15:23');
+    values (4,'test post','post bod',1,'2023-10-16 03:24:04','2023-11-08 03:15:23');
 insert into attachments (pid,file_name,ext,size,type,date_created)
 	values (3,'Cave_Women.PNG','png',149728,'image/png','2023-10-16 03:24:04');
 
 insert into posts (author,title,content,has_attachment,date_created,last_edited) -- pid 4
-    values (3,'testing for posts','thank you for viewing this post',1,'2023-10-16 12:00:30','2023-10-16 12:00:30');
+    values (4,'testing for posts','thank you for viewing this post',1,'2023-10-16 12:00:30','2023-10-16 12:00:30');
 insert into attachments (pid,file_name,ext,size,type,date_created)
 	values (4,'3c75d20.jpg','jpg',2899318,'image/jpeg','2023-10-16 12:00:30');
 insert into tags (tag) values ('cool');
@@ -108,12 +108,12 @@ insert into post_tags (tid,pid) values (3,4);
 insert into post_tags (tid,pid) values (4,4);
 
 insert into posts (author,title,content,has_attachment,date_created,last_edited) -- pid 5
-    values (4,'','',1,'2023-11-09 12:00:30','2023-11-18 03:15:23');
+    values (3,'','',1,'2023-11-09 12:00:30','2023-11-18 03:15:23');
 insert into attachments (pid,file_name,ext,size,type,date_created)
 	values (5,'2023-04-20.png','png',149728,'image/png','2023-11-09 12:00:30');
 
 insert into posts (author,title,content,has_attachment,date_created,last_edited) -- pid 6
-    values (4,'user 1s post','she sells sea shells by the sea shore',1,'2023-10-14 16:05:00','2023-10-14 06:34:23');
+    values (2,'user 1s post','she sells sea shells by the sea shore',1,'2023-10-14 16:05:00','2023-10-14 06:34:23');
 insert into tags (tag) values ('test');
 insert into tags (tag) values ('post');
 insert into tags (tag) values ('wee doggy');
@@ -122,7 +122,7 @@ insert into post_tags (tid,pid) values (6,6);
 insert into post_tags (tid,pid) values (7,6);
 
 insert into posts (author,title,content,has_attachment,date_created,last_edited) -- pid 7
-    values (4,'cool picture','this picture is cool',1,'2023-10-15 11:43:05','2023-10-15 11:43:05');
+    values (2,'cool picture','this picture is cool',1,'2023-10-15 11:43:05','2023-10-15 11:43:05');
 insert into attachments (pid,file_name,ext,size,type,date_created)
 	values (7,'2RP5BgZ.jpg','jpg',520855,'image/jpeg','2023-10-15 11:43:05');
 insert into tags (tag) values ('this');
