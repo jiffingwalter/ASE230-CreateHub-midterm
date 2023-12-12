@@ -49,6 +49,8 @@ if(count($_POST)>0){
         ?>
             <h3>Sign Up</h3>
             <form method="POST">
+                <label for="name">Enter your username:</label><br>
+                <input type="text" name="name"><br>
                 <label for="email">Enter your email:</label><br>
                 <input type="email" name="email"><br>
                 <label for="Password">Enter a password:</label><br>

@@ -18,7 +18,7 @@ require_once('../themes/nav.php');
                 <div class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center">
                     <div class="col-lg-8 align-self-end">
                         <?= isLoggedIn($userID)?
-                            '<h1 class="text-white font-weight-bold">Welcome back,<br>'.get_user($userID)['email'].'</h1>':
+                            '<h1 class="text-white font-weight-bold">Welcome back,<br>'.get_user($userID)['name'].'</h1>':
                             '<h1 class="text-white font-weight-bold">Welcome to CreateHub</h1>' // this should be a name eventually ?> 
                         <hr class="divider" />
                     </div>
