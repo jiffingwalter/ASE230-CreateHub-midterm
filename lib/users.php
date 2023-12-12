@@ -140,14 +140,19 @@ function validate_user_signup($info_in){
     //check if email exists
     $users = get_all_users();
     $email_found=false;
+    $user_name_found=false;
     for($i=0;$i<count($users);$i++){
         if($info_in['email'] == $users[$i]['email']){
             $email_found=true;
             break;
         }
+        if($info_in['name'] == $users[$i]['name']){
+            $user_name_found=true;
+            break;
+        }
     }
     // validate password if user doesn't already exist, error if they do
-    if(!$email_found){
+    if(!$email_found && !$user_name_found){
         if(strlen($info_in['password'])<1){ // check if blank
             display_error('Password cannot be blank');
         }elseif($info_in['password'] != $info_in['confirmPassword']){ // check if passwords match
@@ -156,7 +161,11 @@ function validate_user_signup($info_in){
             return true;
         }
     }else{
-        display_error('Email is already in use');
+        if($user_name_found){
+            display_error('Username is already in use');
+        }else{
+            display_error('Email is already in use');
+        }
     }
 }
 
