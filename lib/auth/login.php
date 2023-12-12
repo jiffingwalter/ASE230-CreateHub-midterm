@@ -50,13 +50,13 @@ if(count($_POST)>0){
             <h3>Sign Up</h3>
             <form method="POST">
                 <label for="name">Enter your username:</label><br>
-                <input type="text" name="name"><br>
+                <input type="text" name="name" required><br>
                 <label for="email">Enter your email:</label><br>
-                <input type="email" name="email"><br>
+                <input type="email" name="email" required><br>
                 <label for="Password">Enter a password:</label><br>
-                <input type="password" name="password"><br>
+                <input type="password" name="password" required><br>
                 <label for="ConfirmPassword">Confirm your password:</label><br>
-                <input type="password" name="confirmPassword"><br><br>
+                <input type="password" name="confirmPassword" required><br><br>
                 <input type="submit" value="Sign Up">
             </form>
         <?php
