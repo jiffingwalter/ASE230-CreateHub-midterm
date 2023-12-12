@@ -1,9 +1,23 @@
 <?php
 require_once('../../lib/global.php');
 $userID=isLoggedIn()?$_SESSION['userID']:forceLogin();
-
 require_once('../themes/nav.php');
-require_once($GLOBALS['postHandlingDirectory']);
+require_once($GLOBALS['databaseDirectory']);
+
+if(count($_POST)>0){
+    //change username
+    if(isset($_POST['changeUsername'])){
+        $update=db->preparedQuery("UPDATE users SET name = ? WHERE uid = ?",[$_POST['changeUsername'], $userID]);
+    }
+    //change password
+    if(isset($_POST['changePassword'])){
+
+    }
+    //change email
+    if(isset($_POST['changeEmail'])){
+
+    }
+}
 ?>
 
 <body id="page-top" style="background-color: black; color: white;">
@@ -20,10 +34,10 @@ require_once($GLOBALS['postHandlingDirectory']);
             <h3>Change email:</h3>
             <h4><label for="changeEmail">New Email:</label></h4>
             <input type="email" name="changeEmail"><br>
-            <h1><input type="submit" class="btn btn-primary" style="color: white" href=""></h1>
+            <h1><input type="submit" class="btn btn-primary" style="color: white"></h1>
         </form>
         <br><br><br>
         <h3>Delete Account:</h3>
-        <h1><a class="btn btn-primary" style="color: white" href="">Delete Account</a></h1>
+        <h1><a class="btn btn-primary" style="color: white" href="./userSettings/delete.php">Delete Account</a></h1>
     </div>
 </body>
