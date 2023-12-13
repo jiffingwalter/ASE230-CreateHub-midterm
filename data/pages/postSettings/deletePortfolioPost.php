@@ -11,6 +11,12 @@ if(isset($_POST['yes'])){
         //delete portfolio image
         unset($images[$_GET['pIndex']]);
         $setImages = db->preparedQuery('UPDATE portfolios SET images = ? WHERE fid = ?',[implode(',',$images),$portfolio['fid']]);
+        
+        //delete local
+        $image = '../../users/'.$userID.'/images/'.$_GET['image'];
+        if(file_exists($image)){
+            unlink($image);
+        }
         header("Location: ./editPortfolio.php?index=$index");
     }
 }

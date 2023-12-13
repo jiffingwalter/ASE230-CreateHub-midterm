@@ -19,6 +19,7 @@ if(count($_POST)>0){
         echo '<h1> FILES NOT EMPTY </h1>';
         //query photos
         $addPhotos = db->preparedQuery('SELECT images FROM portfolios WHERE fid = ?',[$portfolios[$index]['fid']]);
+
         //explode photos on ,
         $addPhotos = explode(',',$addPhotos['images']);
 
@@ -26,13 +27,6 @@ if(count($_POST)>0){
         for($i=0;$i<count($_FILES['images']['full_path']);$i++){
             $addPhotos[] = $_FILES['images']['full_path'][$i];
         }
-        // echo '<pre>';
-        // print_r($addPhotos);
-        // echo '</pre>';
-
-        // echo '<pre>';
-        // print_r($_FILES['images']['full_path']);
-        // echo '</pre>';
 
         //add locally
         for($i=0;$i<count($_FILES['images']['full_path']);$i++){
@@ -41,11 +35,8 @@ if(count($_POST)>0){
 
         //implode on , and update
         $updatePhotos = db->preparedQuery('UPDATE portfolios SET images = ? WHERE fid = ?',[implode(',',$addPhotos),$portfolios[$index]['fid']]);
-    }else{
-        echo '<h1> FILES EMPTY </h1>';
     }
     header('Location: ../portfolio.php');
-    //print_r($_FILES['images']);
 }
 ?>
 <a href="../portfolioSelect.php?index=<?=$index?>"><< BACK </a>
@@ -70,6 +61,6 @@ if(count($_POST)>0){
 <?php
 for($i=0;$i<count($portfolios[$index]['images']);$i++){
 ?>
-<a href="./deletePortfolioPost.php?pIndex=<?=$i?>&index=<?=$index?>&name=<?=$portfolios[$index]['name']?>"><img src="../../users/<?=$userID?>/images/<?=$portfolios[$index]['images'][$i]?>" style="max-width: 500px"></a>
+<a href="./deletePortfolioPost.php?pIndex=<?=$i?>&index=<?=$index?>&name=<?=$portfolios[$index]['name']?>&image=<?=$portfolios[$index]['images'][$i]?>"><img src="../../users/<?=$userID?>/images/<?=$portfolios[$index]['images'][$i]?>" style="max-width: 500px"></a>
 <?php
 }?>
