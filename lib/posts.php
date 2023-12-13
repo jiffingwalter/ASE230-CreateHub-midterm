@@ -419,6 +419,12 @@ function get_attachments($pid){
     return (db->resultFound($attachments))? $attachments : false;
 }
 
+//return the attachment of a post
+function get_attachment_photo($pid){
+    $attachment=db->preparedQuery('SELECT file_name FROM attachments WHERE pid=:pid',['pid'=>$pid]);
+    return $attachment['file_name'];
+}
+
 // moves a post's attachment to a new user
 function change_attachment_user($filename,$user_id_old,$user_id_new){
     // output debug

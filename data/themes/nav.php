@@ -15,6 +15,7 @@ require_once('../themes/head.php');
                 <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
                 <li class="nav-item"><a class="nav-link" href="../pages/userPage.php">My Page</a></li>
                 <li class="nav-item"><a class="nav-link" href="../pages/portfolio.php">My Portfolio</a></li>
+                <li class="nav-item"><a class="nav-link" href="../pages/explore.php">Explore</a></li>
                 <?= isLoggedIn($userID)?'<li class="nav-item"><a class="nav-link" href="../../lib/auth/logout.php">Logout</a></li>':
                     '<li class="nav-item"><a class="nav-link" href="../../lib/auth/login.php">Sign up/Login</a></li>'?>
             </ul>
