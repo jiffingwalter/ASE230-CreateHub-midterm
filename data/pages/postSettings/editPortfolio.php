@@ -5,6 +5,12 @@ require_once($GLOBALS['databaseDirectory']);
 require_once($GLOBALS['postHandlingDirectory']);
 $index = $_GET['index'];
 $portfolios=get_user_portfolio($userID);
+$images=[];
+
+//set images in the portfolio
+for($i=0;$i<count($portfolios[$index]['images']);$i++){
+    $images[] = $portfolios[$index]['images'][$i];
+}
 
 if(count($_POST)>0){
     if($_POST['title'] != ''){
@@ -55,6 +61,13 @@ if(count($_POST)>0){
     <input type="file" name="images[]" accept=".png, .jpg, .jpeg" multiple><br><br>
     <input type="hidden" name="user_id" value="<?=$userID?>">
     <input type="submit" value="Upload Changes">
+</form>
+
+<form method="POST" action="deletePortfolio.php">
+    <h3>Delete Portfolio?</h3>
+    <input type="text" name="images[]" value=<?=implode(',',$images)?> hidden>
+    <input type="text" name="fid" value=<?=$portfolios[$index]['fid']?> hidden>
+    <input type="submit" value="delete portfolio">
 </form>
 
 <h3> Click on a photo to delete </h3>
