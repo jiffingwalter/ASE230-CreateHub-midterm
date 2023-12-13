@@ -61,6 +61,6 @@ if(count($_POST)>0){
         </form>
         <br><br><br>
         <h3>Delete Account:</h3>
-        <h1><a class="btn btn-primary" style="color: white" href="./userSettings/delete.php">Delete Account</a></h1>
+        <h1><a class="btn btn-primary" style="color: white" href="./userSettings/deleteAccount.php">Delete Account</a></h1>
     </div>
 </body>
