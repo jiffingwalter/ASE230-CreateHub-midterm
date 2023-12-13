@@ -9,31 +9,61 @@ $portfolios=get_user_portfolio($userID);
 if(count($_POST)>0){
     if($_POST['title'] != ''){
         $changeTitle = db->preparedQuery('UPDATE portfolios SET name = ? WHERE fid = ?',[$_POST['title'],$portfolios[$index]['fid']]);
-        header('Location: ../portfolio.php');
     }
 
     if($_POST['category'] != ''){
         $changeTitle = db->preparedQuery('UPDATE portfolios SET category = ? WHERE fid = ?',[$_POST['category'],$portfolios[$index]['fid']]);
-        header('Location: ../portfolio.php');
     }
+
+    if($_FILES['images'] != 0){
+        echo '<h1> FILES NOT EMPTY </h1>';
+        //query photos
+        $addPhotos = db->preparedQuery('SELECT images FROM portfolios WHERE fid = ?',[$portfolios[$index]['fid']]);
+        //explode photos on ,
+        $addPhotos = explode(',',$addPhotos['images']);
+
+        //append the new uploads
+        for($i=0;$i<count($_FILES['images']['full_path']);$i++){
+            $addPhotos[] = $_FILES['images']['full_path'][$i];
+        }
+        // echo '<pre>';
+        // print_r($addPhotos);
+        // echo '</pre>';
+
+        // echo '<pre>';
+        // print_r($_FILES['images']['full_path']);
+        // echo '</pre>';
+
+        //add locally
+        for($i=0;$i<count($_FILES['images']['full_path']);$i++){
+            move_uploaded_file($_FILES['images']['tmp_name'][$i], '../../users/'.$userID.'/images/'.$_FILES['images']['full_path'][$i]);
+        }
+
+        //implode on , and update
+        $updatePhotos = db->preparedQuery('UPDATE portfolios SET images = ? WHERE fid = ?',[implode(',',$addPhotos),$portfolios[$index]['fid']]);
+    }else{
+        echo '<h1> FILES EMPTY </h1>';
+    }
+    header('Location: ../portfolio.php');
+    //print_r($_FILES['images']);
 }
 ?>
 <a href="../portfolioSelect.php?index=<?=$index?>"><< BACK </a>
 
-<?php
-//add a way to add content to portfilio
-?>
-<form method="POST" action="editPortfolio.php?index=<?=$index?>">
+<form method="POST" enctype="multipart/form-data" action="editPortfolio.php?index=<?=$index?>">
+
     <h3>Title: <?=$portfolios[$index]['name']?></h3>
     <input type="text" name="title">
-    <input type="submit" value="Change Title">
-</form>
 
-<form method="POST" action="editPortfolio.php?index=<?=$index?>">
     <h3>Category: <?=$portfolios[$index]['category']?></h3>
     <input type="text" name="category">
-    <input type="submit" value="Change Category">
-
+    
+    
+    <h3>Add photo(s):</h3>
+    <label for="images">Upload Images</label><br>
+    <input type="file" name="images[]" accept=".png, .jpg, .jpeg" multiple><br><br>
+    <input type="hidden" name="user_id" value="<?=$userID?>">
+    <input type="submit" value="Upload Changes">
 </form>
 
 <h3> Click on a photo to delete </h3>
