@@ -6,8 +6,6 @@ require_once($GLOBALS['postHandlingDirectory']);
 $index = $_GET['index'];
 $posts=get_user_posts($userID);
 
-echo '<h1>'.$index.'</h1>';
-
 if(count($_POST)>0){
     //update title
     if($_POST['title'] != ''){
@@ -23,16 +21,17 @@ if(count($_POST)>0){
     if($_POST['tags'] != ''){
         parse_tags_in($_POST['tags'], $posts[$index]['pid']);
     }
+    header('location: ../userPage.php');
 }
 
 ?>
 
 <form method="POST" action="editPost.php?index=<?=$index?>">
         <label for="title">Title:</label><br>
-        <input type="text" name="title" required><br>
+        <input type="text" name="title"><br>
 
         <label for="content">Post Body:</label><br>
-        <textarea name="content" rows="10" cols="50" required></textarea><br>
+        <textarea name="content" rows="10" cols="50"></textarea><br>
 
         <label for="tags">Post Tags (separated by commas):</label> <br>
         <input type="text" name="tags"> <br><br>
