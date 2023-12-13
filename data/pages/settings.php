@@ -6,18 +6,25 @@ require_once($GLOBALS['databaseDirectory']);
 
 if(count($_POST)>0){
     //change username
-    if(isset($_POST['changeUsername'])){
+    if($_POST['changeUsername'] != ''){
         $checkUsernames=db->preparedQuery('SELECT * FROM users WHERE name=?',[$_POST['changeUsername']]);
         if(db->resultFound($checkUsernames)){
-            display_system_error('User already exists with this username. Please choose a different one.',$_SERVER['SCRIPT_NAME']);
+            display_error('The username you entered is already in use');
         }else{
             $updateUsername=db->preparedQuery("UPDATE users SET name = ? WHERE uid = ?",[$_POST['changeUsername'], $userID]);
         }
     }
     //change password
-    if(isset($_POST['changePassword'])){
+    if($_POST['changePassword'] != ''){
         //check if curent password is password
+        $checkPassword=db->preparedQuery('SELECT password FROM users WHERE uid=?',[$userID]);
 
+        if(password_verify($_POST['currentPassword'], $checkPassword['password'])){
+            //change password
+            $changePassword=db->preparedQuery('UPDATE users SET password = ? WHERE uid = ?',[password_hash($_POST['changePassword'], PASSWORD_DEFAULT),$userID]);
+        }else{
+            display_error('the password you entered is incorrect');
+        }
     }
     //change email
     if(isset($_POST['changeEmail'])){
