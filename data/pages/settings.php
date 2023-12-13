@@ -11,7 +11,9 @@ if(count($_POST)>0){
         if(db->resultFound($checkUsernames)){
             display_error('The username you entered is already in use');
         }else{
+            //change username in db
             $updateUsername=db->preparedQuery("UPDATE users SET name = ? WHERE uid = ?",[$_POST['changeUsername'], $userID]);
+            display_error('Username has been updated');
         }
     }
     //change password
@@ -20,15 +22,23 @@ if(count($_POST)>0){
         $checkPassword=db->preparedQuery('SELECT password FROM users WHERE uid=?',[$userID]);
 
         if(password_verify($_POST['currentPassword'], $checkPassword['password'])){
-            //change password
+            //set password in db
             $changePassword=db->preparedQuery('UPDATE users SET password = ? WHERE uid = ?',[password_hash($_POST['changePassword'], PASSWORD_DEFAULT),$userID]);
+            display_error('Password has been updated');
         }else{
-            display_error('the password you entered is incorrect');
+            display_error('The password you entered is incorrect');
         }
     }
     //change email
-    if(isset($_POST['changeEmail'])){
-
+    if($_POST['changeEmail'] != ''){
+        $checkEmails=db->preparedQuery('SELECT email FROM users WHERE email = ?',[$_POST['changeEmail']]);
+        if(db->resultFound($checkEmails)){
+            display_error('The email you entered is already in use');
+        }else{
+            //change email in db
+            $changeEmail=db->preparedQuery('UPDATE users SET email = ? WHERE uid = ?',[$_POST['changeEmail'], $userID]);
+            display_error('Email has been updated');
+        }
     }
 }
 ?>
