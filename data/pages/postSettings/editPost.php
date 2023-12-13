@@ -16,12 +16,12 @@ if(count($_POST)>0){
     
     //update body
     if($_POST['content'] != ''){
-    
+        $updateTitle=db->preparedQuery('UPDATE posts SET content = ? WHERE pid = ?',[$_POST['content'], $posts[$index]['pid']]);
     }
 
     //update tags
     if($_POST['tags'] != ''){
-    
+        parse_tags_in($_POST['tags'], $posts[$index]['pid']);
     }
 }
 
