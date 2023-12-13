@@ -2,7 +2,7 @@
 LOGIC ----------------------------------------------------------------------------------------------
 users:
 - need to add to signup & admin user manager
-- able to edit posts and portfolios
+- able to edit portfolios
 - need to experiment to make sure user cant cheat system and view/make posts by other users. maybe make sure post belongs to the userID on page load?
 
 posts:
