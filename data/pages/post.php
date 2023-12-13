@@ -59,5 +59,6 @@ $attachment=get_attachments($posts[$index]['pid']);
         <!-- Add more rows as needed -->
     </table>
     <h1><a class="btn btn-primary" style="color: white" href="./postSettings/editPost.php?index=<?=$index?>">Edit Post</a></h1>
+    <h1><a class="btn btn-primary" style="color: white" href="./postSettings/deletePost.php?index=<?=$index?>">Delete Post</a></h1>
     <a href="./userPage.php"><< BACK</a>
 </body>
