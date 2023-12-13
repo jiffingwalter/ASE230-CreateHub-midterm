@@ -1,15 +1,14 @@
 <?php
 require_once('../../lib/global.php');
 require_once('../themes/head.php');
+$userID=isLoggedIn()?$_SESSION['userID']:forceLogin();
+require_once('../themes/nav.php');
+
 require_once($GLOBALS['postHandlingDirectory']);
 $posts=get_all_posts();
-
-echo'<pre>';
-print_r($posts);
-echo'</pre>';
-
 ?>
-<table style="margin-left: auto; margin-right: auto">
+<body style="background-color: black;">
+<table style="margin-left: auto; margin-right: auto; margin-top: 70px">
 <?php
 foreach($posts as $upload){
     $index = key($posts);
@@ -28,11 +27,13 @@ foreach($posts as $upload){
                     <h5 class="card-title"><?=$upload['title']?></h5>
                     <p class="card-text"><?=$upload['content']?></p>
                     <h5 class="card-text"><?=$upload['date_created']?></h5>
-                    <a href="post.php?index=<?=$index?>" class="btn btn-primary">View Post</a>
+                    <a href="viewPost.php?index=<?=$index?>" class="btn btn-primary">View Post</a>
                 </div>
             </div>
         </td>
     </tr>
-<?php
+    <?php
+    next($posts);
 }?>
 </table>
+</body>

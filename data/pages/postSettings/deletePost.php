@@ -5,8 +5,6 @@ require_once($GLOBALS['databaseDirectory']);
 require_once($GLOBALS['postHandlingDirectory']);
 $index = $_GET['index'];
 $posts=get_user_posts($userID);
-
-print_r($posts[$index]);
 $userPost = $posts[$index];
 
 if(count($_POST)>0){
