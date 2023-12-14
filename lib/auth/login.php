@@ -1,6 +1,7 @@
 <?php
 require_once('../global.php');
 require_once($GLOBALS['userHandlingDirectory']);
+require_once('../../data/themes/head.php');
 $showSignUp=True;
 if(isset($_SESSION['email'])) $showSignUp=false;
 if(count($_POST)>0){
@@ -33,8 +34,12 @@ if(count($_POST)>0){
     <head>
         <title>Login/Sign Up</title>
     </head>
+    <nav style="text-align: left;">
+        <a class="btn btn-primary" style="color: white" href="../../data/pages/index.php">CreateHub Home</a>
+        <hr>
+    </nav>
 
-    <body>
+    <body style="background-color: black; color: white; text-align:center">
         <h3>Log In</h3>
         <form method="POST">
             <label for="LoginEmail">Email:</label><br>
