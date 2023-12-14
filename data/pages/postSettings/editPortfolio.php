@@ -1,5 +1,6 @@
 <?php
 require_once('../../../lib/global.php');
+require_once('../../themes/head.php');
 $userID=isLoggedIn()?$_SESSION['userID']:forceLogin();
 require_once($GLOBALS['databaseDirectory']);
 require_once($GLOBALS['postHandlingDirectory']);
@@ -45,8 +46,13 @@ if(count($_POST)>0){
     header('Location: ../portfolio.php');
 }
 ?>
-<a href="../portfolioSelect.php?index=<?=$index?>"><< BACK </a>
+<link href="../../../dist/css/styles.css" rel="stylesheet" />
 
+<nav>
+    <a class="btn btn-primary" style="color: white" href="../portfolioSelect.php?index=<?=$index?>">Back</a><br><br>
+</nav>
+
+<body style="background-color: black; color: white;">
 <form method="POST" enctype="multipart/form-data" action="editPortfolio.php?index=<?=$index?>">
 
     <h3>Title: <?=$portfolios[$index]['name']?></h3>
@@ -77,3 +83,4 @@ for($i=0;$i<count($portfolios[$index]['images']);$i++){
 <a href="./deletePortfolioPost.php?pIndex=<?=$i?>&index=<?=$index?>&name=<?=$portfolios[$index]['name']?>&image=<?=$portfolios[$index]['images'][$i]?>"><img src="../../users/<?=$userID?>/images/<?=$portfolios[$index]['images'][$i]?>" style="max-width: 500px"></a>
 <?php
 }?>
+</body>

@@ -1,6 +1,7 @@
 <?php
 require_once('../../../lib/global.php');
 $userID=isLoggedIn()?$_SESSION['userID']:forceLogin();
+require_once('../../themes/head.php');
 require_once($GLOBALS['databaseDirectory']);
 require_once($GLOBALS['postHandlingDirectory']);
 $index = $_GET['index'];
@@ -25,18 +26,23 @@ if(count($_POST)>0){
 }
 
 ?>
-
+<link href="../../../dist/css/styles.css" rel="stylesheet" />
+<nav style="text-align: left;">
+    <a class="btn btn-primary" style="color: white" href="../../../data/pages/index.php">CreateHub Home</a>
+</nav>
+<body style="background-color: black; color: white; text-align:center">
 <form method="POST" action="editPost.php?index=<?=$index?>">
-        <label for="title">Title:</label><br>
-        <input type="text" name="title"><br>
+    <label for="title">Title:</label><br>
+    <input type="text" name="title"><br><br>
 
-        <label for="content">Post Body:</label><br>
-        <textarea name="content" rows="10" cols="50"></textarea><br>
+    <label for="content">Post Body:</label><br>
+    <textarea name="content" rows="10" cols="50"></textarea><br><br>
 
-        <label for="tags">Post Tags (separated by commas):</label> <br>
-        <input type="text" name="tags"> <br><br>
+    <label for="tags">Post Tags (separated by commas):</label> <br>
+    <input type="text" name="tags"> <br><br>
 
-        <input type="text" name="index" value="<?=$index?>" hidden>
+    <input type="text" name="index" value="<?=$index?>" hidden>
 
-        <input type="submit" value="Update Post">
-    </form>
+    <input type="submit" value="Update Post">
+</form>
+</body>
