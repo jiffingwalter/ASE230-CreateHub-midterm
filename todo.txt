@@ -5,7 +5,7 @@ users:
 - need to experiment to make sure user cant cheat system and view/make posts by other users. maybe make sure post belongs to the userID on page load?
 
 posts:
-- modify database population file to have incremential ids for tags, portfolios, and attachments (to avoid issues when attachments are deleted)
+
 
 other:
 - update attachment functions to rename attachments when uploading them to server (prof said this was good practice)

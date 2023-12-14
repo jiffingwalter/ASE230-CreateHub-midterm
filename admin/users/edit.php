@@ -49,7 +49,7 @@ if (isset($_POST['confirm_delete'])){
         <label for="confirm_new_password">Confirm New Password:</label><br>
         <input type="password" name="confirm_new_password"><br>
         <label for="is_admin">Admin rights?</label><br>
-        <input type="checkbox" id="is_admin" name="is_admin" value=<?php if(is_user_admin($user['uid'])) echo 'Yes checked="checked"'; ?>>
+        <input type="checkbox" id="is_admin" name="is_admin" value=<?php if(isUserAdmin($user['uid'])) echo 'Yes checked="checked"'; ?>>
         <br><br>
         <input type="hidden" name="id" value="<?= $user['uid'] ?>">
         <button type="submit">Save Changes</button>

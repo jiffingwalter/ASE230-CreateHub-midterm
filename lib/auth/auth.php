@@ -5,7 +5,13 @@ require_once($GLOBALS['userHandlingDirectory']);
 
 // if debug mode is on, show current login information at the top of the page
 if ($GLOBALS['debug']){
-    echo '<div style="background-color: white">development mode is on. signed in as user #'; echo isset($_SESSION['userID'])?$_SESSION['userID'].' - '.get_user($_SESSION['userID'])['email']:'not logged in';echo '</div>';
+    echo '<div style="background-color: white">development mode is on. ';
+    if (isset($_SESSION['userID']) && $_SESSION['userID'] != 'guest'){
+        echo 'signed in as user #'.$_SESSION['userID']; echo ' - '.get_user($_SESSION['userID'])['email']; echo ' - ROLE: '; echo isUserAdmin($_SESSION['userID'])?'ADMIN':'USER';
+    } else{
+        echo 'not currently logged in';
+    }
+    echo '</div>';
 }
 
 // check if user is logged in
@@ -18,17 +24,7 @@ function forceLogin(){
     header("Location: ../../".$GLOBALS['loginPage']);
 }
 
-// read through admin file and check if the user signed in is an admin
+// query a given user and return a bool if they're an admin or not
 function isUserAdmin($user_id){
-    $admins=readCSV($GLOBALS['adminListDirectory']);
-    $id_found=false;
-
-    // step through user data and compare ids until a match
-    for ($i=0;$i<count($admins);$i++){
-        if ($admins[$i]['uid'] == $user_id){
-            $id_found=true;
-            break;
-        }
-    }
-    return $id_found;
+    return get_user($user_id)['role']=='0';
 }
