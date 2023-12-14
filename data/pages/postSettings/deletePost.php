@@ -18,7 +18,8 @@ if(count($_POST)>0){
         }
     }
     //delete db
-    $deletePost = db->preparedQuery('DELETE FROM posts WHERE pid = ?',[$userPost['pid']]);
+    //$deletePost = db->preparedQuery('DELETE FROM posts WHERE pid = ?',[$userPost['pid']]);
+    delete_post($userPost['pid']);
     header('Location: ../userPage.php');
 }
 ?>

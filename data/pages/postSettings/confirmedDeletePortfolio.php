@@ -10,6 +10,7 @@ $images=explode(',',$_POST['images'][0]);
 if($_POST['yes']){
     for($i=0;$i<count($images);$i++){
         if(file_exists('../../users/'.$userID.'/images/'.$images[$i])){
+            //delete local
             unlink('../../users/'.$userID.'/images/'.$images[$i]);
         }
     }
