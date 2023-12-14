@@ -8,7 +8,7 @@ link here:
 
 ## User Credentials for testing
 
-* username
+* test1@email.com
   * password
 
 ## Admin user credentials for testing
