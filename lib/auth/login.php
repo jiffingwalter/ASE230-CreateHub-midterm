@@ -34,8 +34,8 @@ if(count($_POST)>0){
     <head>
         <title>Login/Sign Up</title>
     </head>
-    <nav style="text-align: left;">
-        <a class="btn btn-primary" style="color: white" href="../../data/pages/index.php">CreateHub Home</a>
+    <nav>
+        <h1>CreateHub</h1>
         <hr>
     </nav>
 
