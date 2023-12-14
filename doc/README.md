@@ -13,5 +13,5 @@ link here:
 
 ## Admin user credentials for testing
 
-* username
+* admin@createhub.com
   * password
