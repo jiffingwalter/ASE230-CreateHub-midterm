@@ -1,7 +1,7 @@
 <?php
 require_once('../../lib/global.php');
 require_once('../themes/head.php');
-$userID=isLoggedIn()?$_SESSION['userID']:forceLogin();
+$userID=isLoggedIn()?$_SESSION['userID']:$_SESSION['userID'] = 'guest';
 require_once('../themes/nav.php');
 
 require_once($GLOBALS['postHandlingDirectory']);

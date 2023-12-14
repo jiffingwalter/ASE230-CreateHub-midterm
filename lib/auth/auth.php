@@ -10,7 +10,7 @@ if ($GLOBALS['debug']){
 
 // check if user is logged in
 function isLoggedIn(){
-    return isset($_SESSION['userID'])?true:false;
+    return isset($_SESSION['userID']) && $_SESSION['userID'] != 'guest'?true:false;
 }
 
 // force login
