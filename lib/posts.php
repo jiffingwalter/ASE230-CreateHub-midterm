@@ -458,6 +458,10 @@ function delete_post_attachment($pid){
 
 // PORTFOLIO HANDLING ------------------------------------------------------------------------
 // accepts text info and files and creates a porfolio for a user
+function get_all_portfolios(){
+    return db->queryAll('SELECT * FROM portfolios');
+}
+
 function create_portfolio($info, $file){
     if ($GLOBALS['debug']){
         echo '<pre><br>creating portfolio with data:<br>';
