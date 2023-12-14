@@ -21,7 +21,7 @@ if ($portfolios) {
                 <div class="col-lg-4 col-sm-6">
                     <a class="portfolio-box" href="portfolioSelect.php?index=<?=$i?>" title="Project Name">
                         <img style="max-width: 500px" class="img-fluid" src="../users/<?=$userID?>/images/<?=$portfolios[$i]['images'][0]?>" alt="..." />
-                        <div class="portfolio-box-caption">
+                        <div class="portfolio-box-caption" style="width: 500px;">
                             <div class="project-category text-white-50"><?=$portfolios[$i]['category']?></div>
                             <div class="project-name"><?=$portfolios[$i]['name']?></div>
                         </div>

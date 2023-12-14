@@ -21,7 +21,7 @@ foreach($portfolios as $portfolio){
         <div class="container-fluid p-0">
             <div class="row g-0">
                 <div class="col-lg-4 col-sm-6">
-                    <a class="portfolio-box" href="./viewPortfolio.php" title="Project Name">
+                    <a class="portfolio-box" href="./viewPortfolio.php?index=<?=$index?>" title="Project Name">
                         <img style="max-width: 500px" class="img-fluid" src="../users/<?=$portfolio['author']?>/images/<?=$image[0]?>" alt="..." />
                         <div class="portfolio-box-caption" style="width: 500;">
                             <div class="project-category text-white-50"><?=$portfolios[$index]['category']?></div>
