@@ -5,7 +5,7 @@ require_once($GLOBALS['userHandlingDirectory']);
 
 // if debug mode is on, show current login information at the top of the page
 if ($GLOBALS['debug']){
-    echo '<div style="background-color: white">development mode is on. ';
+    echo '<div style="background-color: white;color:black" class="fixed-top">development mode is on. ';
     if (isset($_SESSION['userID']) && $_SESSION['userID'] != 'guest'){
         echo 'signed in as user #'.$_SESSION['userID']; echo ' - '.get_user($_SESSION['userID'])['email']; echo ' - ROLE: '; echo isUserAdmin($_SESSION['userID'])?'ADMIN':'USER';
     } else{

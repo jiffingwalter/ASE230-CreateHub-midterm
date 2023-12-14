@@ -393,8 +393,11 @@ function parse_attachments($pid,$file_in){
     // if attachment incoming, check if its an allowed filetype. throw exception if not
     else if(in_array(strtolower(pathinfo($file_in['name'], PATHINFO_EXTENSION)),$GLOBALS['attachmentExts'])){
         if($GLOBALS['debug']) {echo '<br>parsing attachment into system...<br>';}
-
+        
+        // generate new file name for the system from the current date
         $ext=strtolower(pathinfo($file_in['name'], PATHINFO_EXTENSION));
+        $file_in['name']=date('Ymd-his').'.'.$ext;
+
         // db insert statement for attachment table and the post relationship set
         db->preparedQuery('INSERT INTO attachments (pid,file_name,ext,size,type,date_created)
             VALUES (:pid,:file_name,:ext,:size,:type,CURRENT_TIMESTAMP)',[
