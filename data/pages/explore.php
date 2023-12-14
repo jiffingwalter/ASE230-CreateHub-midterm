@@ -7,8 +7,9 @@ require_once('../themes/nav.php');
 require_once($GLOBALS['postHandlingDirectory']);
 $posts=get_all_posts();
 ?>
-<body style="background-color: black;">
-<table style="margin-left: auto; margin-right: auto; margin-top: 70px">
+<body style="background-color: black; margin-top: 70px">
+<a class="btn btn-primary" style="color: white" href="./explorePortfolios.php">Explore Portfolios</a>
+<table style="margin-left: auto; margin-right: auto;">
 <?php
 foreach($posts as $upload){
     $index = key($posts);
