@@ -9,7 +9,7 @@ if(count($_POST)>0){
     // append user id to POST array, run portfolio creation function
     $_POST['uid']=$userID;
     create_portfolio($_POST, $_FILES);
-    header('Location: ./portfolio.php');
+    //header('Location: ./portfolio.php');
 }
 ?>
 <body style="margin-top: 100px; background-color: black; color: white;">

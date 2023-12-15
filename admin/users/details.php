@@ -6,6 +6,7 @@ require_once($GLOBALS['postHandlingDirectory']);
 $user=get_user($_GET['index']);
 $user_posts=get_user_posts($user['uid']);
 $user_portfolios=get_user_portfolio($user['uid']);
+echo '<pre>';var_dump($user_portfolios);echo'</pre>';//die;
 ?>
 
 <head>
@@ -83,7 +84,7 @@ $user_portfolios=get_user_portfolio($user['uid']);
                 </tr>
                 <!-- table entries -->
                 <?php
-                for($i=0;$i<count($user_posts);$i++){ ?>
+                for($i=0;$i<=count($user_posts);$i++){ echo $i;?>
                     <tr>
                         <td class="table_col_title"><p><?=$user_portfolios[$i]['name']?></p></td>
                         <td class="table_col_category"><p><?=$user_portfolios[$i]['category']?></p></td>
