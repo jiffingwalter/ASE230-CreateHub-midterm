@@ -62,7 +62,7 @@ if (isset($_POST['confirm_delete'])){
                 <input type="hidden" name="name" value="<?=$pageName?>"><br>
                 <button type="submit">Update Page</button><br>
                 <label for="code">Page Content:</label><br>
-                <textarea style="width:100%;height:450px" name="code"><?=$pageContent?></textarea><br><br>
+                <textarea style="width:900px;height:450px" name="code"><?=$pageContent?></textarea><br><br>
             </form><hr>
             <?php if(!$show_confirm_delete){ ?>
                 <form method="POST">
