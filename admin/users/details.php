@@ -76,7 +76,7 @@ $user_portfolios=get_user_portfolio($user['uid']);
                         <?php
                         for($i=0;$i<count($user_posts);$i++){ ?>
                             <tr>
-                                <td class="table_col_id"><b><?=$user_posts[$i]['pid']?></b></td>
+                                <td class="table_col_id"><p><b><?=$user_posts[$i]['pid']?></b></p></td>
                                 <td class="table_col_title"><p><?=$user_posts[$i]['title']?></p></td>
                                 <td class="table_col_details"><a href="../posts/details.php?index=<?=$user_posts[$i]['pid']?>">View details</a></td>
                                 <td class="table_col_edit"><a href="../posts/edit.php?index=<?=$user_posts[$i]['pid']?>">Edit</a></td>

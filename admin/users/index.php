@@ -36,7 +36,7 @@ $users=get_all_users();
             </table>
             <table class="admin-table" border="1" cellpadding="5" cellspacing="2" style="width:900px">
                 <tr>
-                    <td><b>User ID:</b></td>
+                    <td><p><b>User ID:</b></p></td>
                     <td><p><b>Email:</p></td>
                     <td colspan="2"><p><b>Options:</p></td>
                 </tr>
@@ -48,7 +48,7 @@ $users=get_all_users();
                     for($i=0;$i<count($users);$i++){ ?>
                         <tr>
                             <td><b><?= $users[$i]['uid'] ?></b></td>
-                            <td><b><?=$users[$i]['email']?></td>
+                            <td><b><?=$users[$i]['email']?></b></td>
                             <td style="width:110px"><a href="details.php?index=<?= $users[$i]['uid'] ?>">View details</a></td>
                             <td><a href="edit.php?index=<?= $users[$i]['uid'] ?>">Edit</a></td>
                         </tr>

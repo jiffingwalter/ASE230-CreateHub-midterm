@@ -43,7 +43,7 @@ $all_posts=get_all_posts();
                     }else{ ?>
                         <!-- column labels -->
                         <tr>
-                            <td><b>Post PID:</b></td>
+                            <td><p><b>Post PID:</b></p></td>
                             <td><p><b>Post Author/UID:</p></td>
                             <td><p><b>Post Title:</p></td>
                             <td colspan="3"><p><b>Post Options:</p></td>
@@ -54,12 +54,12 @@ $all_posts=get_all_posts();
                             $user=get_post_author($all_posts[$i]['pid']);
                             ?>
                             <tr>
-                                <td class="table_col_id"><b><?=$all_posts[$i]['pid']?></b></td>
+                                <td class="table_col_id"><p><b><?=$all_posts[$i]['pid']?></b></p></td>
                                 <td class="table_col_author"><p><?=$user['email']?> [<?=$user['uid']?>]</p></td>
                                 <td class="table_col_title"><p><?=$all_posts[$i]['title']?></p></td>
-                                <td class="table_col_details"><a href="details.php?index=<?=$all_posts[$i]['pid']?>">View details</a></td>
-                                <td class="table_col_edit"><a href="edit.php?index=<?=$all_posts[$i]['pid']?>">Edit</a></td>
-                                <td class="table_col_delete"><a href="delete.php?index=<?=$all_posts[$i]['pid']?>">Delete</a></td>
+                                <td class="table_col_details"><p><a href="details.php?index=<?=$all_posts[$i]['pid']?>">View details</a></p></td>
+                                <td class="table_col_edit"><p><a href="edit.php?index=<?=$all_posts[$i]['pid']?>">Edit</a></p></td>
+                                <td class="table_col_delete"><p><a href="delete.php?index=<?=$all_posts[$i]['pid']?>">Delete</a></p></td>
                             </tr>
                     <?php  }
                     } ?>
