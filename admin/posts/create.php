@@ -8,10 +8,10 @@ $users=get_all_users();
 // if author id is set, create post. error if not
 if (isset($_POST['author'])){
     if(strlen($_POST['author'])>0) {
+        // attempt to create post, and if an id is retured (successful) success message and link to post. if false returned, let error print. do options either way
         $new_pid=create_post($_POST,$_FILES);
-        ($new_pid)?display_message('Created post PID #'.$new_pid.'!'):die;
-        echo '<a href="./details.php?index='.$new_pid.'">Go to post '.$new_pid.'</a><br>
-            <a href="./create.php">Create another post</a><br>
+        ($new_pid)?display_message('Created post PID #'.$new_pid.'!').'<a href="./details.php?index='.$new_pid.'">Go to post '.$new_pid.'</a><br>':'';
+        echo '<a href="./create.php">Create another post</a><br>
             <a href="./index.php">Back to post manager</a><br>';
         die;
     }else{
