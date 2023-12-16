@@ -101,7 +101,7 @@ $user_portfolios=get_user_portfolio($user['uid']);
                         </tr>
                         <!-- table entries -->
                         <?php
-                        for($i=0;$i<=count($user_posts);$i++){ ?>
+                        for($i=0;$i<count($user_portfolios);$i++){ ?>
                             <tr>
                                 <td class="table_col_title"><p><?=$user_portfolios[$i]['name']?></p></td>
                                 <td class="table_col_category"><p><?=$user_portfolios[$i]['category']?></p></td>

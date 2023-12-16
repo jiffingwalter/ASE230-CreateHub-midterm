@@ -49,7 +49,7 @@ $users=get_all_users();
                         <tr>
                             <td><b><?= $users[$i]['uid'] ?></b></td>
                             <td><b><?=$users[$i]['email']?></td>
-                            <td style="width:80px"><a href="details.php?index=<?= $users[$i]['uid'] ?>">View details</a></td>
+                            <td style="width:110px"><a href="details.php?index=<?= $users[$i]['uid'] ?>">View details</a></td>
                             <td><a href="edit.php?index=<?= $users[$i]['uid'] ?>">Edit</a></td>
                         </tr>
                 <?php }
