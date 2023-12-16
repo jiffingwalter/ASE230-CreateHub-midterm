@@ -393,8 +393,11 @@ function parse_attachments($pid,$file_in){
     // if attachment incoming, check if its an allowed filetype. throw exception if not
     else if(in_array(strtolower(pathinfo($file_in['name'], PATHINFO_EXTENSION)),$GLOBALS['attachmentExts'])){
         if($GLOBALS['debug']) {echo '<br>parsing attachment into system...<br>';}
-
+        
+        // generate new file name for the system from the current date
         $ext=strtolower(pathinfo($file_in['name'], PATHINFO_EXTENSION));
+        $file_in['name']=date('Ymd-his').'.'.$ext;
+
         // db insert statement for attachment table and the post relationship set
         db->preparedQuery('INSERT INTO attachments (pid,file_name,ext,size,type,date_created)
             VALUES (:pid,:file_name,:ext,:size,:type,CURRENT_TIMESTAMP)',[
@@ -474,13 +477,18 @@ function create_portfolio($info, $file){
         $filenames='';
         for($i=0;$i<count($file['images']['name']);$i++){
             if(in_array(strtolower(pathinfo($file['images']['name'][0], PATHINFO_EXTENSION)),get_file_extensions())){
-                if ($GLOBALS['debug']) echo '<br>parsing in file '.$file['images']['full_path'][$i].' i='.$i.'</br>';
+                // generate new file name for the system from the current date
+                $ext=strtolower(pathinfo($file['images']['full_path'][$i], PATHINFO_EXTENSION));
+                $file['images']['name'][$i]=date('Ymd-his').$i.'.'.$ext;
 
-                move_uploaded_file($file['images']['tmp_name'][$i],'../../data/users/'.$info['user_id'].'/images/'.$file['images']['full_path'][$i]);
+                // debug output
+                if ($GLOBALS['debug']) echo '<br>parsing in file '.$file['images']['name'][$i].' i='.$i.'</br>';
+
+                move_uploaded_file($file['images']['tmp_name'][$i],'../../data/users/'.$info['user_id'].'/images/'.$file['images']['name'][$i]);
 
                 // add filename(s) to name array and add comma if its not the last in the list
-                $filenames.=$file['images']['full_path'][$i];
-                $filenames.=($i!=count($file['images']['full_path'])-1) ? ',' : '';
+                $filenames.=$file['images']['name'][$i];
+                $filenames.=($i!=count($file['images']['name'])-1) ? ',' : '';
             }
         }
         // get portfolio id and push portfolio info to database
