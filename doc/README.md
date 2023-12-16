@@ -4,7 +4,7 @@ By Bryce Bien and Justin Walter
 
 ## Video
 
-link here:
+[CreateHub final presentation for ASE 230](https://youtu.be/_VCOYi8TO6k)
 
 ## User Credentials for testing
 
